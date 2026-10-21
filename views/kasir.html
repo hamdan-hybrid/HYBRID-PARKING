@@ -1,0 +1,796 @@
+<!doctype html>
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Kasir Parkir | Hybrid Parking</title>
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{display:flex;flex-direction:column;height:100vh;height:100dvh;font-family:"Nunito","Segoe UI",system-ui,-apple-system,Roboto,sans-serif;color:#3b3f5c;background:#fff;overflow:hidden}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none}
+svg{flex:none}
+
+/* ===== Header ===== */
+.top{flex:none;position:relative;z-index:3;display:flex;align-items:center;gap:6px;height:76px;padding:0 24px;background:#fff;border-top:2px solid #2b2b2b;box-shadow:0 2px 6px rgba(40,40,80,.12)}
+.top .logo{height:58px;width:auto;margin-right:auto}
+.pill{display:inline-flex;align-items:center;height:30px;padding:0 12px;border-radius:15px;background:#8c6cf2;color:#fff;font-size:13px;font-weight:700;letter-spacing:.3px;white-space:nowrap}
+.chips,.acts{display:flex;align-items:center;gap:5px}
+.acts{gap:0}
+.hbtn{display:inline-flex;align-items:center;gap:10px;height:46px;margin-left:6px;padding:0 16px;border-radius:4px;color:#fff;font-size:17px;font-weight:700;white-space:nowrap;box-shadow:0 2px 4px rgba(0,0,0,.12)}
+.hbtn svg{width:20px;height:20px}
+.hbtn.area{margin-left:12px;background:#1463f3;padding:0 16px}
+.hbtn.area b{min-width:28px;text-align:center;font-weight:800;letter-spacing:1px}
+.hbtn.close{background:#e8101a}
+.hbtn.member{background:linear-gradient(135deg,#7c4ff3,#5b2ee0)}
+.hbtn{transition:filter .15s,transform .15s}
+.hbtn:hover{filter:brightness(1.08)}
+.user{position:relative;margin-left:12px}
+.user>button{display:flex;align-items:center;gap:14px;height:48px;padding:0 14px;border:2px solid #e6e6ef;border-radius:6px;background:#fff}
+.user>button svg{width:20px;height:20px;color:#27273a}
+.menu{position:absolute;right:0;top:54px;min-width:200px;padding:6px;border:1px solid #e6e6ef;border-radius:8px;background:#fff;box-shadow:0 12px 30px rgba(30,30,70,.15)}
+.menu[hidden]{display:none}
+.menu .nm{padding:8px 10px 10px;border-bottom:1px solid #eee;font-size:13px;color:#8a8aa3}
+.menu .nm b{display:block;margin-top:2px;color:#2b2b40;font-size:15px}
+.menu button{display:flex;align-items:center;gap:8px;width:100%;margin-top:4px;padding:9px 10px;border-radius:6px;color:#d4141c;font-weight:700;text-align:left}
+.menu button:hover{background:#fdf0f0}
+
+/* ===== Isi ===== */
+.body{flex:1;min-height:0;display:grid;grid-template-columns:467px 1fr}
+.left{display:flex;flex-direction:column;min-height:0;overflow:auto;padding:18px 14px 14px;background:#f5f3fd}
+.left>:not(.info){flex-shrink:0}
+.lbl{display:block;margin-bottom:6px;font-size:11px;font-weight:700;letter-spacing:1.1px;text-transform:uppercase;color:#8d8fa3}
+.search{display:flex;height:45px;border:1.5px solid #8b4ff0;border-radius:6px;overflow:hidden;background:#fff;box-shadow:0 2px 6px rgba(139,79,240,.25)}
+.search input{flex:1;min-width:0;padding:0 13px;border:0;outline:0;font-size:14px;background:transparent}
+.search input::placeholder,.inp::placeholder{color:#c3c5d2}
+.search button{display:flex;align-items:center;gap:8px;padding:0 16px;background:#8b3df0;color:#fff;font-size:13px;font-weight:700}
+.search button svg{width:13px;height:13px}
+kbd{display:inline-block;padding:1px 5px;border-radius:3px;background:rgba(255,255,255,.28);font:700 9px/1.4 system-ui,sans-serif}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px 11px;margin-top:16px}
+.inp,.sel{width:100%;height:40px;padding:0 13px;border:1px solid #e3e3ee;border-radius:5px;background:#fff;outline:0;font-size:14px}
+.inp:focus,.sel:focus{border-color:#a98af5}
+.inp.plate{font-weight:700;letter-spacing:1px;text-transform:uppercase}
+.sel:has(option[value=""]:checked){color:#a3a5b8}
+.sel option{color:#3b3f5c}
+.sel option.opt-debit{color:#15803d;background:#e7f6ec;font-weight:600}
+.sel option.opt-kredit{color:#b91c1c;background:#fdecec;font-weight:600}
+.sel:has(option.opt-debit:checked){color:#15803d;background-color:#f1faf4;border-color:#9fd8b2;font-weight:600}
+.sel:has(option.opt-kredit:checked){color:#b91c1c;background-color:#fef4f4;border-color:#f1a9a9;font-weight:600}
+.sel{appearance:none;padding-right:34px;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0h10L5 6z' fill='%23a3a5b8'/%3E%3C/svg%3E") no-repeat right 12px center}
+.pay{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-top:12px}
+.pay .col{display:flex;flex-direction:column}
+.pay .col .sel{height:38px}
+.amount{display:flex;gap:7px;margin-top:6px}
+.amount .inp{flex:1;height:43px;text-align:right;font-weight:700}
+.exact{width:41px;height:43px;border-radius:5px;display:grid;place-items:center;background:#16a876;color:#fff}
+.exact svg{width:22px;height:22px}
+.rate{display:flex;flex-direction:column;justify-content:space-between;min-height:131px;padding:14px 14px 13px;border-radius:7px;color:#fff;background:linear-gradient(135deg,#6b3ff0,#7c4ff3 55%,#8f62f4)}
+.rate .t{font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;opacity:.85}
+.rate .v{margin-top:auto;text-align:right;font-size:22px;font-weight:800;line-height:1.2}
+.rate hr{width:100%;margin:10px 0 9px;border:0;border-top:1px solid rgba(255,255,255,.35)}
+.rate .ch{display:flex;align-items:center;justify-content:space-between}
+.rate .ch span{padding:3px 9px;border-radius:3px;border:1px solid rgba(255,255,255,.4);background:rgba(255,255,255,.18);font-size:10px;font-weight:700;letter-spacing:1px}
+.rate .ch b{font-size:18px;font-weight:800}
+.rate .ch b.minus{color:#ffd0d0}
+.info{flex:1;display:flex;flex-direction:column;min-height:180px;margin-top:15px;border:1px solid #e3e1f2;border-radius:6px;background:#fff;overflow:hidden}
+.info h4{margin:0;padding:8px;text-align:center;background:#e6e3fb;color:#7b3fe4;font-size:11px;font-weight:700;letter-spacing:1.2px}
+.info .in{flex:1;min-height:0;overflow:auto;padding:6px 14px 12px;font-size:13.5px}
+.info dl{display:grid;grid-template-columns:118px 1fr;margin:0}
+.info dt,.info dd{margin:0;padding:8px 0;border-bottom:1px dashed #ecebf5}
+.info dt{color:#8d8fa3}
+.info dd{font-weight:700;color:#2f3150;word-break:break-word}
+.info ul{margin:10px 0 0;padding-left:18px;color:#6d7090;font-size:12.5px;line-height:1.6}
+.info .msg{padding:26px 6px;text-align:center;color:#a3a5b8}
+.info .msg.err{color:#d4141c;font-weight:700}
+.mode[hidden]{display:none}
+.mode{display:inline-block;margin-left:6px;padding:1px 7px;border-radius:3px;background:#fff;color:#6b3ff0;font-size:9px;letter-spacing:.8px}
+
+.cam{display:grid;grid-template-columns:1fr 1fr;gap:1px;min-height:0;background:#1b1d26;overflow:hidden}
+.shot{display:flex;flex-direction:column;min-width:0;min-height:0;background:#0b0c11;color:#e9eaf2}
+.sh-head{display:flex;align-items:center;gap:12px;height:50px;padding:0 16px;background:#13151d;border-bottom:1px solid #1f2230}
+.sh-tag{display:inline-grid;place-items:center;min-width:46px;height:24px;padding:0 10px;border-radius:12px;font-size:11px;font-weight:800;letter-spacing:1.4px;color:#fff}
+.sh-tag.in{background:#16a876}.sh-tag.out{background:#f15a0b}
+.sh-meta{flex:1;min-width:0;line-height:1.25}
+.sh-meta b{display:block;font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sh-meta small{display:block;color:#8b8fa6;font-size:11.5px}
+.sh-live{display:inline-flex;align-items:center;gap:5px;margin-right:6px;color:#ff5a5a;font-weight:800;letter-spacing:.8px}
+.sh-live::before{content:"";width:7px;height:7px;border-radius:50%;background:#ff3b3b;box-shadow:0 0 0 3px rgba(255,59,59,.25);animation:blink 1.4s ease-in-out infinite}
+@keyframes blink{50%{opacity:.35}}
+.sh-count{padding:3px 9px;border-radius:4px;background:#1f2230;color:#b9bccd;font-size:11.5px;font-weight:700;font-variant-numeric:tabular-nums}
+.sh-stage{position:relative;flex:1;min-height:0;background:#000;overflow:hidden}
+.sh-stage img.main{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;cursor:zoom-in;animation:fade .35s ease}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+.sh-cap{position:absolute;left:0;right:0;bottom:0;padding:26px 16px 11px;background:linear-gradient(transparent,rgba(0,0,0,.78));font-size:13px;font-weight:700;pointer-events:none}
+.sh-nav{position:absolute;top:50%;width:40px;height:40px;margin-top:-20px;border-radius:50%;display:grid;place-items:center;background:rgba(15,16,24,.55);color:#fff;opacity:0;transition:opacity .2s,background .2s;backdrop-filter:blur(4px)}
+.sh-nav svg{width:20px;height:20px}
+.sh-nav.prev{left:12px}.sh-nav.next{right:12px}
+.sh-stage:hover .sh-nav{opacity:1}
+.sh-nav:hover{background:rgba(255,255,255,.22)}
+.sh-thumbs{display:flex;gap:8px;height:72px;padding:9px 12px;background:#13151d;border-top:1px solid #1f2230;overflow-x:auto;scrollbar-width:none}
+.sh-thumbs::-webkit-scrollbar{display:none}
+.sh-thumbs button{flex:none;width:94px;height:100%;padding:0;border-radius:5px;overflow:hidden;opacity:.5;outline:2px solid transparent;outline-offset:-2px;transition:opacity .2s}
+.sh-thumbs button:hover{opacity:.85}
+.sh-thumbs button.on{opacity:1;outline-color:#8b5cf6}
+.sh-thumbs img{width:100%;height:100%;object-fit:cover;display:block}
+.sh-empty{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:20px;text-align:center;color:#5d6175;font-size:13px}
+.sh-empty svg{width:46px;height:46px;opacity:.7}
+.sh-empty.err{color:#e2a24a}
+.spin{width:34px;height:34px;border-radius:50%;border:3px solid #2a2d3c;border-top-color:#8b5cf6;animation:rot .8s linear infinite}
+@keyframes rot{to{transform:rotate(360deg)}}
+.lightbox{position:fixed;inset:0;z-index:30;display:flex;flex-direction:column;background:rgba(5,6,10,.98)}
+.lightbox[hidden]{display:none}
+.lb-head{display:flex;align-items:center;gap:12px;padding:14px 20px;color:#fff;font-weight:700}
+.lb-head span{flex:1}
+.lb-head button{width:40px;height:40px;border-radius:50%;color:#fff;font-size:26px;line-height:1;background:rgba(255,255,255,.1)}
+.lb-stage{position:relative;flex:1;min-height:0}
+.lb-stage img{position:absolute;inset:0 70px 20px;width:calc(100% - 140px);height:calc(100% - 20px);object-fit:contain}
+.lb-stage .sh-nav{opacity:1;width:48px;height:48px;margin-top:-24px}
+
+/* ===== Tombol bawah ===== */
+.foot{flex:none;position:relative;z-index:4;display:grid;grid-template-columns:repeat(4,1fr);height:52px}
+.foot .short{display:none}
+.foot .k::before{content:" - "}
+.foot button{display:flex;align-items:center;justify-content:center;gap:6px;color:#fff;font-size:15px;font-weight:700;border-right:1px solid rgba(255,255,255,.5)}
+.foot button svg{width:15px;height:15px}
+.f1{background:linear-gradient(90deg,#9a12f2,#7d12d8)}
+.f3{background:linear-gradient(90deg,#1569f2,#1a4fd6)}
+.f4{background:linear-gradient(90deg,#f44d07,#d63c10)}
+.f6{background:#7ec8bf}
+.f6:not(:disabled){background:linear-gradient(90deg,#11a88a,#0b9076)}
+.foot button:disabled{cursor:not-allowed}
+.foot button.on{box-shadow:inset 0 -5px 0 rgba(255,255,255,.75)}
+
+/* ===== Modal & toast ===== */
+.back{position:fixed;inset:0;z-index:10;display:grid;place-items:center;padding:16px;background:rgba(20,16,50,.45)}
+.back[hidden]{display:none}
+.box{width:min(720px,100%);max-height:86vh;display:flex;flex-direction:column;border-radius:10px;background:#fff;box-shadow:0 30px 80px rgba(0,0,0,.35);overflow:hidden}
+.box header{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;background:#1463f3;color:#fff;font-weight:800}
+.box header button{color:#fff;font-size:22px;line-height:1}
+.box .tools{padding:12px 18px;border-bottom:1px solid #eee}
+.box .list{overflow:auto}
+.box table{width:100%;border-collapse:collapse;font-size:13.5px}
+.box th,.box td{padding:9px 18px;text-align:left;border-bottom:1px solid #f0f0f5}
+.box th{position:sticky;top:0;background:#f7f7fb;color:#8d8fa3;font-size:11px;letter-spacing:1px;text-transform:uppercase}
+.box tbody tr{cursor:pointer}
+.box tbody tr:hover{background:#f5f3fd}
+/* Scan QR kamera */
+.qr-box{width:min(520px,100%)}
+.qr-cams{display:flex;gap:6px;padding:12px 18px;border-bottom:1px solid #eee}
+.qr-cams button{flex:1;height:38px;border:1px solid #d9dbe8;border-radius:6px;font-weight:700;color:#5b5f7a;background:#fff}
+.qr-cams button[aria-pressed="true"]{border-color:#1463f3;background:#1463f3;color:#fff}
+.qr-stage{position:relative;aspect-ratio:4/3;max-height:60vh;background:#0b0d14;overflow:hidden}
+.qr-stage video{width:100%;height:100%;object-fit:cover;display:block}
+.qr-stage video.mirror{transform:scaleX(-1)}
+.qr-frame{position:absolute;inset:0;margin:auto;width:62%;aspect-ratio:1;max-height:80%;border:3px solid rgba(255,255,255,.9);border-radius:12px;box-shadow:0 0 0 2000px rgba(0,0,0,.35);pointer-events:none}
+.qr-msg{padding:12px 18px;min-height:46px;font-size:14px;color:#5b5f7a;text-align:center}
+.qr-msg.err{color:#d4141c;font-weight:700}
+.qr-foto{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:28px 18px;background:#f7f7fb;text-align:center;color:#5b5f7a;font-size:14px}
+.qr-foto[hidden],.qr-stage[hidden]{display:none}
+.qr-foto svg{width:54px;height:54px;color:#1463f3}
+.qr-foto button{display:inline-flex;align-items:center;gap:8px;height:48px;padding:0 22px;border-radius:8px;background:#1463f3;color:#fff;font-size:16px;font-weight:800;box-shadow:0 2px 6px rgba(20,99,243,.3)}
+.qr-foto button:disabled{opacity:.6;cursor:wait}
+.qr-foto .qr-live{display:inline-flex;align-items:center;gap:8px;height:48px;padding:0 22px;border-radius:8px;background:#11a88a;color:#fff;font-size:16px;font-weight:800;text-decoration:none}
+.qr-foto .qr-live[hidden]{display:none}
+.qr-foto small{max-width:380px;color:#8d8fa3;font-size:12.5px;line-height:1.5}
+.struk-box{width:min(420px,100%)}
+.struk-box header{background:#11a88a}
+.struk-body{overflow:auto;padding:18px 20px 6px;background:#f2f3f7}
+.gate-st{display:flex;align-items:center;gap:8px;margin-bottom:14px;padding:10px 12px;border-radius:8px;font-size:13.5px;font-weight:700}
+.gate-st svg{width:18px;height:18px}
+.gate-st[hidden]{display:none}
+.gate-st.ok{background:#e3f6f0;color:#0b7a62}.gate-st.warn{background:#fff1dc;color:#9a5a00}
+.paper{position:relative;margin:0 auto 14px;padding:18px 18px 22px;max-width:320px;background:#fff;color:#111;font:13px/1.45 "DejaVu Sans Mono",ui-monospace,Menlo,Consolas,monospace;box-shadow:0 6px 18px rgba(20,16,50,.12)}
+.paper::after{content:"";position:absolute;left:0;right:0;bottom:-8px;height:8px;background:linear-gradient(-45deg,transparent 6px,#fff 0) 0 0/12px 8px repeat-x,linear-gradient(45deg,transparent 6px,#fff 0) 0 0/12px 8px repeat-x}
+.paper h5{margin:0;text-align:center;font-size:15px}
+.paper .addr{text-align:center;font-size:11.5px;color:#555}
+.paper .ttl{margin:6px 0;text-align:center;font-weight:800;letter-spacing:.5px}
+.paper hr{margin:7px 0;border:0;border-top:1.5px dashed #999}
+.paper hr.solid{border-top:2px solid #111}
+.paper .r{display:flex;justify-content:space-between;gap:10px}
+.paper .r b{text-align:right;word-break:break-all}
+.paper .sec{margin:2px 0;font-weight:800}
+.paper .tot{font-size:17px;font-weight:800;margin:2px 0}
+.paper .ft{text-align:center;font-size:11.5px;color:#555}
+.struk-act{display:grid;grid-template-columns:1fr 1.4fr;gap:10px;padding:14px 20px 16px;border-top:1px solid #e8e8ef;background:#fff}
+.struk-act button{display:flex;align-items:center;justify-content:center;gap:8px;height:46px;border-radius:8px;font-weight:800}
+.struk-act .ghost{border:1.5px solid #d9dbe6;color:#4b4f6b}
+.struk-act .print{background:linear-gradient(135deg,#6b3ff0,#8f62f4);color:#fff}
+.struk-act .print:disabled{opacity:.6;cursor:wait}
+.struk-act kbd{background:rgba(0,0,0,.08)}
+.struk-act .print kbd{background:rgba(255,255,255,.25)}
+.struk-msg{min-height:18px;padding:0 20px 12px;background:#fff;font-size:12.5px;font-weight:700;text-align:center}
+.struk-msg.ok{color:#0b7a62}.struk-msg.err{color:#d4141c}
+/* Popup bayar QRIS (SDK): di atas modal lain (Tiket Manual / Hilang); hanya bisa ditutup lewat Batal */
+.qris-back{z-index:15;background:rgba(12,14,32,.62);backdrop-filter:blur(3px)}
+.qris-box{width:min(400px,100%);max-height:96vh;border-radius:18px}
+.qris-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;border-bottom:1px solid #eceef5;background:#fff}
+.qris-head .q{height:30px}.qris-head .g{height:40px}
+.qris-body{display:grid;gap:12px;justify-items:center;padding:16px 22px 14px;overflow:auto;background:linear-gradient(180deg,#f6f7fb 0,#fff 120px)}
+.qris-merchant{font-size:12px;font-weight:800;letter-spacing:1.4px;color:#8d8fa3;text-transform:uppercase;text-align:center}
+.qris-amt{display:grid;justify-items:center;line-height:1.1}
+.qris-amt small{font-size:11px;font-weight:700;color:#8d8fa3;letter-spacing:.5px}
+.qris-amt b{font-size:30px;font-weight:900;color:#1b1d33;letter-spacing:-.5px}
+.qris-qr{position:relative;display:grid;place-items:center;width:252px;height:252px;padding:10px;border:1px solid #e6e8f0;border-radius:14px;background:#fff;box-shadow:0 6px 24px rgba(30,30,70,.10)}
+.qris-qr img{width:232px;height:232px;image-rendering:pixelated}
+.qris-qr .spin{width:36px;height:36px;border:4px solid #e3e5ef;border-top-color:#e2231a;border-radius:50%;animation:qris-spin 1s linear infinite}
+@keyframes qris-spin{to{transform:rotate(360deg)}}
+.qris-st{display:inline-flex;align-items:center;gap:8px;min-height:30px;padding:6px 14px;border-radius:999px;background:#f1f2f8;color:#4b4f6b;font-size:12.5px;font-weight:800;text-align:center}
+.qris-st::before{content:"";flex:none;width:8px;height:8px;border-radius:50%;background:#f0a020;animation:qris-pulse 1.2s ease-in-out infinite}
+.qris-st.ok{background:#e5f6ef;color:#0b7a62}.qris-st.ok::before{background:#0b7a62;animation:none}
+.qris-st.err{background:#fdeceb;color:#d4141c}.qris-st.err::before{background:#d4141c;animation:none}
+@keyframes qris-pulse{50%{opacity:.25}}
+.qris-print{font-size:11.5px;color:#8d8fa3;text-align:center;line-height:1.5}
+.qris-hint{font-size:11px;color:#a3a6b8;text-align:center}
+.qris-act{grid-template-columns:1fr 1.3fr}
+.qris-act .print{background:linear-gradient(135deg,#e2231a,#f04b3c)}
+.qris-act .print svg{flex:none}
+/* Modal Tiket Manual / Tiket Hilang */
+.tm-box{width:min(760px,100%);max-height:94vh}
+.tm-box header{background:#1463f3}
+.tm-box.lost header{background:#f15a0b}
+.tm-body{overflow:auto;padding:14px 18px 4px}
+.tm-hint{margin:0 0 12px;color:#6d7090;font-size:13px;line-height:1.5}
+.tm-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 14px}
+.tm-grid .full{grid-column:1/-1}
+.tm-box [hidden]{display:none!important}
+.tm-box .inp:disabled{background:#f4f4f8;color:#6d7090;cursor:not-allowed}
+.tm-dt{display:grid;grid-template-columns:1.4fr 1fr;gap:8px}
+.tm-dt .inp{padding-right:8px}
+.tm-plate{display:flex;gap:8px}
+.tm-plate .inp{flex:1;min-width:0}
+.tm-plate button{flex:none;padding:0 14px;border-radius:5px;background:#f15a0b;color:#fff;font-size:13px;font-weight:700}
+.tm-found{padding:9px 12px;border-radius:6px;font-size:13px;font-weight:700;line-height:1.5}
+.tm-found.ok{background:#e3f6f0;color:#0b7a62}
+.tm-found.no{background:#fff1dc;color:#9a5a00}
+.tm-sum{display:grid;grid-template-columns:repeat(4,1fr);margin-top:14px;border:1px solid #e3e1f2;border-radius:8px;overflow:hidden}
+.tm-sum div{display:flex;flex-direction:column;gap:3px;padding:10px 12px;border-right:1px solid #e3e1f2;background:#faf9ff}
+.tm-sum div:last-child{border-right:0}
+.tm-sum span{color:#8d8fa3;font-size:10.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase}
+.tm-sum b{color:#2f3150;font-size:16px;font-weight:800;font-variant-numeric:tabular-nums}
+.tm-sum .tot{background:linear-gradient(135deg,#6b3ff0,#8f62f4)}
+.tm-sum .tot span{color:rgba(255,255,255,.85)}
+.tm-sum .tot b{color:#fff;font-size:20px}
+.tm-rincian{min-height:18px;padding:6px 2px 0;color:#6d7090;font-size:12px;line-height:1.5}
+.tm-pay{display:grid;grid-template-columns:1fr 1.2fr .8fr;gap:10px 14px;margin-top:8px;align-items:end}
+.tm-pay .amount{display:flex}
+.tm-pay .amount .inp{height:40px}
+.tm-pay .exact{height:40px;width:40px}
+.tm-pay .inp[readonly]{background:#f4f4f8}
+.tm-kembali{display:flex;flex-direction:column}
+.tm-kembali b{display:flex;align-items:center;justify-content:flex-end;height:40px;padding:0 12px;border-radius:5px;background:#e3f6f0;color:#0b7a62;font-size:16px;font-weight:800;font-variant-numeric:tabular-nums}
+.tm-kembali b.minus{background:#fdecec;color:#d4141c}
+.tm-err{min-height:20px;padding:8px 0 6px;color:#d4141c;font-size:13px;font-weight:700}
+.tm-act{display:flex;gap:10px;justify-content:flex-end;padding:12px 18px 14px;border-top:1px solid #eee}
+.tm-act button{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:46px;padding:0 18px;border-radius:8px;font-weight:800}
+.tm-act .ghost{border:1.5px solid #d9dbe6;color:#4b4f6b}
+.tm-act .go{background:linear-gradient(135deg,#11a88a,#0b9076);color:#fff}
+.tm-act .go:disabled{opacity:.5;cursor:not-allowed}
+.tm-act kbd{background:rgba(0,0,0,.08)}
+.tm-act .go kbd{background:rgba(255,255,255,.25)}
+/* Modal Closing */
+.cl-box{width:min(560px,100%);border-radius:14px}
+.cl-head{display:flex;align-items:center;gap:14px;padding:16px 18px!important;background:linear-gradient(135deg,#b30d17,#e8101a 60%,#f2434b)!important}
+.cl-hicon{display:grid;place-items:center;flex:none;width:42px;height:42px;border-radius:11px;background:rgba(255,255,255,.18);box-shadow:inset 0 0 0 1px rgba(255,255,255,.25)}
+.cl-hicon svg{width:22px;height:22px}
+.cl-htx{flex:1;min-width:0;line-height:1.25}
+.cl-htx b{display:block;font-size:17px;font-weight:800}
+.cl-htx small{display:block;margin-top:2px;font-size:12.5px;font-weight:600;opacity:.85}
+.cl-body{overflow:auto;padding:16px 18px 0}
+.cl-meta{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.cl-meta>span{display:flex;align-items:center;gap:9px;min-width:0;padding:9px 10px;border:1px solid #ebe8f7;border-radius:10px;background:#faf9ff}
+.cl-meta svg{flex:none;width:30px;height:30px;padding:6px;border-radius:8px;background:#efe9ff;color:#6b3ff0}
+.cl-meta em{display:block;color:#8d8fa3;font-size:10px;font-style:normal;font-weight:700;letter-spacing:.9px;text-transform:uppercase}
+.cl-meta b{display:block;color:#2f3150;font-size:14px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cl-cash{display:block;margin-top:16px}
+.cl-cash-box{display:flex;align-items:center;height:62px;border:1.5px solid #ddd8f3;border-radius:12px;background:#fff;overflow:hidden;transition:border-color .15s,box-shadow .15s}
+.cl-cash-box:focus-within{border-color:#8b5cf6;box-shadow:0 0 0 4px rgba(139,92,246,.14)}
+.cl-cash-box i{display:grid;place-items:center;align-self:stretch;padding:0 16px;background:#f5f3fd;color:#6b3ff0;font-size:16px;font-style:normal;font-weight:800;border-right:1px solid #ebe8f7}
+.cl-cash-box input{flex:1;min-width:0;height:100%;padding:0 16px;border:0;outline:0;background:transparent;text-align:right;font-size:26px;font-weight:800;color:#2f3150;font-variant-numeric:tabular-nums}
+.cl-cash-box input::placeholder{color:#c9cbd8}
+.cl-note{display:flex;gap:7px;margin:8px 2px 0;color:#7d8099;font-size:12px;line-height:1.5}
+.cl-note svg{flex:none;width:15px;height:15px;margin-top:1px;color:#8b5cf6}
+.cl-pass{display:block;margin-top:16px}
+.cl-pw{position:relative;display:block}
+.cl-pw .inp{height:48px;padding:0 46px 0 42px;border-radius:10px;border-width:1.5px;font-size:15px}
+.cl-pw .inp:focus{border-color:#8b5cf6;box-shadow:0 0 0 4px rgba(139,92,246,.14)}
+.cl-lock{position:absolute;left:13px;top:50%;width:18px;height:18px;margin-top:-9px;color:#8b3df0;pointer-events:none}
+.cl-eye{position:absolute;right:5px;top:50%;width:38px;height:38px;margin-top:-19px;display:grid;place-items:center;border-radius:8px;color:#6d7090}
+.cl-eye:hover{background:#f5f3fd;color:#6b3ff0}
+.cl-eye svg{width:19px;height:19px}
+.cl-eye svg[hidden]{display:none}
+.cl-hint{display:flex;gap:16px;flex-wrap:wrap;margin:14px 2px 0;padding-top:12px;border-top:1px dashed #e6e3f3;color:#7d8099;font-size:12px}
+.cl-hint b{color:#3b3f5c}
+.cl-act{display:flex;align-items:center;gap:10px;margin-top:14px;padding:14px 18px;border-top:1px solid #eceaf5;background:#f8f7fc}
+.cl-act button{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:46px;padding:0 18px;border-radius:10px;font-size:15px;font-weight:800;white-space:nowrap;transition:background .15s,border-color .15s,box-shadow .15s,color .15s}
+.cl-act button svg{width:18px;height:18px}
+.cl-act button:disabled{opacity:.55;cursor:wait}
+.cl-cancel{margin-right:auto;border:1.5px solid #dcd9ea;background:#fff;color:#4b4f6b}
+.cl-cancel:hover{border-color:#c4c0dc;color:#2f3150}
+.cl-global{border:1.5px solid #e8101a;background:#fff;color:#d10f19}
+.cl-global:hover{background:#fff4f4}
+.cl-global.confirm{background:#e8101a;color:#fff;box-shadow:0 6px 16px -6px rgba(232,16,26,.6)}
+.cl-shift{background:linear-gradient(135deg,#1569f2,#1a4fd6);color:#fff;box-shadow:0 6px 16px -6px rgba(21,105,242,.6)}
+.cl-shift:hover{box-shadow:0 8px 20px -6px rgba(21,105,242,.75)}
+/* Akun kasir (header) */
+.user>button.ku-trigger{display:flex;align-items:center;gap:10px;height:48px;padding:4px 12px 4px 4px;border:0;border-radius:999px;background:transparent;transition:background .15s}
+.user>button.ku-trigger:hover,.user.open>button.ku-trigger{background:#f3f0fc}
+.ku-photo{position:relative;flex:none;aspect-ratio:1/1;min-width:0;display:grid;place-items:center;width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#7c4ff3,#5b2ee0);color:#fff;font-size:15px;font-weight:800;box-shadow:0 0 0 2px #fff,0 0 0 3px #ddd6f5}
+.ku-photo img{position:absolute;inset:0;display:block;width:100%;height:100%;max-width:none;aspect-ratio:1/1;border-radius:50%;object-fit:cover;object-position:center}
+.ku-trigger .ku-photo::after{content:"";position:absolute;right:-1px;bottom:-1px;width:11px;height:11px;border:2px solid #fff;border-radius:50%;background:#22b573}
+.ku-text{display:grid;line-height:1.2;text-align:left}
+.ku-text b{max-width:150px;color:#1f2140;font-size:14px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ku-text small{color:#8a8ca6;font-size:12px}
+.user>button.ku-trigger svg.ku-caret{width:14px;height:14px;color:#9a9cb3;transition:transform .2s}
+.user.open svg.ku-caret{transform:rotate(180deg)}
+.menu.ku-menu{top:58px;width:290px;padding:0;border:1px solid #e8e4f6;border-radius:16px;overflow:hidden;box-shadow:0 24px 48px -20px rgba(40,20,110,.35)}
+.ku-head{display:flex;align-items:center;gap:13px;padding:18px;background:linear-gradient(135deg,#4a22c9,#6b3ff0 60%,#8f62f4);color:#fff}
+.ku-photo.big{width:54px;height:54px;font-size:19px;box-shadow:0 0 0 3px rgba(255,255,255,.3)}
+.ku-id{display:grid;gap:1px;min-width:0}
+.ku-id b{font-size:16px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ku-id span{color:rgba(255,255,255,.75);font-size:12px}
+.ku-id em{justify-self:start;margin-top:4px;padding:2px 9px;border-radius:999px;background:rgba(255,255,255,.2);font-size:11px;font-style:normal;font-weight:800}
+.ku-list{display:grid;gap:2px;padding:8px}
+.menu .ku-item{display:flex;align-items:center;gap:12px;width:100%;margin:0;padding:9px 10px;border-radius:11px;color:#1f2140;font-weight:400;text-align:left;cursor:pointer}
+.menu .ku-item:hover{background:#f5f2fd}
+.ku-item>svg{flex:none;width:36px;height:36px;padding:8px;border-radius:10px;background:#f0ebff;color:#6b3ff0}
+.ku-item b{display:block;font-size:13.5px;font-weight:800}
+.ku-item small{display:block;margin-top:1px;color:#8a8ca6;font-size:11.5px}
+.ku-foot{padding:8px 12px 12px;border-top:1px solid #f0eef7}
+.menu .ku-foot button{justify-content:center;height:40px;margin:0;border:1px solid #f3cccc;border-radius:10px;color:#c8101a;font-weight:800}
+.menu .ku-foot button:hover{background:#fdf1f1}
+.menu .ku-foot button svg{flex:none;width:17px;height:17px}
+.pin-box{width:min(460px,100%)}
+.pin-head{background:linear-gradient(135deg,#4a22c9,#6b3ff0 60%,#8f62f4)!important}
+.pin-box .cl-pass:first-of-type{margin-top:0}
+@media (max-width:600px){.ku-text,.user>button.ku-trigger svg.ku-caret{display:none}.user>button.ku-trigger{padding:3px}}
+
+/* Modal Member (langganan) */
+.mb-box{width:min(600px,100%)}
+.mb-box [hidden]{display:none!important}
+.mb-head{background:linear-gradient(135deg,#4a22c9,#6b3ff0 60%,#8f62f4)!important}
+.mb-search{display:flex;align-items:center;height:48px;border:1.5px solid #ddd8f3;border-radius:12px;background:#fff;overflow:hidden;transition:border-color .15s,box-shadow .15s}
+.mb-search:focus-within{border-color:#8b5cf6;box-shadow:0 0 0 4px rgba(139,92,246,.14)}
+.mb-search>svg{flex:none;width:19px;height:19px;margin:0 4px 0 14px;color:#6b3ff0}
+.mb-search input{flex:1;min-width:0;height:100%;padding:0 10px;border:0;outline:0;font-size:15px;background:transparent}
+.mb-search button{align-self:stretch;padding:0 18px;background:#6b3ff0;color:#fff;font-weight:800}
+.mb-list{display:grid;gap:6px;margin-top:10px;max-height:240px;overflow:auto}
+.mb-item{display:flex;align-items:center;gap:12px;width:100%;padding:10px 12px;border:1px solid #e6e3f3;border-radius:10px;background:#fff;text-align:left}
+.mb-item:hover{border-color:#8b5cf6;background:#f8f5ff}
+.mb-item div{flex:1;min-width:0}
+.mb-item b{display:block;font-size:14px}
+.mb-item small{display:block;color:#7d8099;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mb-st{flex:none;padding:3px 9px;border-radius:999px;font-size:11px;font-weight:800;background:#e3f6f0;color:#0b7a62}
+.mb-st.soon{background:#fff1dc;color:#9a5a00}.mb-st.exp,.mb-st.off{background:#fdecec;color:#c8101a}.mb-st.pend{background:#eef2fb;color:#4a83d8}
+.mb-card{margin-top:12px;padding:14px 16px;border:1px solid #e6e0fa;border-radius:12px;background:linear-gradient(135deg,#f8f5ff,#fff)}
+.mb-card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.mb-card-top b{display:block;color:#1f2a44;font-size:17px;font-weight:800}
+.mb-card-top small{color:#7d8099;font-size:12.5px}
+.mb-card dl{display:grid;grid-template-columns:110px 1fr;gap:6px 10px;margin:12px 0 0;font-size:13px}
+.mb-card dt{color:#8d8fa3}
+.mb-card dd{margin:0;color:#2f3150;font-weight:700}
+.mb-plate{display:inline-block;margin:0 4px 4px 0;padding:2px 8px;border-radius:5px;background:#1f2a44;color:#fff;font:700 12px/1.6 ui-monospace,Menlo,monospace;letter-spacing:.6px}
+.mb-change{padding:0;color:#6b3ff0;font-size:12.5px;font-weight:700}
+.mb-grid{display:grid;grid-template-columns:1fr 1.2fr .8fr;gap:10px 12px;margin-top:12px;align-items:end}
+.mb-grid .amount{display:flex}
+.mb-grid .amount .inp{height:44px}
+.mb-grid .exact{height:44px;width:44px}
+.mb-grid .sel{height:44px}
+.mb-grid .inp[readonly]{background:#f4f4f8}
+.cl-act .mb-go{background:linear-gradient(135deg,#7c4ff3,#5b2ee0);box-shadow:0 6px 16px -6px rgba(107,63,240,.6)}
+.cl-act .mb-go:hover{box-shadow:0 8px 20px -6px rgba(107,63,240,.75)}
+.mb-ket{display:block;margin-top:12px}
+.cl-cash-box.locked{background:#f7f6fc;border-color:#e6e3f3}
+.cl-cash-box.locked input{color:#4b4f6b;cursor:not-allowed}
+.mb-tarif-info b{color:#3b3f5c}
+.mb-baru{margin-top:12px;padding:10px 12px;border-radius:10px;background:#e9f7f2;color:#0b7a62;font-size:13px;font-weight:700}
+.mb-baru span{display:block;color:#3d8f78;font-size:11px;font-weight:800;letter-spacing:.8px;text-transform:uppercase}
+.mb-ket .inp{height:42px}
+.toast{position:fixed;left:50%;top:90px;z-index:20;transform:translateX(-50%);max-width:min(560px,92vw);padding:12px 18px;border-radius:8px;color:#fff;font-weight:700;box-shadow:0 12px 30px rgba(0,0,0,.25)}
+.toast[hidden]{display:none}
+.toast.ok{background:#11a88a}.toast.warn{background:#e58a00}.toast.err{background:#d4141c}
+
+/* ===== Tema v2: tampilan lebih rapi (warna & bentuk; tata letak tetap) ===== */
+body{background:#f4f2fb}
+.top{height:72px;border-top:0;box-shadow:0 1px 0 #ebe8f5,0 6px 18px -10px rgba(30,20,80,.18)}
+.pill{height:32px;padding:0 12px;border-radius:9px;background:#f3efff;border:1px solid #e4dbff;color:#4a22c9;font-size:12.5px;font-weight:800;letter-spacing:.2px}
+.pill .pl{color:#8a78c9;font-weight:700}
+.pill.jam{background:#1f2140;border-color:#1f2140;color:#fff;font-variant-numeric:tabular-nums}
+.pill.jam .pl{color:#a9acd0}
+.hbtn{height:44px;border-radius:10px;font-size:15.5px;box-shadow:0 8px 16px -10px rgba(20,20,60,.55)}
+.hbtn.area{background:linear-gradient(135deg,#2f6bff,#1446d6)}
+.hbtn.close{background:linear-gradient(135deg,#f0313a,#c9101a)}
+.hbtn.area b{padding:2px 8px;border-radius:6px;background:rgba(255,255,255,.18);letter-spacing:.5px}
+.user>button{height:44px;border:1.5px solid #e6e3f3;border-radius:10px}
+.user>button:hover{background:#f8f7fc}
+.left{background:#f4f2fb;padding:18px 16px 16px}
+.lbl{color:#8a8ca6;letter-spacing:1px}
+.search{height:48px;border:1.5px solid #8b5cf6;border-radius:11px;box-shadow:0 8px 20px -12px rgba(107,63,240,.55)}
+.search input{font-size:15px;padding:0 15px}
+.search button{padding:0 18px;background:linear-gradient(135deg,#7c4ff3,#5b2ee0);font-size:14px}
+.inp,.sel{height:42px;border:1.5px solid #e4e1f0;border-radius:9px}
+.inp:focus,.sel:focus{border-color:#8b5cf6;box-shadow:0 0 0 3px rgba(139,92,246,.13)}
+.amount .inp{height:44px}
+.exact{width:44px;height:44px;border-radius:9px;background:linear-gradient(135deg,#16b182,#0d9468);box-shadow:0 6px 14px -8px rgba(13,148,104,.8)}
+.rate{position:relative;overflow:hidden;border-radius:13px;background:linear-gradient(140deg,#5b2ee0,#7c4ff3 55%,#9b72f6);box-shadow:0 14px 28px -16px rgba(91,46,224,.8)}
+.rate::before{content:"";position:absolute;right:-38px;top:-38px;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,.08)}
+.rate>*{position:relative}
+.rate .v{font-size:26px;letter-spacing:-.3px}
+.rate .ch span{border-radius:5px}
+.info{border:1px solid #e6e3f3;border-radius:13px;box-shadow:0 10px 24px -20px rgba(30,20,80,.4)}
+.info h4{padding:10px;background:linear-gradient(90deg,#efe9ff,#f6f2ff);color:#5b2ee0;border-bottom:1px solid #e6e3f3}
+.cam{gap:10px;padding:10px;background:#0b0c12}
+.shot{border:1px solid #1d2030;border-radius:13px;overflow:hidden}
+.sh-head{height:52px;background:linear-gradient(180deg,#171a26,#12141e);border-bottom:1px solid #1d2030}
+.sh-tag{border-radius:7px}
+.sh-stage{background:radial-gradient(circle at 50% 45%,#11131c,#06070b 70%)}
+.sh-empty svg{width:34px;height:34px;padding:16px;box-sizing:content-box;border-radius:50%;background:#151826;border:1px solid #22263a;opacity:1;color:#6b7090}
+.sh-empty.err svg{color:#e2a24a;border-color:#4a3a1f}
+.foot{height:56px;box-shadow:0 -6px 18px -10px rgba(20,20,60,.35)}
+.foot button{font-size:15.5px;letter-spacing:.2px;border-right:1px solid rgba(255,255,255,.18);transition:filter .15s}
+.foot button:not(:disabled):hover{filter:brightness(1.07)}
+.foot .k::before{content:none}
+.foot .k{margin-left:4px;padding:2px 7px;border-radius:5px;background:rgba(255,255,255,.22);font-size:11px;font-weight:800;letter-spacing:.5px}
+.f1{background:linear-gradient(135deg,#8b3df0,#6d28d9)}
+.f3{background:linear-gradient(135deg,#2f6bff,#1446d6)}
+.f4{background:linear-gradient(135deg,#f5661f,#d9480f)}
+.f6{background:#a9d9cf}
+.f6:not(:disabled){background:linear-gradient(135deg,#16b182,#0d9468)}
+.foot button:disabled .k{background:rgba(255,255,255,.3)}
+
+/* ===== Responsif ===== */
+/* Laptop kecil / tablet landscape besar */
+@media (max-width:1366px){
+  .top{padding:0 16px}
+  .hbtn{font-size:15px;padding:0 13px;height:42px}
+  .body{grid-template-columns:400px 1fr}
+}
+/* Tablet landscape: foto IN & OUT ditumpuk atas-bawah */
+@media (max-width:1180px){
+  .top{height:64px;gap:8px}
+  .top .logo{height:48px}
+  .pill{height:28px;font-size:12px;padding:0 10px}
+  .hbtn{height:40px;font-size:14px;gap:8px;padding:0 12px;margin-left:6px}
+  .hbtn.area{margin-left:4px}
+  .user{margin-left:6px}.user>button{height:42px;gap:10px;padding:0 10px}
+  .body{grid-template-columns:360px 1fr}
+  .left{padding:14px 12px 12px}
+  .row{margin-top:12px}
+  .cam{grid-template-columns:1fr;grid-template-rows:1fr 1fr}
+  .sh-head{height:42px}
+  .sh-thumbs{height:58px;padding:7px 10px}
+  .sh-thumbs button{width:76px}
+}
+@media (max-width:1180px) and (max-height:700px){
+  .info{min-height:120px}
+}
+/* Tablet portrait & HP: satu kolom, halaman bisa di-scroll, tombol aksi menempel di bawah */
+@media (max-width:900px){
+  body{display:block;height:auto;min-height:100%;overflow:auto;padding-bottom:calc(60px + env(safe-area-inset-bottom));background:#f5f3fd}
+  .top{position:sticky;top:0;flex-wrap:wrap;height:auto;padding:10px 14px;gap:10px 8px}
+  .top .logo{height:44px}
+  .chips{order:2;margin-left:auto}
+  .user{order:3;margin-left:0}
+  .acts{order:4;flex-basis:100%;display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+  .hbtn{justify-content:center;height:42px;margin:0!important;padding:0 10px;font-size:14.5px}
+  .body{display:block}
+  .left{display:block;overflow:visible;padding:16px 14px}
+  .info{min-height:0}
+  .info .in{overflow:visible}
+  .cam{grid-template-columns:1fr 1fr;grid-template-rows:none;gap:12px;padding:0 14px 16px;background:none}
+  .shot{border-radius:10px;overflow:hidden;box-shadow:0 6px 18px rgba(20,16,50,.18)}
+  .sh-stage{flex:none;aspect-ratio:4/3}
+  .sh-nav{opacity:1;width:34px;height:34px;margin-top:-17px}
+  .foot{position:fixed;left:0;right:0;bottom:0;height:calc(60px + env(safe-area-inset-bottom));padding-bottom:env(safe-area-inset-bottom);background:#fff;box-shadow:0 -4px 16px rgba(20,16,50,.12)}
+  .foot button{flex-direction:column;gap:3px;font-size:12.5px;border-right:1px solid rgba(255,255,255,.35)}
+  .foot button svg{width:19px;height:19px}
+  .foot .k{display:none}
+  .toast{top:auto;bottom:calc(76px + env(safe-area-inset-bottom))}
+}
+/* HP portrait */
+@media (max-width:600px){
+  .top{padding:8px 12px}
+  .top .logo{height:38px}
+  .chips{flex-direction:column;align-items:flex-end;gap:3px}
+  .pill{height:20px;padding:0 8px;font-size:10.5px;letter-spacing:.2px}
+  .pill .pl{display:none}
+  .pill.jam{display:none}
+  .user>button{height:38px;padding:0 8px;gap:6px}
+  .acts{gap:6px}
+  .hbtn{height:40px;font-size:13px;gap:6px;padding:0 6px}
+  .hbtn svg{width:17px;height:17px}
+  .hbtn.area b{min-width:0}
+  .left{padding:14px 12px}
+  .search{height:48px}
+  .search button{padding:0 14px}
+  .search kbd{display:none}
+  .row{gap:10px}
+  .inp,.sel{height:44px;font-size:15px}
+  .pay .col .sel{height:44px}
+  .amount .inp{height:46px}.exact{height:46px;width:46px}
+  .rate{min-height:142px}
+  .rate .v{font-size:26px}
+  .cam{grid-template-columns:1fr;padding:0 12px 14px}
+  .sh-stage{aspect-ratio:16/10}
+  .box{max-height:92vh}
+  .box th:nth-child(4),.box td:nth-child(4){display:none}
+  .box th,.box td{padding:9px 12px}
+  .lb-stage img{inset:0 0 20px;width:100%}
+  .tm-grid{grid-template-columns:1fr}
+  .tm-sum{grid-template-columns:1fr 1fr}
+  .tm-sum div:nth-child(2){border-right:0}
+  .tm-sum div:nth-child(-n+2){border-bottom:1px solid #e3e1f2}
+  .tm-pay{grid-template-columns:1fr 1fr}
+  .tm-pay label:first-child{grid-column:1/-1}
+  .tm-act button{flex:1}
+  .tm-act kbd{display:none}
+  .cl-meta{grid-template-columns:1fr 1fr}
+  .cl-meta>span:last-child{grid-column:1/-1}
+  .cl-act{flex-wrap:wrap}
+  .cl-act .cl-shift,.cl-act .cl-global{flex:1}
+  .cl-cancel{order:3;flex-basis:100%;margin-right:0}
+  .mb-grid{grid-template-columns:1fr 1fr}
+  .mb-grid label:first-child{grid-column:1/-1}
+  .foot .full{display:none}
+  .foot .short{display:inline}
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <img class="logo" src="/assets/logo.png" alt="Hybrid Parking">
+  <div class="chips">
+    <span class="pill"><span class="pl">Perangkat :&nbsp;</span><span id="device">-</span></span>
+    <span class="pill"><span class="pl">Tgl Buku :&nbsp;</span><span id="eod">-</span></span>
+    <span class="pill jam"><span id="jamNow">--:--</span></span>
+  </div>
+  <div class="acts">
+  <button class="hbtn area" id="btnArea" type="button" title="Kendaraan di dalam">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5v2M15 11v2M15 17v2M5 5h14a2 2 0 0 1 2 2v3a2 2 0 0 0 0 4v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-3a2 2 0 0 0 0-4V7a2 2 0 0 1 2-2"/></svg>
+    <b id="areaCount">**</b><span class="tx">Di Area</span>
+  </button>
+  <button class="hbtn close" id="btnClosing" type="button">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 7h8M8 11h8"/></svg>
+    <span class="tx">Tutup Kasir</span>
+  </button>
+  <button class="hbtn member" id="btnMember" type="button">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="7" r="4"/><path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2M16 3.13a4 4 0 0 1 0 7.75M21 21v-2a4 4 0 0 0-3-3.85"/></svg>
+    <span class="tx">Member</span>
+  </button>
+  </div>
+  <div class="user">
+    <button type="button" id="btnUser" class="ku-trigger" aria-label="Akun kasir" aria-haspopup="true">
+      <span class="ku-photo" data-ku-avatar><span>K</span></span>
+      <span class="ku-text"><b data-ku-nama>-</b><small>Kasir</small></span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="ku-caret"><path d="M6 9l6 6 6-6"/></svg>
+    </button>
+    <div class="menu ku-menu" id="userMenu" hidden>
+      <div class="ku-head">
+        <span class="ku-photo big" data-ku-avatar><span>K</span></span>
+        <div class="ku-id"><b id="nama">-</b><span data-ku-username>@-</span><em>Kasir</em></div>
+      </div>
+      <div class="ku-list">
+        <label class="ku-item" for="kuFoto"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8a2 2 0 0 1 2-2h2l1.5-2h7L17 6h2a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><circle cx="12" cy="13" r="4"/></svg><span><b>Ganti foto</b><small>PNG, JPG, atau WEBP maks. 2 MB</small></span></label>
+        <button type="button" class="ku-item" id="btnPin"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="15" r="4"/><path d="M10.85 12.15L19 4M18 5l2 2M15 8l2 2"/></svg><span><b>Ganti PIN</b><small>PIN untuk login kasir</small></span></button>
+      </div>
+      <div class="ku-foot"><button type="button" id="logout"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>Keluar</button></div>
+      <input type="file" id="kuFoto" accept="image/png,image/jpeg,image/webp" hidden>
+    </div>
+  </div>
+</header>
+
+<div class="body">
+  <section class="left">
+    <label class="lbl" for="q">Scan: No. Tiket, Plat Nomor, ID Member</label>
+    <form class="search" id="formCari">
+      <input id="q" placeholder="No. Tiket / Plat Nomor / ID Member" autocomplete="off" autofocus>
+      <button type="submit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>Cari <kbd>F7</kbd></button>
+    </form>
+
+    <div class="row">
+      <label><span class="lbl">Plat Nomor</span><input class="inp plate" id="nopol" placeholder="B 1234 ABC" autocomplete="off"></label>
+      <label><span class="lbl">Jenis Kendaraan</span><select class="sel" id="jenis"><option value="" disabled hidden selected>Pilih jenis kendaraan</option></select></label>
+    </div>
+
+    <div class="pay">
+      <div class="col">
+        <label><span class="lbl">Metode Bayar</span><select class="sel" id="metode"></select></label>
+        <span class="lbl" style="margin-top:16px">Jumlah Bayar</span>
+        <div class="amount" style="margin-top:0">
+          <input class="inp" id="bayar" inputmode="numeric" placeholder="0" autocomplete="off">
+          <button class="exact" id="btnPas" type="button" title="Uang pas" aria-label="Uang pas"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M14.8 9A2 2 0 0 0 13 8h-2a2 2 0 0 0 0 4h2a2 2 0 0 1 0 4h-2a2 2 0 0 1-1.8-1M12 6v2m0 8v2"/></svg></button>
+        </div>
+      </div>
+      <div class="rate">
+        <div class="t">Tarif<span class="mode" id="modeTag" hidden></span></div>
+        <div class="v" id="rate">-</div>
+        <hr>
+        <div class="ch"><span>KEMBALIAN</span><b id="kembali">0</b></div>
+      </div>
+    </div>
+
+    <div class="info">
+      <h4>INFORMASI PARKIR</h4>
+      <div class="in" id="info"></div>
+    </div>
+  </section>
+  <section class="cam">
+    <div class="shot" id="shotIn"></div>
+    <div class="shot" id="shotOut"></div>
+  </section>
+</div>
+
+<nav class="foot">
+  <button class="f1" id="btnScan" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M4 7V5a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v2M4 17v2a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-2M4 12h16"/></svg><span class="full">Scan QR</span><span class="short">Scan QR</span><span class="k">F1</span></button>
+  <button class="f3" id="btnManual" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5v2M15 11v2M15 17v2M5 5h14a2 2 0 0 1 2 2v3a2 2 0 0 0 0 4v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-3a2 2 0 0 0 0-4V7a2 2 0 0 1 2-2"/></svg><span class="full">Tiket Manual</span><span class="short">Manual</span><span class="k">F3</span></button>
+  <button class="f4" id="btnLost" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v4M12 16h.01"/></svg><span class="full">Tiket Hilang</span><span class="short">Hilang</span><span class="k">F4</span></button>
+  <button class="f6" id="btnDone" type="button" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg><span class="full">Selesai &amp; Buka Gate</span><span class="short">Selesai</span><span class="k">F6</span></button>
+</nav>
+
+<div class="back" id="qrModal" hidden>
+  <div class="box qr-box" role="dialog" aria-modal="true" aria-labelledby="qrTitle">
+    <header><span id="qrTitle">Scan QR Tiket</span><button type="button" data-close aria-label="Tutup">×</button></header>
+    <div class="qr-cams"><button type="button" data-cam="environment" aria-pressed="true">Kamera Belakang</button><button type="button" data-cam="user" aria-pressed="false">Kamera Depan</button></div>
+    <div class="qr-stage" id="qrStage"><video id="qrVideo" playsinline muted></video><div class="qr-frame"></div></div>
+    <div class="qr-foto" id="qrFoto" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8a2 2 0 0 1 2-2h2l1.5-2h5L16 6h2a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/><circle cx="12" cy="13" r="3.5"/></svg><span>Foto QR code tiket dari dekat dan pastikan tidak buram</span><button type="button" id="qrAmbil">Ambil Foto QR</button><a class="qr-live" id="qrLive" hidden>Pakai Scan Langsung</a><small id="qrLiveInfo" hidden>Scan langsung membuka kasir lewat HTTPS. Pertama kali di HP ini, browser memberi peringatan sertifikat: pilih Lanjutan/Advanced lalu Lanjutkan ke situs.</small></div>
+    <input type="file" id="qrFile" accept="image/*" capture="environment" hidden>
+    <div class="qr-msg" id="qrMsg">Arahkan QR code tiket ke dalam kotak</div>
+  </div>
+</div>
+<div class="back" id="areaModal" hidden>
+  <div class="box" role="dialog" aria-modal="true" aria-labelledby="areaTitle">
+    <header><span id="areaTitle">Kendaraan di Area</span><button type="button" data-close aria-label="Tutup">×</button></header>
+    <div class="tools"><input class="inp" id="areaCari" placeholder="Cari no. tiket / nopol" autocomplete="off"></div>
+    <div class="list"><table><thead><tr><th>No. Tiket</th><th>Nopol</th><th>Jenis</th><th>Gate</th><th>Masuk</th></tr></thead><tbody id="areaRows"></tbody></table></div>
+  </div>
+</div>
+<div class="lightbox" id="lightbox" hidden role="dialog" aria-modal="true">
+  <div class="lb-head"><span id="lbTitle"></span><button type="button" id="lbClose" aria-label="Tutup">×</button></div>
+  <div class="lb-stage"><img id="lbImg" alt=""><button class="sh-nav prev" type="button" data-lb="-1" aria-label="Sebelumnya"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button><button class="sh-nav next" type="button" data-lb="1" aria-label="Berikutnya"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button></div>
+</div>
+<div class="back" id="strukModal" hidden>
+  <div class="box struk-box" role="dialog" aria-modal="true" aria-labelledby="strukTitle">
+    <header><span id="strukTitle">Pembayaran Berhasil</span><button type="button" data-close aria-label="Tutup">×</button></header>
+    <div class="struk-body"><div class="gate-st" id="gateSt"></div><div class="paper" id="strukPaper"></div></div>
+    <div class="struk-act">
+      <button type="button" class="ghost" data-close>Tutup <kbd>Esc</kbd></button>
+      <button type="button" class="print" id="btnCetak"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3h12v6M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg><span id="cetakTx">Cetak Struk</span> <kbd>Enter</kbd></button>
+    </div>
+    <div class="struk-msg" id="strukMsg"></div>
+  </div>
+</div>
+<div class="back qris-back" id="qrisModal" hidden>
+  <div class="box qris-box" role="dialog" aria-modal="true" aria-label="Pembayaran QRIS">
+    <div class="qris-head"><img class="q" src="/assets/qris-logo.png" alt="QRIS"><img class="g" src="/assets/gpn-logo.svg" alt="GPN"></div>
+    <div class="qris-body">
+      <div class="qris-merchant" id="qrisMerchant"></div>
+      <div class="qris-amt"><small>TOTAL BAYAR</small><b>Rp <span id="qrisAmt">-</span></b></div>
+      <div class="qris-qr" id="qrisQr"><div class="spin"></div></div>
+      <div class="qris-st" id="qrisSt"></div>
+      <div class="qris-print" id="qrisPrint"></div>
+      <div class="qris-hint">Scan dengan aplikasi bank / e-wallet yang mendukung QRIS</div>
+    </div>
+    <div class="struk-act qris-act">
+      <button type="button" class="ghost" data-qris-batal>Batal</button>
+      <button type="button" class="print" id="qrisCetak" disabled><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3h12v6M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>Print QRIS</button>
+    </div>
+  </div>
+</div>
+<div class="back" id="tiketModal" hidden>
+  <form class="box tm-box" id="tmForm" role="dialog" aria-modal="true" aria-labelledby="tmTitle" novalidate>
+    <header><span id="tmTitle">Tiket Manual</span><button type="button" data-close aria-label="Tutup">×</button></header>
+    <div class="tm-body">
+      <p class="tm-hint" id="tmHint"></p>
+      <div class="tm-grid">
+        <label class="tm-nopol"><span class="lbl">Plat Nomor *</span><span class="tm-plate"><input class="inp plate" id="tmNopol" maxlength="15" autocomplete="off" placeholder="B1234ABC"><button type="button" id="tmCek" data-for="hilang">Cek Area</button></span></label>
+        <div class="tm-found full" id="tmFound" hidden></div>
+        <label><span class="lbl">Jenis Kendaraan *</span><select class="sel" id="tmJenis"></select></label>
+        <div class="tm-masuk"><span class="lbl">Waktu Masuk *</span><span class="tm-dt"><input class="inp" type="date" id="tmTgl" aria-label="Tanggal masuk"><input class="inp" type="time" id="tmJam" step="60" aria-label="Jam masuk"></span></div>
+        <label data-for="hilang"><span class="lbl">Nama Pengemudi *</span><input class="inp" id="tmNama" maxlength="80" autocomplete="off"></label>
+        <label data-for="hilang"><span class="lbl">No. KTP / SIM *</span><input class="inp" id="tmIdentitas" maxlength="40" autocomplete="off"></label>
+        <label data-for="hilang"><span class="lbl">No. STNK</span><input class="inp" id="tmStnk" maxlength="40" autocomplete="off"></label>
+        <label class="tm-ket"><span class="lbl">Keterangan</span><input class="inp" id="tmKet" maxlength="200" autocomplete="off" placeholder="Opsional"></label>
+      </div>
+      <div class="tm-sum">
+        <div><span>Durasi</span><b id="tmDur">-</b></div>
+        <div><span>Tarif Parkir</span><b id="tmTarif">-</b></div>
+        <div><span>Denda</span><b id="tmDenda">-</b></div>
+        <div class="tot"><span>Total Bayar</span><b id="tmTotal">-</b></div>
+      </div>
+      <div class="tm-rincian" id="tmRincian"></div>
+      <div class="tm-pay">
+        <label><span class="lbl">Metode Bayar</span><select class="sel" id="tmMetode"></select></label>
+        <label><span class="lbl">Jumlah Bayar</span><span class="amount" style="margin-top:0"><input class="inp" id="tmBayar" inputmode="numeric" placeholder="0" autocomplete="off"><button class="exact" id="tmPas" type="button" title="Uang pas" aria-label="Uang pas"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M14.8 9A2 2 0 0 0 13 8h-2a2 2 0 0 0 0 4h2a2 2 0 0 1 0 4h-2a2 2 0 0 1-1.8-1M12 6v2m0 8v2"/></svg></button></span></label>
+        <div class="tm-kembali"><span class="lbl">Kembalian</span><b id="tmKembali">Rp 0</b></div>
+      </div>
+      <div class="tm-err" id="tmErr" role="alert"></div>
+    </div>
+    <div class="tm-act">
+      <button type="button" class="ghost" data-close>Batal <kbd>Esc</kbd></button>
+      <button type="submit" class="go" id="tmGo" disabled><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>Bayar &amp; Buka Gate <kbd>F6</kbd></button>
+    </div>
+  </form>
+</div>
+<div class="back" id="closingModal" hidden>
+  <form class="box cl-box" id="clForm" role="dialog" aria-modal="true" aria-labelledby="clTitle" novalidate>
+    <header class="cl-head">
+      <span class="cl-hicon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h16v16l-3-2-2 2-3-2-3 2-2-2-3 2z"/><path d="M8 9h8M8 13h5"/></svg></span>
+      <div class="cl-htx"><b id="clTitle">Tutup Kasir</b><small>Tutup transaksi dan serahkan setoran tunai</small></div>
+      <button type="button" data-close aria-label="Tutup">×</button>
+    </header>
+    <div class="cl-body">
+      <div class="cl-meta">
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></svg><span><em>Tanggal Buku</em><b id="clBuku">-</b></span></span>
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M5 21v-1a6 6 0 0 1 6-6h2a6 6 0 0 1 6 6v1"/></svg><span><em>Kasir</em><b id="clKasir">-</b></span></span>
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span><em>Waktu</em><b id="clJam">-</b></span></span>
+      </div>
+      <label class="cl-cash"><span class="lbl">Uang Tunai di Laci</span><span class="cl-cash-box"><i>Rp</i><input id="clTunai" inputmode="numeric" placeholder="0" autocomplete="off"></span></label>
+      <p class="cl-note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h1v4h1"/></svg><span>Hitung uang tunai fisik lalu isi di atas (kosong = Rp 0). Rincian per metode bayar, jumlah transaksi, in area, tunai menurut sistem, dan selisih tampil di struk setelah tutup kasir diproses.</span></p>
+      <label class="cl-pass"><span class="lbl">Password SPV *</span><span class="cl-pw"><svg class="cl-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg><input class="inp" id="clPass" type="password" autocomplete="off" placeholder="Diisi oleh SPV"><button type="button" class="cl-eye" id="clEye" aria-label="Tampilkan password" title="Tampilkan password"><svg data-eye viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg><svg data-eye-off viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" hidden><path d="M17.9 17.9A10.4 10.4 0 0 1 12 19c-6.5 0-10-7-10-7a18.5 18.5 0 0 1 5.1-5.9M9.9 5.2A9.1 9.1 0 0 1 12 5c6.5 0 10 7 10 7a18.6 18.6 0 0 1-2.2 3.2M14.1 14.1a3 3 0 1 1-4.2-4.2M2 2l20 20"/></svg></button></span></label>
+      <div class="cl-hint"><span><b>Tutup Shift</b>: tutup shift Anda, akun terkunci</span><span><b>Tutup Harian</b>: tutup tanggal buku, +1 hari</span></div>
+      <div class="tm-err" id="clErr" role="alert"></div>
+    </div>
+    <div class="cl-act">
+      <button type="button" class="cl-cancel" data-close>Batal</button>
+      <button type="button" class="cl-global" id="clGlobal" title="Tutup tanggal buku untuk semua kasir, tanggal buku +1 hari"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></svg><span>Tutup Harian</span></button>
+      <button type="submit" class="cl-shift" id="clShift" title="Tutup shift Anda, akun terkunci sampai tutup harian"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg><span>Tutup Shift</span></button>
+    </div>
+  </form>
+</div>
+<div class="back" id="memberModal" hidden>
+  <form class="box cl-box mb-box" id="mbForm" role="dialog" aria-modal="true" aria-labelledby="mbTitle" novalidate>
+    <header class="cl-head mb-head">
+      <span class="cl-hicon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="7" r="4"/><path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2M16 3.13a4 4 0 0 1 0 7.75M21 21v-2a4 4 0 0 0-3-3.85"/></svg></span>
+      <div class="cl-htx"><b id="mbTitle">Member Langganan</b><small>Cari langganan lalu terima pembayaran</small></div>
+      <button type="button" data-close aria-label="Tutup">×</button>
+    </header>
+    <div class="cl-body">
+      <label><span class="lbl">Cari Langganan</span><span class="mb-search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg><input id="mbQ" placeholder="Kode, RFID, nama, atau plat nomor" autocomplete="off"><button type="button" id="mbCari">Cari</button></span></label>
+      <div class="mb-list" id="mbList" hidden></div>
+      <div class="mb-card" id="mbCard" hidden></div>
+      <div id="mbPay" hidden>
+        <label class="cl-cash"><span class="lbl">Tarif Langganan *</span><span class="cl-cash-box" id="mbTotalBox"><i>Rp</i><input id="mbTotal" inputmode="numeric" placeholder="0" autocomplete="off"></span></label>
+        <p class="cl-note mb-tarif-info" id="mbTarifInfo"></p>
+        <div class="mb-grid">
+          <label><span class="lbl">Metode Bayar</span><select class="sel" id="mbMetode"></select></label>
+          <label><span class="lbl">Jumlah Bayar</span><span class="amount" style="margin-top:0"><input class="inp" id="mbBayar" inputmode="numeric" placeholder="0" autocomplete="off"><button class="exact" id="mbPas" type="button" title="Uang pas" aria-label="Uang pas"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M14.8 9A2 2 0 0 0 13 8h-2a2 2 0 0 0 0 4h2a2 2 0 0 1 0 4h-2a2 2 0 0 1-1.8-1M12 6v2m0 8v2"/></svg></button></span></label>
+          <div class="tm-kembali"><span class="lbl">Kembalian</span><b id="mbKembali">Rp 0</b></div>
+        </div>
+        <label class="mb-ket"><span class="lbl">Keterangan</span><input class="inp" id="mbUraian" maxlength="255" autocomplete="off"></label>
+      </div>
+      <div class="tm-err" id="mbErr" role="alert"></div>
+    </div>
+    <div class="cl-act">
+      <button type="button" class="cl-cancel" data-close>Batal</button>
+      <button type="submit" class="cl-shift mb-go" id="mbGo" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg><span>Bayar Langganan</span></button>
+    </div>
+  </form>
+</div>
+<div class="back" id="pinModal" hidden>
+  <form class="box cl-box pin-box" id="pinForm" role="dialog" aria-modal="true" aria-labelledby="pinTitle" novalidate>
+    <header class="cl-head pin-head">
+      <span class="cl-hicon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="15" r="4"/><path d="M10.85 12.15L19 4M18 5l2 2M15 8l2 2"/></svg></span>
+      <div class="cl-htx"><b id="pinTitle">Ganti PIN</b><small>PIN dipakai untuk login di aplikasi kasir</small></div>
+      <button type="button" data-close aria-label="Tutup">×</button>
+    </header>
+    <div class="cl-body">
+      <label class="cl-pass"><span class="lbl">PIN lama *</span><span class="cl-pw"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="cl-lock"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg><input class="inp" id="pinLama" type="password" inputmode="numeric" maxlength="8" autocomplete="off" placeholder="PIN yang dipakai sekarang"><button type="button" class="cl-eye" data-pin-eye aria-label="Tampilkan PIN"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button></span></label>
+      <label class="cl-pass"><span class="lbl">PIN baru *</span><span class="cl-pw"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="cl-lock"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg><input class="inp" id="pinBaru" type="password" inputmode="numeric" maxlength="8" autocomplete="off" placeholder="4–8 digit angka"><button type="button" class="cl-eye" data-pin-eye aria-label="Tampilkan PIN"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button></span></label>
+      <label class="cl-pass"><span class="lbl">Ulangi PIN baru *</span><span class="cl-pw"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="cl-lock"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg><input class="inp" id="pinUlang" type="password" inputmode="numeric" maxlength="8" autocomplete="off" placeholder="Ketik ulang PIN baru"><button type="button" class="cl-eye" data-pin-eye aria-label="Tampilkan PIN"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button></span></label>
+      <p class="cl-note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h1v4h1"/></svg><span>PIN harus 4–8 digit angka dan tidak boleh sama dengan PIN kasir lain.</span></p>
+      <div class="tm-err" id="pinErr" role="alert"></div>
+    </div>
+    <div class="cl-act">
+      <button type="button" class="cl-cancel" data-close>Batal</button>
+      <button type="submit" class="cl-shift mb-go" id="pinGo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg><span>Simpan PIN</span></button>
+    </div>
+  </form>
+</div>
+<div class="toast" id="toast" hidden></div>
+
+<script>function v6_0x1ab8(_0x15c52f,_0x4d0b85){_0x15c52f=_0x15c52f-0x159;var _0x578c19=v6_0x578c();var _0x1ab883=_0x578c19[_0x15c52f];if(v6_0x1ab8['qyJmZu']===undefined){var _0x1fc5d6=function(_0x48903a){var _0x4266c8='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+/=';var _0x5d04b0='',_0x501abd='';for(var _0xf9ba7c=0x0,_0x365644,_0xacc3cc,_0xd5e799=0x0;_0xacc3cc=_0x48903a['charAt'](_0xd5e799++);~_0xacc3cc&&(_0x365644=_0xf9ba7c%0x4?_0x365644*0x40+_0xacc3cc:_0xacc3cc,_0xf9ba7c++%0x4)?_0x5d04b0+=String['fromCharCode'](0xff&_0x365644>>(-0x2*_0xf9ba7c&0x6)):0x0){_0xacc3cc=_0x4266c8['indexOf'](_0xacc3cc);}for(var _0x2f5a82=0x0,_0x5038b4=_0x5d04b0['length'];_0x2f5a82<_0x5038b4;_0x2f5a82++){_0x501abd+='%'+('00'+_0x5d04b0['charCodeAt'](_0x2f5a82)['toString'](0x10))['slice'](-0x2);}return decodeURIComponent(_0x501abd);};v6_0x1ab8['DsIpYR']=_0x1fc5d6,v6_0x1ab8['jgPFsc']={},v6_0x1ab8['qyJmZu']=!![];}var _0x6a882c=_0x578c19[0x0],_0x301617=_0x15c52f+_0x6a882c,_0x4f31fc=v6_0x1ab8['jgPFsc'][_0x301617];return!_0x4f31fc?(_0x1ab883=v6_0x1ab8['DsIpYR'](_0x1ab883),v6_0x1ab8['jgPFsc'][_0x301617]=_0x1ab883):_0x1ab883=_0x4f31fc,_0x1ab883;}(function(_0x774561,_0x455e89){var _0x4f22ef=v6_0x1ab8,_0x34aa77=_0x774561();while(!![]){try{var _0x5da4d2=parseInt(_0x4f22ef(0x201))/0x1+parseInt(_0x4f22ef(0x1c3))/0x2+-parseInt(_0x4f22ef(0x2bb))/0x3*(-parseInt(_0x4f22ef(0x196))/0x4)+-parseInt(_0x4f22ef(0x2a1))/0x5*(-parseInt(_0x4f22ef(0x264))/0x6)+-parseInt(_0x4f22ef(0x20a))/0x7+-parseInt(_0x4f22ef(0x19b))/0x8+-parseInt(_0x4f22ef(0x26c))/0x9;if(_0x5da4d2===_0x455e89)break;else _0x34aa77['push'](_0x34aa77['shift']());}catch(_0x1fed5f){_0x34aa77['push'](_0x34aa77['shift']());}}}(v6_0x578c,0x85979),(function(){var _0x430c79=v6_0x1ab8,_0x5d04b0=function(_0x46a43a){var _0x3977ff=v6_0x1ab8;return document[_0x3977ff(0x29f)](_0x46a43a);},_0x501abd={'metode':[],'tarif':[]},_0xf9ba7c=null,_0x365644=_0x430c79(0x2d1),_0xacc3cc=null,_0xd5e799=[],_0x2f5a82=0x0,_0x5038b4={'Normal':'','Manual\x20Ticket':'TIKET\x20MANUAL','Tiket\x20Hilang':_0x430c79(0x2bf)};function _0x4ac3ac(_0x86882e){return String(_0x86882e==null?'':_0x86882e)['replace'](/[&<>"]/g,function(_0x34528f){var _0x317ae9=v6_0x1ab8;return{'&':_0x317ae9(0x1a5),'<':'&lt;','>':_0x317ae9(0x2c7),'\x22':_0x317ae9(0x25e)}[_0x34528f];});}function _0x24f689(_0x5cc837){var _0x11969f=_0x430c79;return Math[_0x11969f(0x223)](Number(_0x5cc837)||0x0)['toLocaleString'](_0x11969f(0x214));}function _0x5c5b64(_0x394703){var _0x1c43cc=_0x430c79;return Number(String(_0x394703||'')[_0x1c43cc(0x2c8)](/\D/g,''))||0x0;}function _0x1f2fe7(_0x3e1b6e,_0x32340e){var _0x4c2f26=_0x430c79;return _0x32340e=_0x32340e||{},_0x32340e[_0x4c2f26(0x1bd)]&&(_0x32340e[_0x4c2f26(0x162)]=_0x4c2f26(0x209),_0x32340e['headers']={'Content-Type':'application/json'},_0x32340e[_0x4c2f26(0x1bd)]=JSON[_0x4c2f26(0x30d)](_0x32340e['body'])),_0x32340e[_0x4c2f26(0x166)]='same-origin',fetch(_0x3e1b6e,_0x32340e)['then'](function(_0x270a40){var _0x262169=_0x4c2f26;if(_0x270a40[_0x262169(0x31a)]===0x191){location['replace'](_0x262169(0x1c0));throw new Error(_0x262169(0x309));}return _0x270a40[_0x262169(0x183)]()['catch'](function(){return{};})['then'](function(_0x38b82d){var _0x2f8eae=_0x262169;if(!_0x270a40['ok'])throw new Error(_0x38b82d[_0x2f8eae(0x1ff)]||_0x2f8eae(0x2cf));return _0x38b82d;});});}var _0x5b1e40;function _0x1cc493(_0x96f38c,_0x20f08d){var _0x558dfe=_0x430c79,_0xd67c6c=_0x5d04b0('toast');_0xd67c6c['textContent']=_0x96f38c,_0xd67c6c['className']=_0x558dfe(0x258)+(_0x20f08d||'ok'),_0xd67c6c[_0x558dfe(0x1e0)]=![],clearTimeout(_0x5b1e40),_0x5b1e40=setTimeout(function(){_0xd67c6c['hidden']=!![];},0x1194);}function _0x43c04e(){return _0x501abd['metode']['find'](function(_0x3a5db3){var _0xde628d=v6_0x1ab8;return _0x3a5db3['id']===_0x5d04b0('metode')[_0xde628d(0x227)];});}function _0x15f538(){var _0x686c4b=_0x43c04e();return!_0x686c4b||_0x686c4b['kode']==='CASH';}function _0x4ab552(_0x578c6a){return!!(_0x578c6a&&_0x578c6a['kredit']);}function _0x1e21f7(_0x21c1fb){var _0x15ce75=_0x430c79;return _0x21c1fb[_0x15ce75(0x17f)](function(_0x5cca3d){var _0x1d60de=_0x15ce75;return'<option\x20class=\x22opt-'+(_0x5cca3d['kredit']?_0x1d60de(0x1a9):'debit')+_0x1d60de(0x159)+_0x4ac3ac(_0x5cca3d['id'])+'\x22>'+_0x4ac3ac(_0x5cca3d[_0x1d60de(0x1e1)])+_0x1d60de(0x318);})['join']('');}function _0x2d2cc8(_0x447bd0){var _0x21648b=_0x430c79,_0x49d167=Math['floor'](_0x447bd0/0x5a0),_0x12bf13=Math['floor'](_0x447bd0%0x5a0/0x3c),_0x1d4009=_0x447bd0%0x3c;return[_0x49d167&&_0x49d167+'\x20hari',_0x12bf13&&_0x12bf13+_0x21648b(0x15a),(_0x1d4009||!_0x49d167&&!_0x12bf13)&&_0x1d4009+_0x21648b(0x276)]['filter'](Boolean)[_0x21648b(0x2f5)]('\x20');}function _0x5926a0(_0x239ffc){var _0x38fa78=_0x430c79;if(!_0x239ffc)return'-';var _0x1b0e3d=_0x239ffc[_0x38fa78(0x185)](/[- T]/);return _0x1b0e3d[0x2]+'/'+_0x1b0e3d[0x1]+'/'+_0x1b0e3d[0x0]+'\x20'+(_0x1b0e3d[0x3]||'')[_0x38fa78(0x2d5)](0x0,0x5);}function _0x30619d(){var _0xdc267b=_0x430c79,_0x5e4f6f=new Date();return _0x5e4f6f[_0xdc267b(0x2ac)](_0x5e4f6f[_0xdc267b(0x25c)]()-_0x5e4f6f['getTimezoneOffset']()),_0x5e4f6f[_0xdc267b(0x298)]()['slice'](0x0,0x10);}function _0x1736f7(_0x32b33b,_0x509014){var _0x26da1b=_0x430c79,_0x3975ae=_0x5d04b0('info');if(_0x32b33b){_0x3975ae['innerHTML']='<div\x20class=\x22msg'+(_0x509014?_0x26da1b(0x1b2):'')+'\x22>'+_0x4ac3ac(_0x32b33b)+_0x26da1b(0x1af);return;}if(!_0xf9ba7c&&_0x365644===_0x26da1b(0x2d1)){_0x3975ae[_0x26da1b(0x232)]='<div\x20class=\x22msg\x22>Scan\x20atau\x20cari\x20tiket\x20untuk\x20melihat\x20informasi\x20parkir</div>';return;}var _0x30f361=[];if(_0xf9ba7c){_0x30f361[_0x26da1b(0x2f4)]([_0x26da1b(0x2e2),_0xf9ba7c['no_tiket']],['Gate\x20Masuk',_0xf9ba7c['gate_masuk']||'-'],['Waktu\x20Masuk',_0x5926a0(_0xf9ba7c['masuk'])],['Metode\x20Masuk',_0xf9ba7c[_0x26da1b(0x174)]||'-']);if(_0xf9ba7c['member'])_0x30f361['push'](['Member',_0xf9ba7c[_0x26da1b(0x167)][_0x26da1b(0x1e1)]+'\x20('+_0xf9ba7c['member'][_0x26da1b(0x244)]+')\x20·\x20'+(_0xf9ba7c[_0x26da1b(0x167)][_0x26da1b(0x1a1)]?'aktif\x20s/d\x20':'berakhir\x20')+_0xf9ba7c[_0x26da1b(0x167)][_0x26da1b(0x2be)]]);}else _0x30f361[_0x26da1b(0x2f4)]([_0x26da1b(0x1c1),_0x365644==='Tiket\x20Hilang'?'Tiket\x20Hilang\x20(tanpa\x20tiket)':_0x26da1b(0x306)]);if(_0xacc3cc)_0x30f361['push']([_0x26da1b(0x27b),_0xf9ba7c?_0x2d2cc8(_0xacc3cc['durasi']):'-']);_0x3975ae['innerHTML']='<dl>'+_0x30f361[_0x26da1b(0x17f)](function(_0x4371a3){var _0x2e40e0=_0x26da1b;return _0x2e40e0(0x2ae)+_0x4ac3ac(_0x4371a3[0x0])+'</dt><dd>'+_0x4ac3ac(_0x4371a3[0x1])+_0x2e40e0(0x266);})['join']('')+'</dl>'+(_0xacc3cc&&_0xacc3cc[_0x26da1b(0x1d0)]['length']?_0x26da1b(0x20f)+_0xacc3cc[_0x26da1b(0x1d0)]['map'](function(_0x3fa7e9){var _0x2ebc59=_0x26da1b;return _0x2ebc59(0x1ad)+_0x4ac3ac(_0x3fa7e9)+_0x2ebc59(0x1f2);})[_0x26da1b(0x2f5)]('')+'</ul>':'');}var _0x1b6356='<svg\x20viewBox=\x220\x200\x2024\x2024\x22\x20fill=\x22none\x22\x20stroke=\x22currentColor\x22\x20stroke-width=\x221.6\x22\x20stroke-linecap=\x22round\x22\x20stroke-linejoin=\x22round\x22><path\x20d=\x22M3\x208a2\x202\x200\x200\x201\x202-2h2l1.5-2h7L17\x206h2a2\x202\x200\x200\x201\x202\x202v10a2\x202\x200\x200\x201-2\x202H5a2\x202\x200\x200\x201-2-2z\x22/><circle\x20cx=\x2212\x22\x20cy=\x2213\x22\x20r=\x224\x22/></svg>',_0x5bcf11={'prev':_0x430c79(0x2fe),'next':'<svg\x20viewBox=\x220\x200\x2024\x2024\x22\x20fill=\x22none\x22\x20stroke=\x22currentColor\x22\x20stroke-width=\x222.5\x22\x20stroke-linecap=\x22round\x22\x20stroke-linejoin=\x22round\x22><path\x20d=\x22M9\x2018l6-6-6-6\x22/></svg>'},_0x46d735={'in':{'el':_0x430c79(0x1bc),'tag':'MASUK','title':'Foto\x20Masuk','foto':[],'i':0x0,'timer':null},'out':{'el':_0x430c79(0x2a7),'tag':_0x430c79(0x168),'title':'Foto\x20Keluar','foto':[],'i':0x0,'timer':null}},_0x40ad28=0x0,_0x17b4c1=null;function _0x4b80a8(_0x53d0a2,_0x2df64e,_0x47f182,_0x4d6cc5){var _0xa9cda7=_0x430c79,_0x11bf8a=_0x46d735[_0x53d0a2];_0x11bf8a[_0xa9cda7(0x2e8)]=_0x47f182||[],_0x11bf8a['i']=0x0,_0x11bf8a['state']=_0x2df64e,_0x11bf8a['meta']=_0x4d6cc5||{},clearInterval(_0x11bf8a['timer']),_0x2bd6be(_0x53d0a2);if(_0x11bf8a[_0xa9cda7(0x2e8)][_0xa9cda7(0x2a5)]>0x1)_0x11bf8a['timer']=setInterval(function(){var _0x2da77e=_0xa9cda7;if(!_0x11bf8a[_0x2da77e(0x278)])_0x4b195f(_0x53d0a2,0x1);},0x1388);}function _0x2bd6be(_0x2bd1ec){var _0x274b22=_0x430c79,_0x2fb4d4=_0x46d735[_0x2bd1ec],_0x495dad=_0x2fb4d4[_0x274b22(0x2c5)],_0x14cb85=_0x5d04b0(_0x2fb4d4['el']),_0x14d54a=_0x2fb4d4['foto'][_0x2fb4d4['i']],_0x3d3f81=_0x2fb4d4[_0x274b22(0x2e8)][_0x274b22(0x2a5)],_0x4ec387='<div\x20class=\x22sh-head\x22><span\x20class=\x22sh-tag\x20'+_0x2bd1ec+'\x22>'+_0x2fb4d4[_0x274b22(0x31d)]+_0x274b22(0x2b5)+_0x4ac3ac(_0x495dad['judul']||_0x2fb4d4[_0x274b22(0x30f)])+'</b><small>'+(_0x2fb4d4[_0x274b22(0x222)]===_0x274b22(0x2e5)?'<span\x20class=\x22sh-live\x22>LANGSUNG</span>':'')+_0x4ac3ac(_0x495dad[_0x274b22(0x29b)]||'-')+_0x274b22(0x297)+(_0x3d3f81?'<span\x20class=\x22sh-count\x22>'+(_0x2fb4d4['i']+0x1)+_0x274b22(0x2cb)+_0x3d3f81+'</span>':'')+_0x274b22(0x1af),_0x1108a2;if(_0x2fb4d4['state']==='loading')_0x1108a2='<div\x20class=\x22sh-empty\x22><div\x20class=\x22spin\x22></div>'+_0x4ac3ac(_0x495dad['pesan']||'Mengambil\x20foto...')+'</div>';else{if(!_0x3d3f81)_0x1108a2=_0x274b22(0x256)+(_0x495dad['err']?'\x20err':'')+'\x22>'+_0x1b6356+_0x4ac3ac(_0x495dad[_0x274b22(0x1a2)]||(_0x2bd1ec==='in'?_0x274b22(0x19a):_0x274b22(0x18e)))+_0x274b22(0x1af);else _0x1108a2=_0x274b22(0x1a6)+_0x4ac3ac(_0x14d54a[_0x274b22(0x1d6)])+_0x274b22(0x195)+_0x4ac3ac(_0x14d54a[_0x274b22(0x312)])+'\x22\x20data-zoom=\x22'+_0x2bd1ec+'\x22><div\x20class=\x22sh-cap\x22>'+_0x4ac3ac(_0x14d54a['kamera'])+_0x274b22(0x1af)+(_0x3d3f81>0x1?_0x274b22(0x293)+_0x2bd1ec+_0x274b22(0x305)+_0x5bcf11[_0x274b22(0x1dd)]+_0x274b22(0x1cf)+_0x2bd1ec+'\x22\x20data-arah=\x221\x22\x20aria-label=\x22Berikutnya\x22>'+_0x5bcf11['next']+_0x274b22(0x2f3):'');}var _0x200fa3=_0x3d3f81>0x1?_0x274b22(0x21c)+_0x2fb4d4['foto']['map'](function(_0x436c37,_0x4563e0){var _0x46d71e=_0x274b22;return _0x46d71e(0x269)+(_0x4563e0===_0x2fb4d4['i']?'on':'')+'\x22\x20data-pilih=\x22'+_0x2bd1ec+'\x22\x20data-i=\x22'+_0x4563e0+_0x46d71e(0x25b)+_0x4ac3ac(_0x436c37[_0x46d71e(0x312)])+'\x22><img\x20src=\x22'+_0x4ac3ac(_0x436c37['url'])+_0x46d71e(0x171);})[_0x274b22(0x2f5)]('')+'</div>':'';_0x14cb85['innerHTML']=_0x4ec387+_0x274b22(0x208)+_0x1108a2+'</div>'+_0x200fa3;}function _0x4b195f(_0x14d5b2,_0x2567c0){var _0x36cbd2=_0x430c79,_0x9da995=_0x46d735[_0x14d5b2],_0x36cbed=_0x9da995[_0x36cbd2(0x2e8)]['length'];if(_0x36cbed<0x2)return;_0x9da995['i']=(_0x9da995['i']+_0x2567c0+_0x36cbed)%_0x36cbed,_0x2bd6be(_0x14d5b2);}var _0x4db01c={'timer':null,'busy':![],'gen':0x0};function _0x1fc447(){var _0x13d9ce=_0x430c79;_0x58dfaa(),_0x4b80a8(_0x13d9ce(0x1f7),'loading',[],{'judul':_0x501abd['device']||'Gate\x20keluar','sub':'Standby','pesan':_0x13d9ce(0x225)}),_0x283163(),_0x4db01c['timer']=setInterval(_0x283163,0xea60);}function _0x58dfaa(){clearInterval(_0x4db01c['timer']),_0x4db01c['timer']=null,_0x4db01c['gen']++,_0x4db01c['busy']=![];}function _0x458004(_0x2ff14b){var _0x283eae=_0x430c79;return Promise[_0x283eae(0x246)](_0x2ff14b[_0x283eae(0x17f)](function(_0x31b3f2){return new Promise(function(_0x5d3394){var _0x5edd61=v6_0x1ab8,_0x161843=new Image();_0x161843[_0x5edd61(0x2ce)]=_0x161843['onerror']=_0x5d3394,setTimeout(_0x5d3394,0xfa0),_0x161843[_0x5edd61(0x218)]=_0x31b3f2[_0x5edd61(0x1d6)];});}));}function _0x283163(){var _0x509010=_0x430c79;if(_0xf9ba7c||document['hidden']||_0x4db01c[_0x509010(0x231)])return;var _0x1d725d=_0x4db01c[_0x509010(0x199)];_0x4db01c[_0x509010(0x231)]=!![],_0x1f2fe7(_0x509010(0x1e6))[_0x509010(0x176)](function(_0x59c3d6){var _0x310934=_0x509010;return _0x458004(_0x59c3d6['foto'])[_0x310934(0x176)](function(){var _0x6c50d2=_0x310934;if(_0x1d725d!==_0x4db01c[_0x6c50d2(0x199)]||_0xf9ba7c)return;var _0x3b90f2=new Date(),_0x42fbf6=[_0x3b90f2['getHours'](),_0x3b90f2[_0x6c50d2(0x25c)](),_0x3b90f2[_0x6c50d2(0x30e)]()]['map'](function(_0x384ab9){return('0'+_0x384ab9)['slice'](-0x2);})[_0x6c50d2(0x2f5)](':'),_0x237fd5={'judul':_0x501abd['device']||'Gate\x20keluar','sub':'Diperbarui\x20'+_0x42fbf6,'pesan':_0x59c3d6['pesan']||(_0x59c3d6[_0x6c50d2(0x198)]&&_0x59c3d6[_0x6c50d2(0x198)][_0x6c50d2(0x2a5)]?_0x6c50d2(0x1eb)+_0x59c3d6[_0x6c50d2(0x198)][_0x6c50d2(0x2f5)](',\x20'):''),'err':!_0x59c3d6['foto'][_0x6c50d2(0x2a5)]},_0x156233=_0x46d735[_0x6c50d2(0x1f7)];if(_0x156233['state']===_0x6c50d2(0x2e5)&&_0x156233['foto']['length']===_0x59c3d6[_0x6c50d2(0x2e8)][_0x6c50d2(0x2a5)]&&_0x59c3d6['foto']['length'])_0x156233[_0x6c50d2(0x2e8)]=_0x59c3d6['foto'],_0x156233['meta']=_0x237fd5,_0x2bd6be('out');else _0x4b80a8(_0x6c50d2(0x1f7),_0x59c3d6[_0x6c50d2(0x2e8)]['length']?_0x6c50d2(0x2e5):_0x6c50d2(0x1fd),_0x59c3d6[_0x6c50d2(0x2e8)],_0x237fd5);});})[_0x509010(0x1e5)](function(){})[_0x509010(0x176)](function(){var _0x378ac3=_0x509010;if(_0x1d725d===_0x4db01c[_0x378ac3(0x199)])_0x4db01c[_0x378ac3(0x231)]=![];});}function _0x59527e(){_0x40ad28++,_0x4b80a8('in','idle'),_0x1fc447();}function _0x2668b0(_0x33be5a){var _0x1a95bd=_0x430c79,_0x1e8804=++_0x40ad28;_0x58dfaa(),_0x4b80a8('in',_0x1a95bd(0x1fd),_0x33be5a[_0x1a95bd(0x2e8)],{'judul':_0x33be5a['gate_masuk']||'Gate\x20masuk','sub':_0x5926a0(_0x33be5a['masuk']),'pesan':'Tiket\x20ini\x20tidak\x20punya\x20foto\x20masuk'}),_0x4b80a8(_0x1a95bd(0x1f7),_0x1a95bd(0x15f),[],{'judul':_0x501abd['device']||'Gate\x20keluar','sub':_0x1a95bd(0x186),'pesan':_0x1a95bd(0x20b)}),_0x1f2fe7('/api/kasir/foto-keluar',{'body':{'id':_0x33be5a['id']}})['then'](function(_0x28325b){var _0x43914e=_0x1a95bd;if(_0x1e8804!==_0x40ad28)return;var _0x469cef=new Date(),_0xa51c46=('0'+_0x469cef['getHours']())[_0x43914e(0x2d5)](-0x2)+':'+('0'+_0x469cef[_0x43914e(0x25c)]())['slice'](-0x2);_0x4b80a8(_0x43914e(0x1f7),'ready',_0x28325b['foto'],{'judul':_0x501abd['device']||_0x43914e(0x2df),'sub':_0x469cef[_0x43914e(0x21b)](_0x43914e(0x214),{'day':'2-digit','month':_0x43914e(0x24f),'year':_0x43914e(0x180)})+'\x20'+_0xa51c46,'pesan':_0x28325b[_0x43914e(0x1a2)]||(_0x28325b['gagal']&&_0x28325b['gagal'][_0x43914e(0x2a5)]?_0x43914e(0x1eb)+_0x28325b['gagal'][_0x43914e(0x2f5)](',\x20'):''),'err':!_0x28325b['foto'][_0x43914e(0x2a5)]});})['catch'](function(_0x148104){var _0x46b9c9=_0x1a95bd;if(_0x1e8804===_0x40ad28)_0x4b80a8('out','ready',[],{'judul':_0x501abd[_0x46b9c9(0x282)]||'Gate\x20keluar','pesan':_0x148104['message'],'err':!![]});});}function _0x513c96(_0x4b9d04){var _0x2b4b31=_0x46d735[_0x4b9d04];if(!_0x2b4b31['foto']['length'])return;_0x17b4c1={'key':_0x4b9d04,'i':_0x2b4b31['i']},_0x165410(),_0x5d04b0('lightbox')['hidden']=![];}function _0x165410(){var _0x2c425b=_0x430c79,_0x5ee88c=_0x46d735[_0x17b4c1['key']],_0x270a2c=_0x5ee88c['foto'][_0x17b4c1['i']];_0x5d04b0(_0x2c425b(0x260))[_0x2c425b(0x218)]=_0x270a2c['url'],_0x5d04b0('lbTitle')['textContent']=_0x5ee88c['tag']+'\x20·\x20'+_0x270a2c[_0x2c425b(0x312)]+'\x20\x20('+(_0x17b4c1['i']+0x1)+'\x20/\x20'+_0x5ee88c[_0x2c425b(0x2e8)][_0x2c425b(0x2a5)]+')',document['querySelectorAll']('[data-lb]')[_0x2c425b(0x1b0)](function(_0x3fba56){var _0x110af9=_0x2c425b;_0x3fba56[_0x110af9(0x1e0)]=_0x5ee88c['foto'][_0x110af9(0x2a5)]<0x2;});}function _0x5a1c8c(_0xd89683){var _0x65a881=_0x430c79,_0x1bb19d=_0x46d735[_0x17b4c1[_0x65a881(0x1a4)]]['foto']['length'];_0x17b4c1['i']=(_0x17b4c1['i']+_0xd89683+_0x1bb19d)%_0x1bb19d,_0x165410();}function _0x17456c(){var _0x2e5198=_0x430c79;_0x5d04b0(_0x2e5198(0x255))['hidden']=!![],_0x17b4c1=null;}function _0x42bb10(){var _0x330f74=_0x430c79,_0x1c4944=_0x5d04b0('modeTag');_0x1c4944[_0x330f74(0x2c1)]=_0x5038b4[_0x365644],_0x1c4944['hidden']=!_0x5038b4[_0x365644],_0x5d04b0(_0x330f74(0x23c))['classList'][_0x330f74(0x2cc)]('on',_0x365644==='Manual\x20Ticket'),_0x5d04b0('btnLost')[_0x330f74(0x1ae)]['toggle']('on',_0x365644===_0x330f74(0x2a2));var _0x464e21=_0x4ab552(_0x43c04e());_0x5d04b0(_0x330f74(0x295))[_0x330f74(0x2c1)]=_0xacc3cc?_0x24f689(_0x464e21?0x0:_0xacc3cc['total']):'-',_0x5d04b0('bayar')[_0x330f74(0x1ee)]=_0x464e21;if(_0xacc3cc&&!_0x15f538())_0x5d04b0(_0x330f74(0x1e4))['value']=_0x464e21?'0':_0x24f689(_0xacc3cc[_0x330f74(0x1c6)]);var _0x3cc4fc=_0x5c5b64(_0x5d04b0(_0x330f74(0x1e4))[_0x330f74(0x227)]),_0x4a7d44=_0xacc3cc&&!_0x464e21?_0x3cc4fc-_0xacc3cc['total']:0x0,_0x5c737a=_0x5d04b0('kembali');_0x5c737a['textContent']=_0xacc3cc&&_0x3cc4fc?_0x4a7d44<0x0?'-'+_0x24f689(-_0x4a7d44):_0x24f689(_0x4a7d44):'0',_0x5c737a['classList']['toggle'](_0x330f74(0x2de),_0x4a7d44<0x0&&_0x3cc4fc>0x0),_0x5d04b0(_0x330f74(0x194))[_0x330f74(0x16c)]=!_0xacc3cc||_0x15f538()&&_0xacc3cc[_0x330f74(0x1c6)]>0x0&&_0x3cc4fc<_0xacc3cc[_0x330f74(0x1c6)];}function _0x1bfaaa(_0xa044e){var _0x2f2e1b=_0x430c79;_0xf9ba7c=null,_0xacc3cc=null,_0x2f5a82++;if(!_0xa044e)_0x365644='Normal';_0x5d04b0('q')[_0x2f2e1b(0x227)]='',_0x5d04b0('nopol')[_0x2f2e1b(0x227)]='',_0x5d04b0('jenis')[_0x2f2e1b(0x227)]='',_0x5d04b0('bayar')['value']='',_0x1736f7(),_0x59527e(),_0x42bb10(),_0x5d04b0('q')['focus']();}function _0x429bcd(_0xec1eeb){var _0x5e7001=_0x430c79,_0x7a3172=_0x501abd['tarif'][_0x5e7001(0x182)](function(_0x2e0987){var _0xe75619=_0x5e7001;return _0x2e0987[_0xe75619(0x1d9)][_0xe75619(0x1c8)]()===String(_0xec1eeb||'')[_0xe75619(0x1c8)]()&&_0x2e0987[_0xe75619(0x1b9)]['indexOf'](_0x365644)>-0x1;})||_0x501abd['tarif']['find'](function(_0x1d1238){var _0x4a358a=_0x5e7001;return _0x1d1238[_0x4a358a(0x1d9)]['toLowerCase']()===String(_0xec1eeb||'')['toLowerCase']();});_0x5d04b0(_0x5e7001(0x1d9))[_0x5e7001(0x227)]=_0x7a3172?_0x7a3172['id']:'';}function _0x5e3643(){var _0x42b526=_0x430c79;_0xacc3cc=null,_0x42bb10();if(!_0x5d04b0('jenis')[_0x42b526(0x227)]||_0x365644===_0x42b526(0x2d1)&&!_0xf9ba7c){_0x1736f7(_0xf9ba7c&&!_0x5d04b0('jenis')['value']?'Pilih\x20jenis\x20kendaraan\x20untuk\x20menghitung\x20tarif':null);return;}var _0x17a20f=++_0x2f5a82;_0x1f2fe7('/api/kasir/hitung',{'body':{'id':_0xf9ba7c?_0xf9ba7c['id']:null,'id_tarif':_0x5d04b0('jenis')[_0x42b526(0x227)],'tipe':_0x365644}})['then'](function(_0x5a230d){var _0x94d2=_0x42b526;if(_0x17a20f!==_0x2f5a82)return;_0xacc3cc=_0x5a230d,_0x1736f7(),_0x42bb10();if((_0x5a230d[_0x94d2(0x167)]||_0x5a230d[_0x94d2(0x206)]&&!(_0x5a230d['total']>0x0))&&_0xf9ba7c&&_0x365644==='Normal'){_0x4ac7d0();return;}if(_0x43c04e()&&_0x43c04e()[_0x94d2(0x191)]){_0x409481();return;}if(_0x15f538())_0x5d04b0(_0x94d2(0x1e4))['focus']();})[_0x42b526(0x1e5)](function(_0x31defe){if(_0x17a20f===_0x2f5a82)_0x1736f7(_0x31defe['message'],!![]);});}function _0x55111b(_0x382dec){var _0x99be66=_0x430c79;_0x382dec=String(_0x382dec||'')[_0x99be66(0x235)]();if(!_0x382dec)return _0x5d04b0('q')['focus']();var _0x4982e6=++_0x2f5a82;_0xf9ba7c=null,_0xacc3cc=null,_0x42bb10(),_0x1736f7('Mencari...'),_0x1f2fe7(_0x99be66(0x2eb)+encodeURIComponent(_0x382dec))['then'](function(_0x4b480a){var _0x582dac=_0x99be66;if(_0x4982e6!==_0x2f5a82)return;_0xf9ba7c=_0x4b480a,_0x5d04b0('q')[_0x582dac(0x227)]=_0x4b480a[_0x582dac(0x2e3)],_0x5d04b0(_0x582dac(0x229))['value']=_0x4b480a['nopol'],_0x429bcd(_0x4b480a[_0x582dac(0x30b)]),_0x2668b0(_0x4b480a),_0x5e3643();})[_0x99be66(0x1e5)](function(_0x372ee7){var _0x8ec01d=_0x99be66;if(_0x4982e6!==_0x2f5a82)return;_0x59527e();if(_0x365644!=='Normal'){_0x5d04b0(_0x8ec01d(0x229))['value']=_0x382dec['toUpperCase']()['replace'](/\s+/g,''),_0x1736f7(),_0x5e3643();return;}_0x1736f7(_0x372ee7[_0x8ec01d(0x1df)],!![]);});}var _0x1fa6aa={'mode':null,'tiket':null,'hitung':null,'seq':0x0,'timer':null,'clock':null,'busy':![]};function _0x5357ed(_0x20edea,_0x2ba1f0){var _0x4a1cc4=_0x430c79,_0x1afffe=_0x5d04b0('tmFound');_0x1afffe['hidden']=!_0x20edea,_0x1afffe['className']='tm-found\x20full\x20'+(_0x2ba1f0?'ok':'no'),_0x1afffe[_0x4a1cc4(0x2c1)]=_0x20edea||'';}function _0x3c80c5(){return _0x501abd['metode']['find'](function(_0x341b8f){return _0x341b8f['id']===_0x5d04b0('tmMetode')['value'];});}function _0x42ec98(){var _0x13f80b=_0x430c79,_0x3bc7db=_0x3c80c5();return!_0x3bc7db||_0x3bc7db[_0x13f80b(0x244)]===_0x13f80b(0x31e);}function _0x589ead(){var _0xc8f21d=_0x430c79;return _0x5d04b0('tmTgl')['value']&&_0x5d04b0('tmJam')['value']?_0x5d04b0('tmTgl')['value']+'T'+_0x5d04b0('tmJam')[_0xc8f21d(0x227)]['slice'](0x0,0x5):'';}function _0x502355(_0x327e1e,_0x24c36e){var _0x2585f=_0x430c79;_0x5d04b0('tmTgl')[_0x2585f(0x227)]=_0x327e1e[_0x2585f(0x2d5)](0x0,0xa),_0x5d04b0(_0x2585f(0x1e8))[_0x2585f(0x227)]=_0x327e1e[_0x2585f(0x2d5)](0xb,0x10),_0x5d04b0(_0x2585f(0x31c))['disabled']=_0x5d04b0('tmJam')['disabled']=!!_0x24c36e;}function _0x22c09f(){var _0x3890f0=_0x430c79;return _0x1fa6aa['tiket']?String(_0x1fa6aa[_0x3890f0(0x274)][_0x3890f0(0x2d2)]||'')['slice'](0x0,0x10)['replace']('\x20','T'):_0x589ead();}function _0x462e94(){var _0x1264b7=_0x430c79,_0x3c0fff=_0x22c09f(),_0x3900ce=_0x3c0fff?Date[_0x1264b7(0x1fa)]()-new Date(_0x3c0fff)[_0x1264b7(0x2dd)]():NaN;_0x5d04b0(_0x1264b7(0x2fa))['textContent']=isNaN(_0x3900ce)?'-':_0x3900ce<0x0?_0x1264b7(0x1a3):_0x2d2cc8(Math['floor'](_0x3900ce/0xea60));}function _0x169111(){var _0x5d3811=_0x430c79,_0x15e110=_0x1fa6aa['hitung'],_0x224637=_0x4ab552(_0x3c80c5());_0x5d04b0(_0x5d3811(0x29c))[_0x5d3811(0x2c1)]=_0x15e110?_0x5d3811(0x275)+_0x24f689(_0x224637?0x0:_0x15e110['tarif_parkir']):'-',_0x5d04b0(_0x5d3811(0x1e2))['textContent']=_0x15e110?_0x5d3811(0x275)+_0x24f689(_0x224637?0x0:_0x15e110['denda']):'-',_0x5d04b0('tmTotal')['textContent']=_0x15e110?_0x5d3811(0x275)+_0x24f689(_0x224637?0x0:_0x15e110['total']):'-',_0x5d04b0(_0x5d3811(0x1b8))[_0x5d3811(0x2c1)]=_0x15e110?_0x15e110[_0x5d3811(0x1d0)][_0x5d3811(0x2f5)]('\x20·\x20'):'';var _0x157051=_0x4ab552(_0x3c80c5());_0x5d04b0(_0x5d3811(0x1ce))['readOnly']=!_0x42ec98();if(_0x15e110&&!_0x42ec98())_0x5d04b0('tmBayar')['value']=_0x157051?'0':_0x24f689(_0x15e110['total']);var _0x2fd3ee=_0x5c5b64(_0x5d04b0(_0x5d3811(0x1ce))['value']),_0x2a442a=_0x15e110&&!_0x157051?_0x2fd3ee-_0x15e110['total']:0x0,_0x5dd4ab=_0x5d04b0(_0x5d3811(0x2da));_0x5dd4ab['textContent']=_0x15e110&&_0x2fd3ee?_0x2a442a<0x0?_0x5d3811(0x2a3)+_0x24f689(-_0x2a442a):_0x5d3811(0x275)+_0x24f689(_0x2a442a):_0x5d3811(0x234),_0x5dd4ab[_0x5d3811(0x1ae)]['toggle'](_0x5d3811(0x2de),_0x2a442a<0x0&&_0x2fd3ee>0x0),_0x5d04b0('tmGo')[_0x5d3811(0x16c)]=_0x1fa6aa['busy']||!_0x15e110||_0x42ec98()&&_0x15e110['total']>0x0&&_0x2fd3ee<_0x15e110[_0x5d3811(0x1c6)];}function _0x30a64d(){var _0x218cdd=_0x430c79;clearTimeout(_0x1fa6aa[_0x218cdd(0x18a)]),_0x1fa6aa['hitung']=null;var _0xf34a18=++_0x1fa6aa['seq'];_0x462e94(),_0x169111();if(!_0x5d04b0(_0x218cdd(0x2a8))['value'])return;_0x1fa6aa['timer']=setTimeout(function(){var _0x412d79=_0x218cdd;_0x1f2fe7('/api/kasir/hitung',{'body':{'id':_0x1fa6aa[_0x412d79(0x274)]?_0x1fa6aa[_0x412d79(0x274)]['id']:null,'id_tarif':_0x5d04b0('tmJenis')[_0x412d79(0x227)],'tipe':_0x1fa6aa['mode'],'masuk':_0x1fa6aa['tiket']?null:_0x589ead()}})[_0x412d79(0x176)](function(_0x13729a){var _0x1d448a=_0x412d79;if(_0xf34a18!==_0x1fa6aa[_0x1d448a(0x25d)])return;_0x1fa6aa['hitung']=_0x13729a,_0x5d04b0(_0x1d448a(0x1ec))['textContent']='',_0x169111();var _0x33bb55=_0x3c80c5();if(_0x33bb55&&_0x33bb55[_0x1d448a(0x191)]&&_0x13729a['total']>0x0&&_0x5d04b0(_0x1d448a(0x2a4))[_0x1d448a(0x227)][_0x1d448a(0x235)]()&&_0x5d04b0('qrisModal')[_0x1d448a(0x1e0)])_0x369d03();})['catch'](function(_0x106424){var _0xd6032b=_0x412d79;if(_0xf34a18===_0x1fa6aa['seq'])_0x5d04b0('tmErr')['textContent']=_0x106424[_0xd6032b(0x1df)];});},0xfa);}function _0x4119aa(_0xdef654){var _0x1fc0a8=_0x430c79;_0x1fa6aa[_0x1fc0a8(0x274)]=_0xdef654,_0x5d04b0(_0x1fc0a8(0x31c))['disabled']=_0x5d04b0('tmJam')['disabled']=!!_0xdef654;if(_0xdef654){_0x502355(_0x22c09f(),!![]),_0x5357ed(_0x1fc0a8(0x31f)+_0xdef654['no_tiket']+'\x20·\x20masuk\x20'+_0x5926a0(_0xdef654['masuk'])+(_0xdef654['gate_masuk']?'\x20·\x20'+_0xdef654['gate_masuk']:'')+_0x1fc0a8(0x31b),!![]);var _0x2d0edd=_0x501abd[_0x1fc0a8(0x29a)][_0x1fc0a8(0x182)](function(_0x28515a){var _0x17d672=_0x1fc0a8;return _0x28515a['tipe'][_0x17d672(0x2af)](_0x1fa6aa[_0x17d672(0x164)])>-0x1&&_0x28515a['jenis']['toLowerCase']()===String(_0xdef654['jenis_kendaraan']||'')['toLowerCase']();});if(_0x2d0edd)_0x5d04b0(_0x1fc0a8(0x2a8))['value']=_0x2d0edd['id'];}_0x30a64d();}function _0x1993c7(){var _0x29e84b=_0x430c79,_0x144447=_0x5d04b0('tmNopol')[_0x29e84b(0x227)][_0x29e84b(0x235)]();if(!_0x144447){_0x5d04b0('tmNopol')[_0x29e84b(0x179)]();return;}var _0x3e19b0=++_0x1fa6aa['cek'];_0x1fa6aa['tiket']=null,_0x5d04b0(_0x29e84b(0x31c))[_0x29e84b(0x16c)]=_0x5d04b0(_0x29e84b(0x1e8))['disabled']=![],_0x5357ed(_0x29e84b(0x2b7),!![]),_0x1f2fe7('/api/kasir/cari?q='+encodeURIComponent(_0x144447))['then'](function(_0x4d4c57){var _0x32214b=_0x29e84b;if(_0x3e19b0===_0x1fa6aa[_0x32214b(0x20e)])_0x4119aa(_0x4d4c57);})[_0x29e84b(0x1e5)](function(_0x2b2402){var _0xe8daf5=_0x29e84b;_0x3e19b0===_0x1fa6aa[_0xe8daf5(0x20e)]&&(_0x5357ed(_0x2b2402[_0xe8daf5(0x1df)]+_0xe8daf5(0x197),![]),_0x30a64d());});}function _0x3c0c8a(_0x38f270){var _0x24cd38=_0x430c79,_0x16a096=_0x38f270===_0x24cd38(0x2a2),_0xd88a92=_0x30619d();_0x1fa6aa[_0x24cd38(0x164)]=_0x38f270,_0x1fa6aa['tiket']=null,_0x1fa6aa[_0x24cd38(0x2f9)]=null,_0x1fa6aa['busy']=![],_0x1fa6aa[_0x24cd38(0x20e)]=(_0x1fa6aa['cek']||0x0)+0x1,_0x5d04b0(_0x24cd38(0x24a))[_0x24cd38(0x1ae)]['toggle']('lost',_0x16a096),_0x5d04b0(_0x24cd38(0x27f))['textContent']=_0x16a096?_0x24cd38(0x2a2):'Tiket\x20Manual',_0x5d04b0('tmHint')[_0x24cd38(0x2c1)]=_0x16a096?_0x24cd38(0x2f2):_0x24cd38(0x2b8),document[_0x24cd38(0x212)](_0x24cd38(0x202))['forEach'](function(_0x32a149){var _0x27807d=_0x24cd38;_0x32a149['hidden']=_0x32a149['dataset']['for']!==(_0x16a096?_0x27807d(0x1c9):'manual');});var _0x2d024e=_0x501abd[_0x24cd38(0x29a)][_0x24cd38(0x2fd)](function(_0x5e2b48){var _0x5d4f75=_0x24cd38;return _0x5e2b48['tipe'][_0x5d4f75(0x2af)](_0x38f270)>-0x1;});_0x5d04b0(_0x24cd38(0x2a8))[_0x24cd38(0x232)]=_0x24cd38(0x2bc)+(_0x2d024e[_0x24cd38(0x2a5)]?'Pilih\x20jenis\x20kendaraan':_0x24cd38(0x217)+_0x4ac3ac(_0x38f270))+'</option>'+_0x2d024e[_0x24cd38(0x17f)](function(_0xc239a5){var _0x1db6fa=_0x24cd38;return'<option\x20value=\x22'+_0x4ac3ac(_0xc239a5['id'])+'\x22>'+_0x4ac3ac(_0xc239a5[_0x1db6fa(0x1d9)])+_0x1db6fa(0x318);})[_0x24cd38(0x2f5)](''),_0x5d04b0(_0x24cd38(0x2a8))['value']=_0x2d024e[_0x24cd38(0x15b)](function(_0x17bb89){return _0x17bb89['id']===_0x5d04b0('jenis')['value'];})?_0x5d04b0('jenis')['value']:_0x2d024e['length']===0x1?_0x2d024e[0x0]['id']:'',_0x5d04b0('tmMetode')['innerHTML']=_0x1e21f7(_0x501abd[_0x24cd38(0x273)]),[_0x24cd38(0x27a),'tmIdentitas',_0x24cd38(0x1b3),_0x24cd38(0x1ea),_0x24cd38(0x1ce)]['forEach'](function(_0x5a9d8a){_0x5d04b0(_0x5a9d8a)['value']='';}),_0x5d04b0('tmNopol')[_0x24cd38(0x227)]=_0x5d04b0('nopol')[_0x24cd38(0x227)],_0x502355(_0xd88a92,![]),_0x5d04b0(_0x24cd38(0x31c))['max']=_0xd88a92['slice'](0x0,0xa),_0x5357ed(''),_0x5d04b0(_0x24cd38(0x1ec))['textContent']='',_0x5d04b0('tiketModal')[_0x24cd38(0x1e0)]=![],clearInterval(_0x1fa6aa[_0x24cd38(0x283)]),_0x1fa6aa['clock']=setInterval(_0x462e94,0x7530);if(_0x16a096&&_0xf9ba7c)_0x4119aa(_0xf9ba7c);else _0x30a64d();(_0x5d04b0('tmNopol')['value']?_0x16a096?_0x5d04b0('tmNama'):_0x5d04b0('tmTgl'):_0x5d04b0(_0x24cd38(0x2a4)))['focus']();}function _0x40ebff(){var _0x1df217=_0x430c79;_0x5d04b0('tiketModal')['hidden']=!![],clearInterval(_0x1fa6aa['clock']),clearTimeout(_0x1fa6aa[_0x1df217(0x18a)]),_0x1fa6aa[_0x1df217(0x25d)]++,_0x5d04b0('q')['focus']();}function _0x369d03(){var _0x35d5a4=_0x430c79,_0x1b9333=_0x1fa6aa[_0x35d5a4(0x164)]==='Tiket\x20Hilang',_0xe9a563=_0x5d04b0(_0x35d5a4(0x2a4))['value']['trim'](),_0x4451d9=_0x1fa6aa[_0x35d5a4(0x274)]?'':_0x589ead(),_0x45b91c='';if(!_0xe9a563)_0x45b91c='Isi\x20plat\x20nomor';else{if(!_0x5d04b0('tmJenis')[_0x35d5a4(0x227)])_0x45b91c='Pilih\x20jenis\x20kendaraan';else{if(!_0x1fa6aa['tiket']&&!_0x4451d9)_0x45b91c=_0x35d5a4(0x22a);else{if(_0x4451d9&&_0x4451d9>_0x30619d())_0x45b91c='Waktu\x20masuk\x20tidak\x20boleh\x20melewati\x20waktu\x20sekarang';else{if(_0x1b9333&&!_0x5d04b0('tmNama')[_0x35d5a4(0x227)]['trim']())_0x45b91c=_0x35d5a4(0x189);else{if(_0x1b9333&&!_0x5d04b0(_0x35d5a4(0x286))['value']['trim']())_0x45b91c=_0x35d5a4(0x307);}}}}}if(_0x45b91c){_0x5d04b0('tmErr')[_0x35d5a4(0x2c1)]=_0x45b91c;return;}if(_0x5d04b0(_0x35d5a4(0x25a))[_0x35d5a4(0x16c)])return;_0x1fa6aa[_0x35d5a4(0x231)]=!![],_0x169111();var _0x2f8a5b={'id':_0x1fa6aa[_0x35d5a4(0x274)]?_0x1fa6aa[_0x35d5a4(0x274)]['id']:null,'id_tarif':_0x5d04b0(_0x35d5a4(0x2a8))['value'],'tipe':_0x1fa6aa['mode'],'masuk':_0x4451d9||null,'id_metode':_0x5d04b0(_0x35d5a4(0x316))[_0x35d5a4(0x227)],'bayar':_0x5c5b64(_0x5d04b0(_0x35d5a4(0x1ce))['value']),'nopol':_0xe9a563,'ekstra':{'nama':_0x1b9333?_0x5d04b0(_0x35d5a4(0x27a))['value']['trim']():'','identitas':_0x1b9333?_0x5d04b0('tmIdentitas')[_0x35d5a4(0x227)]['trim']():'','stnk':_0x1b9333?_0x5d04b0('tmStnk')['value']['trim']():'','keterangan':_0x5d04b0(_0x35d5a4(0x1ea))['value']['trim']()}},_0x49ce53=_0x3c80c5();if(_0x49ce53&&_0x49ce53['qris']&&_0x1fa6aa[_0x35d5a4(0x2f9)]&&_0x1fa6aa['hitung']['total']>0x0){_0x1803d1(_0x2f8a5b,_0x1fa6aa[_0x35d5a4(0x2f9)][_0x35d5a4(0x1c6)],function(_0x14f5a4){var _0x194e95=_0x35d5a4;_0x1fa6aa[_0x194e95(0x231)]=![],_0x40ebff(),_0x1bfaaa(),_0x51da0b(),_0x538086(_0x14f5a4);},function(){var _0x374fd6=_0x35d5a4;_0x1fa6aa[_0x374fd6(0x231)]=![],_0x286828(_0x5d04b0(_0x374fd6(0x316))),_0x5d04b0(_0x374fd6(0x1ce))['value']='',_0x169111();});return;}_0x1f2fe7(_0x35d5a4(0x287),{'body':_0x2f8a5b})[_0x35d5a4(0x176)](function(_0x44f3d8){_0x40ebff(),_0x1bfaaa(),_0x51da0b(),_0x538086(_0x44f3d8);})[_0x35d5a4(0x1e5)](function(_0x584705){var _0x29993d=_0x35d5a4;_0x5d04b0(_0x29993d(0x1ec))[_0x29993d(0x2c1)]=_0x584705['message'];})['then'](function(){_0x1fa6aa['busy']=![],_0x169111();});}function _0x205058(_0x568c16){_0x3c0c8a(_0x568c16);}function _0x4ac7d0(){var _0xeea722=_0x430c79;if(_0x5d04b0(_0xeea722(0x194))[_0xeea722(0x16c)])return;var _0x2f23f6=_0x5d04b0(_0xeea722(0x194));_0x2f23f6['disabled']=!![];var _0x264688={'id':_0xf9ba7c?_0xf9ba7c['id']:null,'id_tarif':_0x5d04b0(_0xeea722(0x1d9))[_0xeea722(0x227)],'tipe':_0x365644,'id_metode':_0x5d04b0('metode')['value'],'bayar':_0x5c5b64(_0x5d04b0(_0xeea722(0x1e4))['value']),'nopol':_0x5d04b0(_0xeea722(0x229))[_0xeea722(0x227)]},_0x5a99b6=_0x43c04e();if(_0x5a99b6&&_0x5a99b6[_0xeea722(0x191)]&&_0xacc3cc&&_0xacc3cc['total']>0x0&&!_0xacc3cc['member']){_0x1803d1(_0x264688,_0xacc3cc['total'],function(_0x2069b7){_0x1bfaaa(),_0x51da0b(),_0x538086(_0x2069b7);},function(){var _0x419bae=_0xeea722;_0x286828(_0x5d04b0(_0x419bae(0x273))),_0x5d04b0(_0x419bae(0x1e4))['value']='',_0x42bb10();});return;}_0x1f2fe7(_0xeea722(0x287),{'body':_0x264688})['then'](function(_0x552851){_0x1bfaaa(),_0x51da0b(),_0x538086(_0x552851);})['catch'](function(_0x1e99d4){var _0x233d70=_0xeea722;_0x1cc493(_0x1e99d4[_0x233d70(0x1df)],_0x233d70(0x320)),_0x42bb10();});}var _0x3524eb={'seq':0x0,'tagihan':null,'body':null,'lunas':![],'busy':![],'timer':null,'onDone':null,'onBatal':null};function _0x1dad7f(_0x187614,_0x1b9b5e){var _0x599810=_0x430c79,_0x161f53=_0x5d04b0('qrisSt');_0x161f53[_0x599810(0x2c1)]=_0x187614,_0x161f53['className']='qris-st'+(_0x1b9b5e?'\x20'+_0x1b9b5e:'');}function _0x286828(_0x3133bc){var _0x43456f=_0x430c79,_0xb7e4bf=_0x501abd[_0x43456f(0x273)]['find'](function(_0x524e2d){return!_0x524e2d['qris'];});if(_0xb7e4bf)_0x3133bc['value']=_0xb7e4bf['id'];}function _0x409481(){var _0x40f9d1=_0x430c79,_0xa69ac7=_0x43c04e();if(_0xa69ac7&&_0xa69ac7[_0x40f9d1(0x191)]&&_0xacc3cc&&_0xacc3cc['total']>0x0&&!_0xacc3cc['member']&&_0x5d04b0(_0x40f9d1(0x284))[_0x40f9d1(0x1e0)]&&_0x5d04b0(_0x40f9d1(0x184))['hidden'])_0x4ac7d0();}function _0x1803d1(_0x575ea5,_0x3aaba8,_0x2546e3,_0x2d49b3){var _0x29306a=_0x430c79,_0x5da975=++_0x3524eb[_0x29306a(0x25d)];clearTimeout(_0x3524eb['timer']),_0x3524eb['tagihan']=null,_0x3524eb['qr']='',_0x3524eb[_0x29306a(0x1bd)]=_0x575ea5,_0x3524eb[_0x29306a(0x173)]=![],_0x3524eb['busy']=![],_0x3524eb['onDone']=_0x2546e3,_0x3524eb['onBatal']=_0x2d49b3,_0x5d04b0('qrisMerchant')[_0x29306a(0x2c1)]=_0x501abd[_0x29306a(0x308)]||'',_0x5d04b0('qrisCetak')[_0x29306a(0x16c)]=!![],_0x5d04b0('qrisAmt')[_0x29306a(0x2c1)]=_0x24f689(_0x3aaba8),_0x5d04b0('qrisQr')[_0x29306a(0x232)]=_0x29306a(0x299),_0x5d04b0('qrisPrint')[_0x29306a(0x2c1)]='',_0x1dad7f(_0x29306a(0x2dc)),_0x5d04b0(_0x29306a(0x284))[_0x29306a(0x1e0)]=![],_0x5d04b0('qrisModal')[_0x29306a(0x2c0)]('[data-qris-batal]')['focus'](),_0x1f2fe7(_0x29306a(0x188),{'body':{'amount':_0x3aaba8,'ip_printer':_0x501abd[_0x29306a(0x2bd)]||''}})[_0x29306a(0x176)](function(_0x55d29c){var _0x1420a3=_0x29306a;if(_0x5da975!==_0x3524eb['seq'])return;_0x3524eb['tagihan']={'billing_number':_0x55d29c['billing_number'],'amount':_0x55d29c[_0x1420a3(0x27d)],'token':_0x55d29c['token']},_0x3524eb['qr']=_0x55d29c['qr_base64'],_0x5d04b0(_0x1420a3(0x1f4))['disabled']=![],_0x5d04b0('qrisAmt')['textContent']=_0x24f689(_0x55d29c[_0x1420a3(0x27d)]),_0x5d04b0(_0x1420a3(0x1e7))['innerHTML']=_0x1420a3(0x1da)+_0x4ac3ac(_0x55d29c[_0x1420a3(0x267)])+'\x22>',_0x5d04b0('qrisPrint')[_0x1420a3(0x2c1)]='No.\x20tagihan\x20'+_0x55d29c[_0x1420a3(0x2db)]+_0x1420a3(0x243)+(_0x55d29c['printer']?_0x55d29c['printed']?_0x1420a3(0x2ab)+_0x55d29c[_0x1420a3(0x2bd)]:_0x1420a3(0x292)+_0x55d29c['printer']:_0x1420a3(0x251)),_0x1dad7f('Menunggu\x20pembayaran...'),_0x55dac1(_0x5da975);})[_0x29306a(0x1e5)](function(_0x3457f8){var _0x30bca1=_0x29306a;if(_0x5da975===_0x3524eb['seq'])_0x1dad7f(_0x3457f8[_0x30bca1(0x1df)],_0x30bca1(0x320));});}function _0x55dac1(_0x4593e0){var _0x341eba=_0x430c79;if(_0x4593e0!==_0x3524eb[_0x341eba(0x25d)]||!_0x3524eb['tagihan']||_0x3524eb['busy'])return;clearTimeout(_0x3524eb['timer']);if(_0x3524eb[_0x341eba(0x173)])return _0x55c174(_0x4593e0);_0x3524eb[_0x341eba(0x231)]=!![],_0x1f2fe7(_0x341eba(0x254),{'body':_0x3524eb[_0x341eba(0x1c7)]})['then'](function(_0x30c6f4){var _0xb2a67f=_0x341eba;_0x3524eb['busy']=![];if(_0x4593e0!==_0x3524eb[_0xb2a67f(0x25d)])return;if(_0x30c6f4['paid'])return _0x3524eb[_0xb2a67f(0x173)]=!![],_0x55c174(_0x4593e0);_0x1dad7f(_0xb2a67f(0x1e3)),_0x3524eb[_0xb2a67f(0x18a)]=setTimeout(function(){_0x55dac1(_0x4593e0);},0x9c4);})['catch'](function(_0x2736db){var _0x2d6511=_0x341eba;_0x3524eb['busy']=![];if(_0x4593e0!==_0x3524eb['seq'])return;_0x1dad7f(_0x2736db['message']+_0x2d6511(0x22f),'err'),_0x3524eb[_0x2d6511(0x18a)]=setTimeout(function(){_0x55dac1(_0x4593e0);},0xfa0);});}function _0x55c174(_0x888c3d){var _0x470c14=_0x430c79;_0x3524eb['busy']=!![],_0x1dad7f('Lunas\x20·\x20menyelesaikan\x20transaksi...','ok'),_0x1f2fe7('/api/kasir/bayar',{'body':Object[_0x470c14(0x200)]({},_0x3524eb[_0x470c14(0x1bd)],{'qris':_0x3524eb[_0x470c14(0x1c7)]})})[_0x470c14(0x176)](function(_0x1094a4){var _0x322f2f=_0x470c14;_0x3524eb[_0x322f2f(0x231)]=![];if(_0x888c3d!==_0x3524eb['seq'])return;_0x3524eb[_0x322f2f(0x25d)]++,_0x5d04b0('qrisModal')[_0x322f2f(0x1e0)]=!![],_0x3524eb[_0x322f2f(0x2d4)](_0x1094a4);})[_0x470c14(0x1e5)](function(_0x3b9133){var _0x1a53ed=_0x470c14;_0x3524eb['busy']=![];if(_0x888c3d!==_0x3524eb['seq'])return;_0x1dad7f('Sudah\x20lunas,\x20tetapi\x20gagal\x20menyelesaikan:\x20'+_0x3b9133[_0x1a53ed(0x1df)]+'\x20·\x20mencoba\x20lagi...',_0x1a53ed(0x320)),_0x3524eb[_0x1a53ed(0x18a)]=setTimeout(function(){_0x55dac1(_0x888c3d);},0xfa0);});}function _0x3b8373(){var _0x122759=_0x430c79;if(!_0x3524eb['tagihan']||_0x5d04b0('qrisCetak')[_0x122759(0x16c)])return;var _0x689885=_0x5d04b0(_0x122759(0x1f4)),_0x1c6644=_0x5d04b0('qrisPrint'),_0x3963cd=_0x3524eb[_0x122759(0x25d)];_0x689885[_0x122759(0x16c)]=!![],_0x1c6644['textContent']='Mengirim\x20QRIS\x20ke\x20printer...',_0x1f2fe7(_0x122759(0x1fe),{'body':Object[_0x122759(0x200)]({'qr_base64':_0x3524eb['qr']},_0x3524eb['tagihan'])})['then'](function(){if(_0x3963cd===_0x3524eb['seq'])_0x1c6644['textContent']='No.\x20tagihan\x20'+_0x3524eb['tagihan']['billing_number']+'\x20·\x20QRIS\x20tercetak';})[_0x122759(0x1e5)](function(_0x20adcf){var _0x59bb23=_0x122759;if(_0x3963cd===_0x3524eb[_0x59bb23(0x25d)])_0x1c6644[_0x59bb23(0x2c1)]=_0x20adcf['message'];})['then'](function(){if(_0x3963cd===_0x3524eb['seq'])_0x689885['disabled']=![];});}function _0x45e69c(){var _0x3ad077=_0x430c79;if(_0x3524eb[_0x3ad077(0x231)]&&_0x3524eb['lunas'])return;if(_0x3524eb['lunas']&&!confirm('Pembayaran\x20QRIS\x20sudah\x20LUNAS\x20tetapi\x20transaksi\x20belum\x20selesai.\x20Tetap\x20tutup?'))return;_0x3524eb['seq']++,clearTimeout(_0x3524eb[_0x3ad077(0x18a)]),_0x3524eb[_0x3ad077(0x231)]=![],_0x5d04b0(_0x3ad077(0x284))['hidden']=!![];if(_0x3524eb[_0x3ad077(0x1aa)])_0x3524eb[_0x3ad077(0x1aa)]();}var _0xf2ff60=null,_0x4e7c93='<svg\x20viewBox=\x220\x200\x2024\x2024\x22\x20fill=\x22none\x22\x20stroke=\x22currentColor\x22\x20stroke-width=\x222.5\x22\x20stroke-linecap=\x22round\x22\x20stroke-linejoin=\x22round\x22><path\x20d=\x22M5\x2012l5\x205L20\x207\x22/></svg>',_0x487daa=_0x430c79(0x193);function _0x538086(_0x34a524,_0x33e645){var _0x183eba=_0x430c79,_0x2df535=_0x33e645==='closing';_0xf2ff60=_0x2df535?{'closing':_0x34a524['id'],'jenis':_0x34a524[_0x183eba(0x1d9)]}:_0x33e645===_0x183eba(0x18f)?{'trx':_0x34a524[_0x183eba(0x242)]}:{'parkir':_0x34a524['parkir'],'trx':_0x34a524['trx']},_0x5d04b0(_0x183eba(0x1ef))[_0x183eba(0x2c1)]=_0x2df535?_0x34a524['jenis']==='global'?'Tutup\x20Harian\x20Berhasil':_0x183eba(0x285):_0x33e645==='langganan'?'Pembayaran\x20Langganan\x20Berhasil':_0x183eba(0x2b6);var _0x25e145=_0x5d04b0(_0x183eba(0x204));_0x25e145[_0x183eba(0x1e0)]=!!_0x33e645,_0x25e145[_0x183eba(0x261)]='gate-st\x20'+(_0x34a524[_0x183eba(0x1b6)]?'ok':_0x183eba(0x2d7)),_0x25e145[_0x183eba(0x232)]=(_0x34a524[_0x183eba(0x1b6)]?_0x4e7c93+_0x183eba(0x1d7):_0x487daa+'Gate\x20tidak\x20terbuka:\x20'+_0x4ac3ac(_0x34a524['gate_pesan']||'-'))+(_0x34a524['kembali']?'\x20·\x20Kembalian\x20Rp\x20'+_0x24f689(_0x34a524['kembali']):'');var _0x559b75=_0x34a524['struk']||{'baris':[],'bayar':[]},_0x245adf=function(_0x31f3a0){var _0x533144=_0x183eba;return!_0x31f3a0?_0x533144(0x21f):typeof _0x31f3a0===_0x533144(0x1c2)?'<div\x20class=\x22sec\x22>'+_0x4ac3ac(_0x31f3a0)+'</div>':_0x533144(0x22e)+_0x4ac3ac(_0x31f3a0[0x0])+'</span><b>'+_0x4ac3ac(_0x31f3a0[0x1])+_0x533144(0x192);};_0x5d04b0('strukPaper')['innerHTML']=_0x183eba(0x262)+_0x4ac3ac(_0x501abd['perusahaan']||_0x183eba(0x268))+_0x183eba(0x1f8)+(_0x501abd['alamat']?'<div\x20class=\x22addr\x22>'+_0x4ac3ac(_0x501abd[_0x183eba(0x28c)])+_0x183eba(0x1af):'')+'<hr\x20class=\x22solid\x22><div\x20class=\x22ttl\x22>'+_0x4ac3ac(_0x559b75['judul']||_0x183eba(0x2fc))+_0x183eba(0x319)+_0x559b75['baris']['map'](_0x245adf)['join']('')+_0x183eba(0x252)+_0x4ac3ac(_0x559b75[_0x183eba(0x1c6)]||'')+'</b></div>'+_0x559b75[_0x183eba(0x1e4)][_0x183eba(0x17f)](_0x245adf)['join']('')+_0x183eba(0x18d)+_0x4ac3ac(_0x559b75[_0x183eba(0x19d)]||_0x183eba(0x1ed))+_0x183eba(0x1af),_0x5d04b0('cetakTx')[_0x183eba(0x2c1)]='Cetak\x20Struk',_0x5d04b0(_0x183eba(0x187))['textContent']='',_0x5d04b0(_0x183eba(0x187))['className']='struk-msg',_0x5d04b0(_0x183eba(0x2d3))['hidden']=![],_0x5d04b0(_0x183eba(0x26d))['focus']();if(_0x33e645||_0x34a524[_0x183eba(0x23f)])_0x345be5();}function _0x345be5(){var _0x3535ff=_0x430c79;if(!_0xf2ff60||_0x5d04b0('btnCetak')[_0x3535ff(0x16c)])return;var _0x2d51a2=_0x5d04b0('btnCetak'),_0x315e12=_0x5d04b0('strukMsg');_0x2d51a2[_0x3535ff(0x16c)]=!![],_0x315e12[_0x3535ff(0x261)]='struk-msg',_0x315e12['textContent']=_0x3535ff(0x27c),_0x1f2fe7(_0xf2ff60['closing']?_0x3535ff(0x210):_0x3535ff(0x2b3),{'body':_0xf2ff60[_0x3535ff(0x1d3)]?{'id':_0xf2ff60['closing']}:_0xf2ff60})[_0x3535ff(0x176)](function(){var _0xf2cf2c=_0x3535ff;_0x315e12['className']=_0xf2cf2c(0x2d8),_0x315e12['textContent']='Struk\x20tercetak',_0x5d04b0(_0xf2cf2c(0x249))[_0xf2cf2c(0x2c1)]='Cetak\x20Lagi';})[_0x3535ff(0x1e5)](function(_0x56a5e1){var _0x4e9762=_0x3535ff;_0x315e12[_0x4e9762(0x261)]=_0x4e9762(0x317),_0x315e12[_0x4e9762(0x2c1)]=_0x56a5e1[_0x4e9762(0x1df)];})[_0x3535ff(0x176)](function(){var _0x43d2fe=_0x3535ff;_0x2d51a2['disabled']=![],_0x2d51a2[_0x43d2fe(0x179)]();});}function _0x5e55e6(){var _0xe1f886=_0x430c79;_0x5d04b0(_0xe1f886(0x2d3))['hidden']=!![];if(_0xf2ff60&&_0xf2ff60['closing']){if(_0xf2ff60[_0xe1f886(0x1d9)]===_0xe1f886(0x17d))fetch('/kasir/logout',{'method':_0xe1f886(0x209),'credentials':'same-origin'})[_0xe1f886(0x2ec)](function(){location['replace']('/kasir');});else location['reload']();return;}_0x5d04b0('q')['focus']();}var _0x321293={'sel':null,'list':[],'busy':![],'seq':0x0},_0x390890={'Aktif':'','Segera\x20berakhir':'soon','Kedaluwarsa':'exp','Nonaktif':_0x430c79(0x15d),'Belum\x20mulai':_0x430c79(0x1e9)};function _0x3aa6a7(_0x1ec672){var _0x50cfe9=_0x430c79,_0x59f69a=String(_0x1ec672||'')[_0x50cfe9(0x185)]('-');return _0x59f69a[_0x50cfe9(0x2a5)]===0x3?_0x59f69a[0x2]+'/'+_0x59f69a[0x1]+'/'+_0x59f69a[0x0]:'-';}function _0x37c48c(){var _0x582255=_0x430c79;return _0x501abd[_0x582255(0x273)][_0x582255(0x182)](function(_0x424160){var _0x53fa29=_0x582255;return _0x424160['id']===_0x5d04b0(_0x53fa29(0x1bb))['value'];});}function _0x49cede(){var _0x164745=_0x430c79,_0x4f1040=_0x37c48c();return!_0x4f1040||_0x4f1040[_0x164745(0x244)]==='CASH';}function _0x188d9d(){var _0x59bde0=_0x430c79;return _0x321293['sel']&&_0x321293['sel']['tarif_terakhir']?_0x321293['sel']['tarif_terakhir']['total']:_0x5c5b64(_0x5d04b0(_0x59bde0(0x172))['value']);}function _0x311ef2(_0x5f14b7){var _0x1e4e4e=_0x430c79;return _0x1e4e4e(0x161)+(_0x390890[_0x5f14b7]||'')+'\x22>'+_0x4ac3ac(_0x5f14b7)+_0x1e4e4e(0x2f1);}function _0x139abd(){var _0x46e56c=_0x430c79;_0x321293['sel']=null,_0x321293[_0x46e56c(0x2aa)]=[],_0x321293['busy']=![],[_0x46e56c(0x219),_0x46e56c(0x172),_0x46e56c(0x213),'mbUraian'][_0x46e56c(0x1b0)](function(_0x507415){var _0x438fee=_0x46e56c;_0x5d04b0(_0x507415)[_0x438fee(0x227)]='';}),_0x5d04b0('mbTotal')['readOnly']=![],_0x5d04b0('mbTotalBox')[_0x46e56c(0x1ae)][_0x46e56c(0x28a)]('locked'),_0x5d04b0(_0x46e56c(0x1d2))[_0x46e56c(0x2c1)]='',_0x5d04b0('mbMetode')[_0x46e56c(0x232)]=_0x1e21f7(_0x501abd['metode']),_0x5d04b0(_0x46e56c(0x2d9))[_0x46e56c(0x1e0)]=_0x5d04b0(_0x46e56c(0x21d))['hidden']=_0x5d04b0(_0x46e56c(0x1be))[_0x46e56c(0x1e0)]=!![],_0x5d04b0('mbErr')['textContent']='',_0x5d04b0('memberModal')['hidden']=![],_0x1b77ed(),_0x5d04b0(_0x46e56c(0x219))[_0x46e56c(0x179)]();}function _0x34ac99(){var _0x548bbd=_0x430c79;_0x5d04b0(_0x548bbd(0x1b7))[_0x548bbd(0x1e0)]=!![],_0x5d04b0('q')[_0x548bbd(0x179)]();}function _0x148f03(){var _0x4d5fb3=_0x430c79,_0x554710=_0x5d04b0('mbQ')['value']['trim']();_0x5d04b0(_0x4d5fb3(0x2c9))['textContent']='';if(_0x554710['length']<0x2){_0x5d04b0(_0x4d5fb3(0x2c9))[_0x4d5fb3(0x2c1)]=_0x4d5fb3(0x2e6),_0x5d04b0(_0x4d5fb3(0x219))[_0x4d5fb3(0x179)]();return;}var _0x48e95d=++_0x321293['seq'];_0x5d04b0('mbCari')['disabled']=!![],_0x1f2fe7('/api/kasir/member?q='+encodeURIComponent(_0x554710))['then'](function(_0x409bba){var _0x2ece62=_0x4d5fb3;if(_0x48e95d!==_0x321293['seq'])return;_0x321293[_0x2ece62(0x2aa)]=_0x409bba;if(!_0x409bba['length']){_0x5d04b0('mbErr')[_0x2ece62(0x2c1)]='Langganan\x20\x22'+_0x554710+'\x22\x20tidak\x20ditemukan';return;}if(_0x409bba[_0x2ece62(0x2a5)]===0x1)return _0x69ef2e(0x0);_0x321293[_0x2ece62(0x24d)]=null,_0x5d04b0(_0x2ece62(0x21d))['hidden']=_0x5d04b0('mbPay')[_0x2ece62(0x1e0)]=!![],_0x1b77ed(),_0x5d04b0('mbList')[_0x2ece62(0x232)]=_0x409bba['map'](function(_0x377c2b,_0x33f4de){var _0x3dfb85=_0x2ece62;return _0x3dfb85(0x2d0)+_0x33f4de+_0x3dfb85(0x2e9)+_0x4ac3ac(_0x377c2b[_0x3dfb85(0x1e1)])+'</b><small>'+_0x4ac3ac(_0x377c2b['kode'])+_0x3dfb85(0x243)+_0x4ac3ac(_0x377c2b['kendaraan']['map'](function(_0x3f0859){return _0x3f0859['nopol'];})[_0x3dfb85(0x2f5)](',\x20')||_0x3dfb85(0x263))+_0x3dfb85(0x297)+_0x311ef2(_0x377c2b[_0x3dfb85(0x31a)])+'</button>';})[_0x2ece62(0x2f5)](''),_0x5d04b0(_0x2ece62(0x2d9))[_0x2ece62(0x1e0)]=![];})['catch'](function(_0x327a9e){var _0x1628ae=_0x4d5fb3;if(_0x48e95d===_0x321293['seq'])_0x5d04b0(_0x1628ae(0x2c9))['textContent']=_0x327a9e['message'];})[_0x4d5fb3(0x176)](function(){_0x5d04b0('mbCari')['disabled']=![];});}function _0x69ef2e(_0x454d35){var _0x4bd7b4=_0x430c79,_0x25e650=_0x321293['list'][_0x454d35];_0x321293['sel']=_0x25e650,_0x5d04b0('mbList')[_0x4bd7b4(0x1e0)]=!![],_0x5d04b0('mbCard')[_0x4bd7b4(0x232)]=_0x4bd7b4(0x1f0)+_0x4ac3ac(_0x25e650['nama'])+'</b><small>'+_0x4ac3ac(_0x25e650[_0x4bd7b4(0x244)])+(_0x25e650[_0x4bd7b4(0x1dc)]?_0x4bd7b4(0x243)+_0x4ac3ac(_0x25e650[_0x4bd7b4(0x1dc)]):'')+'</small></div>'+_0x311ef2(_0x25e650[_0x4bd7b4(0x31a)])+_0x4bd7b4(0x1af)+'<dl><dt>Masa\x20berlaku</dt><dd>'+_0x3aa6a7(_0x25e650['mulai'])+'\x20s/d\x20'+_0x3aa6a7(_0x25e650['berakhir'])+'</dd><dt>Kendaraan</dt><dd>'+(_0x25e650['kendaraan'][_0x4bd7b4(0x2a5)]?_0x25e650['kendaraan']['map'](function(_0x2f448b){var _0x598b42=_0x4bd7b4;return _0x598b42(0x2ff)+_0x4ac3ac(_0x2f448b[_0x598b42(0x229)])+'</span>';})['join'](''):'-')+_0x4bd7b4(0x266)+(_0x25e650[_0x4bd7b4(0x170)]?_0x4bd7b4(0x1a7)+_0x4ac3ac(_0x25e650['rfid'])+_0x4bd7b4(0x266):'')+'</dl>'+'<div\x20class=\x22mb-baru\x22><span>Setelah\x20dibayar\x20·\x20siklus\x20'+_0x25e650[_0x4bd7b4(0x1d1)][_0x4bd7b4(0x181)]+'\x20bulan</span>Berlaku\x20'+_0x3aa6a7(_0x25e650[_0x4bd7b4(0x1d1)]['mulai'])+'\x20s/d\x20'+_0x3aa6a7(_0x25e650['periode_baru']['berakhir'])+'</div>'+(_0x321293[_0x4bd7b4(0x2aa)]['length']>0x1?_0x4bd7b4(0x1d8):''),_0x5d04b0(_0x4bd7b4(0x21d))['hidden']=![],_0x5d04b0(_0x4bd7b4(0x1be))[_0x4bd7b4(0x1e0)]=![];var _0x4997d0=_0x25e650['tarif_terakhir'];_0x5d04b0('mbTotal')['value']=_0x4997d0?_0x24f689(_0x4997d0['total']):'',_0x5d04b0('mbTotal')[_0x4bd7b4(0x1ee)]=!!_0x4997d0,_0x5d04b0(_0x4bd7b4(0x224))[_0x4bd7b4(0x1ae)][_0x4bd7b4(0x2cc)]('locked',!!_0x4997d0),_0x5d04b0(_0x4bd7b4(0x1d2))[_0x4bd7b4(0x232)]=_0x4997d0?'Tarif\x20dari\x20pembayaran\x20terakhir\x20<b>'+_0x4ac3ac(_0x4997d0[_0x4bd7b4(0x20d)])+'</b>\x20('+_0x3aa6a7(_0x4997d0[_0x4bd7b4(0x16b)])+_0x4bd7b4(0x2b0):'Belum\x20ada\x20pembayaran\x20sebelumnya:\x20isi\x20tarif\x20langganan\x20(tidak\x20boleh\x200).',_0x5d04b0('mbUraian')['value']='Perpanjangan\x20langganan\x20'+_0x25e650[_0x4bd7b4(0x1e1)]+'\x20'+_0x25e650['periode_baru']['siklus']+_0x4bd7b4(0x1f1)+_0x3aa6a7(_0x25e650['periode_baru']['mulai'])+'\x20s/d\x20'+_0x3aa6a7(_0x25e650['periode_baru']['berakhir'])+')',_0x5d04b0('mbBayar')[_0x4bd7b4(0x227)]='',_0x1b77ed(),(_0x4997d0?_0x5d04b0('mbBayar'):_0x5d04b0('mbTotal'))[_0x4bd7b4(0x179)]();}function _0x1b77ed(){var _0x254091=_0x430c79,_0x373df4=_0x188d9d(),_0x135114=_0x4ab552(_0x37c48c());_0x5d04b0('mbBayar')[_0x254091(0x1ee)]=!_0x49cede();if(!_0x49cede())_0x5d04b0(_0x254091(0x213))['value']=_0x135114?'0':_0x373df4?_0x24f689(_0x373df4):'';var _0x3556c5=_0x5c5b64(_0x5d04b0(_0x254091(0x213))['value']),_0x4a9e26=_0x135114?0x0:_0x3556c5-_0x373df4,_0x5e5a48=_0x5d04b0(_0x254091(0x257));_0x5e5a48['textContent']=_0x373df4&&_0x3556c5?_0x4a9e26<0x0?'-Rp\x20'+_0x24f689(-_0x4a9e26):'Rp\x20'+_0x24f689(_0x4a9e26):_0x254091(0x234),_0x5e5a48[_0x254091(0x1ae)][_0x254091(0x2cc)]('minus',_0x4a9e26<0x0&&_0x3556c5>0x0),_0x5d04b0('mbGo')[_0x254091(0x16c)]=_0x321293[_0x254091(0x231)]||!_0x321293[_0x254091(0x24d)]||_0x373df4<0x1||_0x49cede()&&_0x3556c5<_0x373df4;}function _0x5b65dd(){var _0x632ebc=_0x430c79,_0x561520=_0x188d9d(),_0x5d765c='';if(!_0x321293['sel'])_0x5d765c=_0x632ebc(0x28b);else{if(_0x561520<0x1)_0x5d765c=_0x632ebc(0x281);else{if(_0x49cede()&&_0x5c5b64(_0x5d04b0(_0x632ebc(0x213))['value'])<_0x561520)_0x5d765c='Jumlah\x20bayar\x20kurang\x20dari\x20tarif\x20langganan';}}if(_0x5d765c){_0x5d04b0(_0x632ebc(0x2c9))['textContent']=_0x5d765c;return;}_0x321293['busy']=!![],_0x1b77ed(),_0x5d04b0('mbErr')['textContent']='',_0x1f2fe7('/api/kasir/member/bayar',{'body':{'id':_0x321293['sel']['id'],'total':_0x561520,'id_metode':_0x5d04b0('mbMetode')[_0x632ebc(0x227)],'bayar':_0x5c5b64(_0x5d04b0('mbBayar')['value']),'uraian':_0x5d04b0(_0x632ebc(0x226))['value']['trim']()}})[_0x632ebc(0x176)](function(_0x492d5e){_0x5d04b0('memberModal')['hidden']=!![],_0x538086(_0x492d5e,'langganan');})['catch'](function(_0x547cb7){_0x5d04b0('mbErr')['textContent']=_0x547cb7['message'];})['then'](function(){var _0x57d1f6=_0x632ebc;_0x321293[_0x57d1f6(0x231)]=![],_0x1b77ed();});}var _0x22a98a=null;function _0x4c8393(){var _0x26bb77=_0x430c79;_0x5d04b0('clErr')[_0x26bb77(0x2c1)]='',_0x5d04b0('clTunai')[_0x26bb77(0x227)]='',_0x5d04b0(_0x26bb77(0x289))['value']='',_0x79b208(![]),_0x25d165(),_0x5d04b0('clBuku')[_0x26bb77(0x2c1)]=_0x5d04b0(_0x26bb77(0x2b2))['textContent'],_0x5d04b0('clKasir')[_0x26bb77(0x2c1)]=_0x501abd['nama']||'-';var _0x291f9a=new Date();_0x5d04b0(_0x26bb77(0x178))[_0x26bb77(0x2c1)]=('0'+_0x291f9a['getHours']())[_0x26bb77(0x2d5)](-0x2)+':'+('0'+_0x291f9a['getMinutes']())['slice'](-0x2),_0x5d04b0('closingModal')['hidden']=![],_0x5d04b0(_0x26bb77(0x24e))[_0x26bb77(0x179)]();}function _0x38cc26(){var _0xe8e0ba=_0x430c79;_0x5d04b0(_0xe8e0ba(0x248))['hidden']=!![],_0x5d04b0('clPass')['value']='',_0x79b208(![]),_0x25d165(),_0x5d04b0('q')[_0xe8e0ba(0x179)]();}function _0x79b208(_0xa7b0fc){var _0x4c9719=_0x430c79,_0x5b3505=_0x5d04b0(_0x4c9719(0x18c));_0x5d04b0('clPass')['type']=_0xa7b0fc?_0x4c9719(0x2ad):_0x4c9719(0x215),_0x5b3505[_0x4c9719(0x2c0)](_0x4c9719(0x22c))[_0x4c9719(0x203)]('hidden',_0xa7b0fc),_0x5b3505['querySelector']('[data-eye-off]')[_0x4c9719(0x203)]('hidden',!_0xa7b0fc),_0x5b3505['title']=_0xa7b0fc?_0x4c9719(0x247):'Tampilkan\x20password',_0x5b3505[_0x4c9719(0x238)]('aria-label',_0x5b3505[_0x4c9719(0x30f)]);}function _0x25d165(){var _0x143466=_0x430c79;clearTimeout(_0x22a98a),_0x22a98a=null,_0x5d04b0(_0x143466(0x2b1))['classList']['remove']('confirm'),_0x5d04b0('clGlobal')['querySelector']('span')[_0x143466(0x2c1)]='Tutup\x20Harian';}function _0x320042(_0x4305b7){var _0x420663=_0x430c79;if(!_0x5d04b0('clPass')['value']){_0x5d04b0(_0x420663(0x1b5))['textContent']=_0x420663(0x280),_0x5d04b0('clPass')[_0x420663(0x179)]();return;}if(_0x4305b7===_0x420663(0x1a8)&&!_0x22a98a){_0x5d04b0(_0x420663(0x2b1))['classList']['add'](_0x420663(0x2ed)),_0x5d04b0(_0x420663(0x2b1))[_0x420663(0x2c0)]('span')['textContent']=_0x420663(0x24b),_0x22a98a=setTimeout(_0x25d165,0x1388);return;}_0x25d165(),_0x5d04b0(_0x420663(0x270))['disabled']=_0x5d04b0('clGlobal')[_0x420663(0x16c)]=!![],_0x5d04b0('clErr')[_0x420663(0x2c1)]='',_0x1f2fe7('/api/kasir/closing',{'body':{'jenis':_0x4305b7,'tunai':_0x5c5b64(_0x5d04b0(_0x420663(0x24e))['value']),'password':_0x5d04b0('clPass')[_0x420663(0x227)]}})[_0x420663(0x176)](function(_0x20af52){var _0x138620=_0x420663;_0x5d04b0('closingModal')['hidden']=!![],_0x5d04b0(_0x138620(0x289))[_0x138620(0x227)]='',_0x538086(_0x20af52,_0x138620(0x1d3));})[_0x420663(0x1e5)](function(_0x4ae912){var _0x50c5d1=_0x420663;_0x5d04b0('clErr')[_0x50c5d1(0x2c1)]=_0x4ae912['message'],_0x5d04b0(_0x50c5d1(0x289))['value']='',_0x5d04b0('clPass')['focus']();})['then'](function(){var _0x77db6a=_0x420663;_0x5d04b0('clShift')[_0x77db6a(0x16c)]=_0x5d04b0('clGlobal')['disabled']=![];});}var _0x3f92f7='',_0x597c5c=![],_0x369a13=![];function _0x51da0b(_0x3edbe3){if(_0x597c5c)return _0x369a13=!![],Promise['resolve']();return _0x597c5c=!![],_0x369a13=![],_0x1f2fe7('/api/kasir/ringkasan'+(_0x3edbe3||!_0x3f92f7?'':'?sig='+encodeURIComponent(_0x3f92f7)))['then'](function(_0x4cb594){var _0x26fe1e=v6_0x1ab8;_0x3f92f7=_0x4cb594[_0x26fe1e(0x18b)]||'';if(_0x4cb594['sama'])return;_0xd5e799=_0x4cb594[_0x26fe1e(0x28e)]||[],_0x5d04b0('areaCount')[_0x26fe1e(0x2c1)]=_0x4cb594[_0x26fe1e(0x17e)],_0x491f44();})['catch'](function(){})['finally'](function(){_0x597c5c=![];if(_0x369a13)_0x51da0b();});}function _0x491f44(){var _0xedadc8=_0x430c79,_0x33afff=_0x5d04b0('areaCari')['value']['trim']()[_0xedadc8(0x2b9)]()[_0xedadc8(0x2c8)](/\s+/g,''),_0x195103=_0xd5e799[_0xedadc8(0x2fd)](function(_0x2a945c){var _0x44482f=_0xedadc8;return!_0x33afff||String(_0x2a945c['no_tiket']||'')['indexOf'](_0x33afff)>-0x1||String(_0x2a945c['nopol']||'')[_0x44482f(0x2b9)]()['indexOf'](_0x33afff)>-0x1;});_0x5d04b0(_0xedadc8(0x2e7))['innerHTML']=_0x195103[_0xedadc8(0x2a5)]?_0x195103[_0xedadc8(0x17f)](function(_0x66a349){var _0x383673=_0xedadc8;return _0x383673(0x29d)+_0x4ac3ac(_0x66a349[_0x383673(0x2e3)])+_0x383673(0x16a)+_0x4ac3ac(_0x66a349['no_tiket'])+'</b></td><td>'+_0x4ac3ac(_0x66a349['nopol']||'-')+'</td><td>'+_0x4ac3ac(_0x66a349[_0x383673(0x30b)]||'-')+_0x383673(0x15c)+_0x4ac3ac(_0x66a349['gate_masuk']||'-')+'</td><td>'+_0x4ac3ac(_0x66a349['tgl']+'\x20'+_0x66a349[_0x383673(0x1f6)])+'</td></tr>';})['join'](''):'<tr><td\x20colspan=\x225\x22\x20style=\x22text-align:center;color:#a3a5b8;padding:24px\x22>Tidak\x20ada\x20kendaraan</td></tr>';}function _0x19dc40(){var _0x212d33=_0x430c79;_0x5d04b0(_0x212d33(0x16e))['hidden']=![],_0x5d04b0(_0x212d33(0x21a))['value']='',_0x491f44(),_0x51da0b(),_0x5d04b0(_0x212d33(0x21a))['focus']();}function _0x10df9a(){var _0xbce52c=_0x430c79;_0x5d04b0(_0xbce52c(0x16e))[_0xbce52c(0x1e0)]=!![],_0x5d04b0('q')[_0xbce52c(0x179)]();}var _0x463536={'stream':null,'timer':null,'cam':'environment','det':null,'canvas':null,'seq':0x0};try{if(localStorage[_0x430c79(0x28d)]('kasirKamera')===_0x430c79(0x1d5))_0x463536['cam']='user';}catch(_0x4bba85){}function _0x1c2bf8(_0x15cd34,_0x54fa79){var _0x5647f0=_0x430c79,_0x517d5b=_0x5d04b0(_0x5647f0(0x300));_0x517d5b[_0x5647f0(0x2c1)]=_0x15cd34,_0x517d5b[_0x5647f0(0x261)]=_0x5647f0(0x2d6)+(_0x54fa79?'\x20err':'');}function _0x4d3bfa(){var _0x1c5304=_0x430c79;_0x463536[_0x1c5304(0x25d)]++,clearTimeout(_0x463536['timer']);if(_0x463536[_0x1c5304(0x1a0)])_0x463536['stream']['getTracks']()['forEach'](function(_0x434b66){var _0x4fbe0e=_0x1c5304;_0x434b66[_0x4fbe0e(0x30c)]();});_0x463536[_0x1c5304(0x1a0)]=null,_0x5d04b0('qrVideo')['srcObject']=null;}function _0x5aa4da(){var _0x318d0d=_0x430c79;if(_0x463536[_0x318d0d(0x190)])return Promise['resolve'](_0x463536[_0x318d0d(0x190)]);if(window[_0x318d0d(0x1fb)])return BarcodeDetector[_0x318d0d(0x28f)]()[_0x318d0d(0x176)](function(_0x4234c3){var _0x49c0a=_0x318d0d;if(_0x4234c3[_0x49c0a(0x2af)](_0x49c0a(0x27e))<0x0)throw 0x0;var _0x4ddadd=new BarcodeDetector({'formats':[_0x49c0a(0x27e)]});return _0x463536['det']=function(_0x654ffd){return _0x4ddadd['detect'](_0x654ffd)['then'](function(_0x5202e2){var _0x206133=v6_0x1ab8;return _0x5202e2[0x0]&&_0x5202e2[0x0][_0x206133(0x25f)];});};})[_0x318d0d(0x1e5)](_0x5c8a58);return _0x5c8a58();}function _0x5c8a58(){var _0x23a3b5=_0x430c79;return(window[_0x23a3b5(0x228)]?Promise[_0x23a3b5(0x207)]():new Promise(function(_0x11fb36,_0x45af6d){var _0x53065e=_0x23a3b5,_0x327b32=document[_0x53065e(0x2ef)]('script');_0x327b32[_0x53065e(0x218)]=_0x53065e(0x2ea),_0x327b32[_0x53065e(0x2ce)]=_0x11fb36,_0x327b32['onerror']=function(){var _0x1d698c=_0x53065e;_0x45af6d(new Error(_0x1d698c(0x19c)));},document[_0x53065e(0x26f)]['appendChild'](_0x327b32);}))['then'](function(){var _0x99d5de=_0x23a3b5;return _0x463536[_0x99d5de(0x23a)]=_0x463536[_0x99d5de(0x23a)]||document['createElement'](_0x99d5de(0x23a)),_0x463536['det']=function(_0x47b053){var _0x4f1529=_0x99d5de,_0x43dd77=_0x47b053[_0x4f1529(0x1c4)]||_0x47b053['width'],_0x43a9b6=_0x47b053[_0x4f1529(0x2a6)]||_0x47b053['height'];if(!_0x43dd77)return Promise[_0x4f1529(0x207)](null);var _0x4aa34b=_0x47b053[_0x4f1529(0x1c4)]?[0x280]:[0x3e8,0x640,0x280],_0x5eb8a1=_0x463536['canvas'],_0x4dc09e=_0x5eb8a1['getContext']('2d',{'willReadFrequently':!![]});for(var _0x4878a0=0x0;_0x4878a0<_0x4aa34b[_0x4f1529(0x2a5)];_0x4878a0++){var _0x3291a5=Math[_0x4f1529(0x19f)](0x1,_0x4aa34b[_0x4878a0]/Math['max'](_0x43dd77,_0x43a9b6));_0x5eb8a1[_0x4f1529(0x2f8)]=Math['round'](_0x43dd77*_0x3291a5),_0x5eb8a1[_0x4f1529(0x1db)]=Math[_0x4f1529(0x223)](_0x43a9b6*_0x3291a5),_0x4dc09e[_0x4f1529(0x291)](_0x47b053,0x0,0x0,_0x5eb8a1[_0x4f1529(0x2f8)],_0x5eb8a1[_0x4f1529(0x1db)]);var _0x979e36=jsQR(_0x4dc09e['getImageData'](0x0,0x0,_0x5eb8a1['width'],_0x5eb8a1[_0x4f1529(0x1db)])[_0x4f1529(0x301)],_0x5eb8a1[_0x4f1529(0x2f8)],_0x5eb8a1[_0x4f1529(0x1db)],{'inversionAttempts':_0x47b053['videoWidth']?_0x4f1529(0x177):_0x4f1529(0x20c)});if(_0x979e36&&_0x979e36[_0x4f1529(0x301)])return Promise[_0x4f1529(0x207)](_0x979e36['data']);if(_0x3291a5===0x1)break;}return Promise['resolve'](null);};});}function _0xfa08c8(){var _0x52c823=_0x430c79;_0x4d3bfa();var _0x1948e9=_0x463536[_0x52c823(0x25d)],_0x719e29=_0x5d04b0(_0x52c823(0x237));document[_0x52c823(0x212)]('[data-cam]')[_0x52c823(0x1b0)](function(_0x258db7){_0x258db7['setAttribute']('aria-pressed',String(_0x258db7['dataset']['cam']===_0x463536['cam']));}),_0x719e29['classList'][_0x52c823(0x2cc)]('mirror',_0x463536['cam']==='user');var _0x5dce0a=_0x5cc9b8();_0x5d04b0(_0x52c823(0x253))[_0x52c823(0x1e0)]=_0x5dce0a,_0x5d04b0('qrFoto')['hidden']=!_0x5dce0a,_0x5d04b0('qrFile')[_0x52c823(0x238)](_0x52c823(0x1ba),_0x463536['cam']);if(_0x5dce0a){var _0x13d989=_0x501abd&&_0x501abd['https_port']&&location[_0x52c823(0x271)]===_0x52c823(0x2f0)?_0x52c823(0x310)+location['hostname']+':'+_0x501abd[_0x52c823(0x26e)]+_0x52c823(0x1c0):'';_0x5d04b0('qrLive')[_0x52c823(0x1e0)]=_0x5d04b0('qrLiveInfo')['hidden']=!_0x13d989;if(_0x13d989)_0x5d04b0(_0x52c823(0x1b4))[_0x52c823(0x259)]=_0x13d989;return _0x1c2bf8('');}_0x1c2bf8('Membuka\x20kamera...'),navigator[_0x52c823(0x21e)]['getUserMedia']({'audio':![],'video':{'facingMode':{'ideal':_0x463536['cam']},'width':{'ideal':0x500},'height':{'ideal':0x2d0}}})['then'](function(_0x2e3b5c){var _0x600801=_0x52c823;if(_0x1948e9!==_0x463536[_0x600801(0x25d)]){_0x2e3b5c[_0x600801(0x175)]()['forEach'](function(_0x5a08bc){_0x5a08bc['stop']();});return;}return _0x463536['stream']=_0x2e3b5c,_0x719e29['srcObject']=_0x2e3b5c,_0x719e29[_0x600801(0x272)]()['then'](_0x5aa4da)[_0x600801(0x176)](function(){var _0x20a050=_0x600801;if(_0x1948e9!==_0x463536[_0x20a050(0x25d)])return;_0x1c2bf8(_0x20a050(0x1f9)),_0x2b0339(_0x1948e9);});})[_0x52c823(0x1e5)](function(_0x4722a1){var _0x205a9a=_0x52c823;if(_0x1948e9!==_0x463536['seq'])return;var _0x3e098d=_0x4722a1&&_0x4722a1['name'];_0x1c2bf8(_0x3e098d==='NotAllowedError'?'Izin\x20kamera\x20ditolak.\x20Izinkan\x20kamera\x20di\x20pengaturan\x20browser.':_0x3e098d==='NotFoundError'||_0x3e098d==='OverconstrainedError'?_0x205a9a(0x216):_0x3e098d===_0x205a9a(0x233)?'Kamera\x20sedang\x20dipakai\x20aplikasi\x20lain':_0x4722a1&&_0x4722a1[_0x205a9a(0x1df)]||'Kamera\x20tidak\x20bisa\x20dibuka',!![]);});}function _0x2b0339(_0x1d2cad){var _0x2c5213=_0x430c79;if(_0x1d2cad!==_0x463536[_0x2c5213(0x25d)])return;_0x463536['det'](_0x5d04b0('qrVideo'))[_0x2c5213(0x176)](function(_0x1cb236){var _0x2ba26e=_0x2c5213;if(_0x1d2cad!==_0x463536['seq'])return;_0x1cb236=String(_0x1cb236||'')[_0x2ba26e(0x235)]();if(!_0x1cb236)return _0x463536['timer']=setTimeout(function(){_0x2b0339(_0x1d2cad);},0x96);if(navigator['vibrate'])navigator[_0x2ba26e(0x265)](0x50);_0x3e916b(),_0x5d04b0('q')['value']=_0x1cb236,_0x365644='Normal',_0x55111b(_0x1cb236);})[_0x2c5213(0x1e5)](function(){var _0x350d60=_0x2c5213;if(_0x1d2cad===_0x463536['seq'])_0x463536[_0x350d60(0x18a)]=setTimeout(function(){_0x2b0339(_0x1d2cad);},0x12c);});}function _0x5cc9b8(){var _0x367bbd=_0x430c79;return!window[_0x367bbd(0x2c3)]||!navigator[_0x367bbd(0x21e)]||!navigator['mediaDevices'][_0x367bbd(0x1cc)];}function _0x42a915(){var _0x4d2147=_0x430c79;_0x5d04b0('qrFile')['setAttribute'](_0x4d2147(0x1ba),_0x463536[_0x4d2147(0x2c2)]),_0x5d04b0('qrFile')['click']();}function _0x108bad(_0x182a6b){var _0x50ca72=_0x430c79,_0x52d537=++_0x463536[_0x50ca72(0x25d)];_0x5d04b0(_0x50ca72(0x1f3))[_0x50ca72(0x16c)]=!![],_0x1c2bf8(_0x50ca72(0x211)),Promise['all']([createImageBitmap(_0x182a6b),_0x5aa4da()])['then'](function(_0x14d36b){return _0x463536['det'](_0x14d36b[0x0])['then'](function(_0x420045){if(_0x14d36b[0x0]['close'])_0x14d36b[0x0]['close']();return _0x420045;});})['then'](function(_0x45e2a5){var _0x9f4089=_0x50ca72;if(_0x52d537!==_0x463536['seq'])return;_0x45e2a5=String(_0x45e2a5||'')['trim']();if(!_0x45e2a5)return _0x1c2bf8('QR\x20tidak\x20terbaca.\x20Foto\x20lebih\x20dekat,\x20terang,\x20dan\x20tidak\x20buram.',!![]);if(navigator['vibrate'])navigator['vibrate'](0x50);_0x3e916b(),_0x5d04b0('q')[_0x9f4089(0x227)]=_0x45e2a5,_0x365644='Normal',_0x55111b(_0x45e2a5);})[_0x50ca72(0x1e5)](function(_0x424aa7){var _0x454a98=_0x50ca72;if(_0x52d537===_0x463536[_0x454a98(0x25d)])_0x1c2bf8(_0x424aa7&&_0x424aa7[_0x454a98(0x1df)]||'Foto\x20tidak\x20bisa\x20dibaca',!![]);})['then'](function(){var _0x5bad3d=_0x50ca72;_0x5d04b0(_0x5bad3d(0x1f3))[_0x5bad3d(0x16c)]=![];});}function _0x218c96(){var _0x5ec758=_0x430c79;_0x5d04b0(_0x5ec758(0x240))['hidden']=![],_0xfa08c8();if(_0x5cc9b8()&&_0x5d04b0('qrLive')['hidden'])_0x42a915();}function _0x3e916b(){var _0x3b19c2=_0x430c79;_0x4d3bfa(),_0x5d04b0('qrModal')[_0x3b19c2(0x1e0)]=!![],_0x5d04b0('q')[_0x3b19c2(0x179)]();}_0x5d04b0(_0x430c79(0x2f7))['addEventListener'](_0x430c79(0x205),function(_0x5c0fbb){var _0x5a1221=_0x430c79;_0x5c0fbb[_0x5a1221(0x1b1)](),_0x55111b(_0x5d04b0('q')[_0x5a1221(0x227)]);}),_0x5d04b0('jenis')['addEventListener']('change',_0x5e3643),_0x5d04b0('metode')[_0x430c79(0x2c6)](_0x430c79(0x2f6),function(){var _0x2d768e=_0x430c79;if(_0x15f538())_0x5d04b0(_0x2d768e(0x1e4))['value']='';_0x42bb10();var _0x402162=_0x43c04e();if(_0x402162&&/qris/i['test'](_0x402162['nama']+'\x20'+_0x402162['kode'])){if(!_0x402162['qris'])_0x1cc493(_0x2d768e(0x17c),_0x2d768e(0x320));else{if(!_0xacc3cc)_0x1cc493(_0x2d768e(0x160),_0x2d768e(0x320));else{if(!(_0xacc3cc['total']>0x0))_0x1cc493('Tarif\x20Rp\x200,\x20tidak\x20perlu\x20bayar\x20QRIS',_0x2d768e(0x320));}}}_0x409481();}),_0x5d04b0('bayar')['addEventListener']('input',function(){var _0x5e245a=_0x430c79,_0x4ec7a5=_0x5c5b64(this[_0x5e245a(0x227)]);this['value']=_0x4ec7a5?_0x24f689(_0x4ec7a5):'',_0x42bb10();}),_0x5d04b0('bayar')['addEventListener'](_0x430c79(0x1cb),function(_0x39570e){var _0x2c736e=_0x430c79;if(_0x39570e[_0x2c736e(0x1a4)]==='Enter')_0x4ac7d0();}),_0x5d04b0('nopol')['addEventListener']('input',function(){var _0x5d80c2=_0x430c79;this[_0x5d80c2(0x227)]=this['value']['toUpperCase']()[_0x5d80c2(0x2c8)](/\s+/g,'');}),_0x5d04b0('btnPas')[_0x430c79(0x2c6)]('click',function(){var _0x3a2549=_0x430c79;_0xacc3cc&&(_0x5d04b0('bayar')['value']=_0x24f689(_0xacc3cc[_0x3a2549(0x1c6)]),_0x42bb10());}),_0x5d04b0('btnScan')['addEventListener'](_0x430c79(0x169),_0x218c96),_0x5d04b0('qrModal')['addEventListener']('click',function(_0x51eea2){var _0x1c5834=_0x430c79,_0x310710=_0x51eea2['target'][_0x1c5834(0x1cd)]('[data-cam]');if(_0x310710){if(_0x310710[_0x1c5834(0x288)]['cam']!==_0x463536['cam']){_0x463536[_0x1c5834(0x2c2)]=_0x310710['dataset']['cam'];try{localStorage['setItem'](_0x1c5834(0x221),_0x463536[_0x1c5834(0x2c2)]);}catch(_0x59fd36){}_0xfa08c8();}if(_0x5cc9b8())_0x42a915();return;}if(_0x51eea2['target']===this||_0x51eea2['target']['closest'](_0x1c5834(0x2a9)))_0x3e916b();}),window['addEventListener']('pagehide',_0x4d3bfa),_0x5d04b0('qrAmbil')['addEventListener'](_0x430c79(0x169),_0x42a915),_0x5d04b0(_0x430c79(0x29e))[_0x430c79(0x2c6)](_0x430c79(0x2f6),function(){var _0x2b4b03=this['files'][0x0];this['value']='';if(_0x2b4b03)_0x108bad(_0x2b4b03);}),_0x5d04b0('btnManual')['addEventListener']('click',function(){_0x205058('Manual\x20Ticket');}),_0x5d04b0('btnLost')['addEventListener'](_0x430c79(0x169),function(){var _0x53b4ae=_0x430c79;_0x205058(_0x53b4ae(0x2a2));}),_0x5d04b0('btnDone')[_0x430c79(0x2c6)](_0x430c79(0x169),_0x4ac7d0),_0x5d04b0('qrisModal')['querySelector'](_0x430c79(0x2a0))['addEventListener']('click',_0x45e69c),_0x5d04b0(_0x430c79(0x1f4))[_0x430c79(0x2c6)](_0x430c79(0x169),_0x3b8373),_0x5d04b0(_0x430c79(0x24a))[_0x430c79(0x2c6)]('submit',function(_0x422bd1){var _0x4095cc=_0x430c79;_0x422bd1[_0x4095cc(0x1b1)](),_0x369d03();}),_0x5d04b0(_0x430c79(0x24a))[_0x430c79(0x2c6)](_0x430c79(0x1cb),function(_0x54a695){var _0x78c230=_0x430c79;if(_0x54a695[_0x78c230(0x1a4)]!=='Enter'||_0x54a695[_0x78c230(0x2ee)]['id']==='tmBayar'||_0x54a695['target']['id']==='tmGo')return;_0x54a695[_0x78c230(0x1b1)]();if(_0x54a695[_0x78c230(0x2ee)]['id']==='tmNopol'&&_0x1fa6aa[_0x78c230(0x164)]===_0x78c230(0x2a2))return _0x1993c7();var _0x1e61c1=[][_0x78c230(0x2d5)][_0x78c230(0x23d)](this['querySelectorAll'](_0x78c230(0x2fb)))['filter'](function(_0x5e69c0){var _0xa8805=_0x78c230;return _0x5e69c0[_0xa8805(0x1fc)];}),_0x11219b=_0x1e61c1[_0x78c230(0x2af)](_0x54a695[_0x78c230(0x2ee)]);if(_0x1e61c1[_0x11219b+0x1])_0x1e61c1[_0x11219b+0x1][_0x78c230(0x179)]();}),_0x5d04b0(_0x430c79(0x184))['addEventListener'](_0x430c79(0x169),function(_0x16de09){var _0x26f0af=_0x430c79;if(_0x16de09[_0x26f0af(0x2ee)]===this||_0x16de09['target']['closest'](_0x26f0af(0x2a9)))_0x40ebff();}),_0x5d04b0(_0x430c79(0x296))[_0x430c79(0x2c6)](_0x430c79(0x169),_0x1993c7),_0x5d04b0(_0x430c79(0x2a4))['addEventListener']('input',function(){var _0xf515f3=_0x430c79;this[_0xf515f3(0x227)]=this[_0xf515f3(0x227)][_0xf515f3(0x2b9)]()[_0xf515f3(0x2c8)](/\s+/g,''),_0x1fa6aa['tiket']&&(_0x1fa6aa[_0xf515f3(0x274)]=null,_0x5d04b0(_0xf515f3(0x31c))[_0xf515f3(0x16c)]=_0x5d04b0('tmJam')['disabled']=![],_0x5357ed(''),_0x30a64d());}),_0x5d04b0('tmJenis')[_0x430c79(0x2c6)](_0x430c79(0x2f6),_0x30a64d),_0x5d04b0(_0x430c79(0x31c))[_0x430c79(0x2c6)](_0x430c79(0x2e0),_0x30a64d),_0x5d04b0(_0x430c79(0x1e8))['addEventListener'](_0x430c79(0x2e0),_0x30a64d),_0x5d04b0('tmMetode')['addEventListener']('change',function(){var _0x45413c=_0x430c79;if(_0x42ec98())_0x5d04b0(_0x45413c(0x1ce))['value']='';_0x169111();var _0x5f109e=_0x3c80c5();if(_0x5f109e&&_0x5f109e['qris']&&_0x1fa6aa['hitung']&&_0x1fa6aa[_0x45413c(0x2f9)][_0x45413c(0x1c6)]>0x0){_0x369d03();return;}_0x5d04b0('tmBayar')[_0x45413c(0x179)]();}),_0x5d04b0('tmBayar')['addEventListener']('input',function(){var _0x18a440=_0x430c79,_0x10f589=_0x5c5b64(this[_0x18a440(0x227)]);this[_0x18a440(0x227)]=_0x10f589?_0x24f689(_0x10f589):'',_0x169111();}),_0x5d04b0(_0x430c79(0x2e1))[_0x430c79(0x2c6)]('click',function(){var _0x350b44=_0x430c79;_0x1fa6aa['hitung']&&(_0x5d04b0('tmBayar')['value']=_0x24f689(_0x1fa6aa[_0x350b44(0x2f9)][_0x350b44(0x1c6)]),_0x169111());}),_0x5d04b0('btnArea')['addEventListener'](_0x430c79(0x169),_0x19dc40),_0x5d04b0('btnClosing')[_0x430c79(0x2c6)]('click',_0x4c8393),_0x5d04b0('clForm')[_0x430c79(0x2c6)]('submit',function(_0x34a456){var _0x1edb21=_0x430c79;_0x34a456[_0x1edb21(0x1b1)](),_0x320042(_0x1edb21(0x17d));}),_0x5d04b0('clGlobal')[_0x430c79(0x2c6)](_0x430c79(0x169),function(){var _0x25f9f3=_0x430c79;_0x320042(_0x25f9f3(0x1a8));}),_0x5d04b0('clEye')['addEventListener']('click',function(){var _0x9d4b20=_0x430c79;_0x79b208(_0x5d04b0('clPass')[_0x9d4b20(0x22b)]===_0x9d4b20(0x215)),_0x5d04b0('clPass')['focus']();}),_0x5d04b0('closingModal')['addEventListener'](_0x430c79(0x169),function(_0x3bf0e4){var _0x222fa3=_0x430c79;if(_0x3bf0e4['target']===this||_0x3bf0e4[_0x222fa3(0x2ee)][_0x222fa3(0x1cd)]('[data-close]'))_0x38cc26();}),_0x5d04b0(_0x430c79(0x24e))[_0x430c79(0x2c6)](_0x430c79(0x2e0),function(){var _0x2c57be=_0x5c5b64(this['value']);this['value']=this['value']['trim']()===''?'':_0x24f689(_0x2c57be);}),_0x5d04b0('btnMember')['addEventListener'](_0x430c79(0x169),_0x139abd),_0x5d04b0('mbForm')['addEventListener']('submit',function(_0x55abc0){var _0x5b1957=_0x430c79;_0x55abc0[_0x5b1957(0x1b1)](),_0x5b65dd();}),_0x5d04b0('mbForm')['addEventListener']('keydown',function(_0x303651){var _0x2446ce=_0x430c79;if(_0x303651[_0x2446ce(0x1a4)]!=='Enter'||_0x303651['target']['id']==='mbBayar'||_0x303651['target']['id']===_0x2446ce(0x2e4))return;_0x303651[_0x2446ce(0x1b1)]();if(_0x303651['target']['id']==='mbQ')return _0x148f03();var _0x481e3b=[][_0x2446ce(0x2d5)][_0x2446ce(0x23d)](this['querySelectorAll'](_0x2446ce(0x165)))['filter'](function(_0x574a25){var _0x30c2f6=_0x2446ce;return _0x574a25[_0x30c2f6(0x1fc)];}),_0x3e8b2d=_0x481e3b['indexOf'](_0x303651['target']);if(_0x481e3b[_0x3e8b2d+0x1])_0x481e3b[_0x3e8b2d+0x1][_0x2446ce(0x179)]();}),_0x5d04b0('mbCari')['addEventListener']('click',_0x148f03),_0x5d04b0(_0x430c79(0x2d9))[_0x430c79(0x2c6)]('click',function(_0x57134c){var _0x23aa72=_0x57134c['target']['closest']('[data-mb]');if(_0x23aa72)_0x69ef2e(Number(_0x23aa72['dataset']['mb']));}),_0x5d04b0('mbCard')['addEventListener'](_0x430c79(0x169),function(_0x49893d){var _0x1f67a5=_0x430c79;_0x49893d[_0x1f67a5(0x2ee)]['id']===_0x1f67a5(0x16d)&&(_0x5d04b0('mbCard')[_0x1f67a5(0x1e0)]=_0x5d04b0(_0x1f67a5(0x1be))['hidden']=!![],_0x321293['sel']=null,_0x5d04b0('mbList')[_0x1f67a5(0x1e0)]=![],_0x1b77ed());}),_0x5d04b0(_0x430c79(0x172))[_0x430c79(0x2c6)]('input',function(){var _0x2674f2=_0x430c79;if(this[_0x2674f2(0x1ee)])return;var _0x2662da=_0x5c5b64(this[_0x2674f2(0x227)]);this['value']=_0x2662da?_0x24f689(_0x2662da):'',_0x1b77ed();}),_0x5d04b0(_0x430c79(0x213))[_0x430c79(0x2c6)]('input',function(){var _0x112496=_0x5c5b64(this['value']);this['value']=_0x112496?_0x24f689(_0x112496):'',_0x1b77ed();}),_0x5d04b0('mbMetode')['addEventListener'](_0x430c79(0x2f6),function(){var _0x9a5bd3=_0x430c79;if(_0x49cede())_0x5d04b0('mbBayar')[_0x9a5bd3(0x227)]='';_0x1b77ed();}),_0x5d04b0(_0x430c79(0x2b4))[_0x430c79(0x2c6)](_0x430c79(0x169),function(){var _0x31c864=_0x430c79,_0x36393f=_0x188d9d();_0x36393f&&(_0x5d04b0('mbBayar')[_0x31c864(0x227)]=_0x24f689(_0x36393f),_0x1b77ed());}),_0x5d04b0('memberModal')['addEventListener']('click',function(_0x21d2e2){var _0x44ce95=_0x430c79;if(_0x21d2e2['target']===this||_0x21d2e2['target'][_0x44ce95(0x1cd)]('[data-close]'))_0x34ac99();}),document['querySelector'](_0x430c79(0x26a))[_0x430c79(0x2c6)]('click',function(_0x14aaed){var _0x3a454e=_0x430c79,_0x39085f=_0x14aaed[_0x3a454e(0x2ee)][_0x3a454e(0x1cd)](_0x3a454e(0x23e)),_0x49b075=_0x14aaed['target']['closest']('[data-pilih]'),_0x5b8055=_0x14aaed['target']['closest']('[data-zoom]');if(_0x39085f)_0x4b195f(_0x39085f['dataset']['geser'],Number(_0x39085f[_0x3a454e(0x288)]['arah']));else{if(_0x49b075)_0x46d735[_0x49b075['dataset']['pilih']]['i']=Number(_0x49b075[_0x3a454e(0x288)]['i']),_0x2bd6be(_0x49b075['dataset'][_0x3a454e(0x313)]);else{if(_0x5b8055)_0x513c96(_0x5b8055['dataset']['zoom']);}}}),['in',_0x430c79(0x1f7)][_0x430c79(0x1b0)](function(_0x483b89){var _0x4c99af=_0x430c79,_0x571edf=_0x5d04b0(_0x46d735[_0x483b89]['el']);_0x571edf['addEventListener']('mouseenter',function(){var _0x11a206=v6_0x1ab8;_0x46d735[_0x483b89][_0x11a206(0x278)]=!![];}),_0x571edf[_0x4c99af(0x2c6)]('mouseleave',function(){_0x46d735[_0x483b89]['hover']=![];});}),_0x5d04b0(_0x430c79(0x23b))[_0x430c79(0x2c6)]('click',_0x17456c),_0x5d04b0('btnCetak')[_0x430c79(0x2c6)]('click',_0x345be5),_0x5d04b0(_0x430c79(0x2d3))['addEventListener'](_0x430c79(0x169),function(_0x221c39){var _0x139081=_0x430c79;if(_0x221c39['target']===this||_0x221c39['target'][_0x139081(0x1cd)]('[data-close]'))_0x5e55e6();}),document[_0x430c79(0x212)]('[data-lb]')['forEach'](function(_0x480529){var _0xb56f55=_0x430c79;_0x480529[_0xb56f55(0x2c6)]('click',function(){_0x5a1c8c(Number(_0x480529['dataset']['lb']));});}),_0x5d04b0(_0x430c79(0x255))[_0x430c79(0x2c6)](_0x430c79(0x169),function(_0x318200){var _0x56be69=_0x430c79;if(_0x318200[_0x56be69(0x2ee)]===this||_0x318200['target'][_0x56be69(0x1ae)][_0x56be69(0x230)](_0x56be69(0x1f5)))_0x17456c();}),_0x5d04b0(_0x430c79(0x21a))['addEventListener'](_0x430c79(0x2e0),_0x491f44),_0x5d04b0(_0x430c79(0x2e7))['addEventListener'](_0x430c79(0x169),function(_0x5b3e36){var _0x5aad22=_0x430c79,_0x2e72ba=_0x5b3e36[_0x5aad22(0x2ee)]['closest'](_0x5aad22(0x1bf));_0x2e72ba&&(_0x10df9a(),_0x365644='Normal',_0x55111b(_0x2e72ba[_0x5aad22(0x288)][_0x5aad22(0x274)]));}),_0x5d04b0(_0x430c79(0x16e))[_0x430c79(0x2c6)]('click',function(_0x45f699){if(_0x45f699['target']===this||_0x45f699['target']['closest']('[data-close]'))_0x10df9a();});function _0x44d57e(_0x57d81a){var _0x37cfde=_0x430c79;_0x5d04b0(_0x37cfde(0x15e))[_0x37cfde(0x1e0)]=!_0x57d81a,document[_0x37cfde(0x2c0)](_0x37cfde(0x22d))[_0x37cfde(0x1ae)]['toggle']('open',_0x57d81a);}_0x5d04b0(_0x430c79(0x314))['addEventListener']('click',function(_0x464631){var _0x5994cf=_0x430c79;_0x464631['stopPropagation'](),_0x44d57e(_0x5d04b0('userMenu')[_0x5994cf(0x1e0)]);}),document[_0x430c79(0x2c6)](_0x430c79(0x169),function(_0x4f68f1){var _0x315442=_0x430c79;if(!_0x4f68f1[_0x315442(0x2ee)]['closest']('.user'))_0x44d57e(![]);});function _0xeeec0(_0x52d646){return String(_0x52d646||'K')['trim']()['split'](/\s+/)['slice'](0x0,0x2)['map'](function(_0xa0a23d){return _0xa0a23d[0x0]||'';})['join']('')['toUpperCase']();}function _0x40f964(_0x3e247a){var _0xf45e01=_0x430c79;document[_0xf45e01(0x212)]('[data-ku-avatar]')[_0xf45e01(0x1b0)](function(_0x3e4476){var _0x4690e6=_0xf45e01;_0x3e4476[_0x4690e6(0x232)]=_0x3e247a?'<img\x20src=\x22'+_0x4ac3ac(_0x3e247a)+_0x4690e6(0x30a):'<span>'+_0x4ac3ac(_0xeeec0(_0x501abd[_0x4690e6(0x1e1)]))+_0x4690e6(0x2f1);});}_0x5d04b0('kuFoto')['addEventListener']('change',function(){var _0x17c32c=_0x430c79,_0xbfb131=this['files'][0x0];this['value']='';if(!_0xbfb131)return;_0x44d57e(![]);if(['image/png',_0x17c32c(0x24c),'image/webp']['indexOf'](_0xbfb131['type'])<0x0||_0xbfb131[_0x17c32c(0x16f)]>0x2*0x400*0x400)return _0x1cc493(_0x17c32c(0x304),'err');fetch('/api/kasir/profil/foto',{'method':_0x17c32c(0x17b),'credentials':'same-origin','headers':{'Content-Type':_0xbfb131[_0x17c32c(0x22b)]},'body':_0xbfb131})['then'](function(_0x1164e7){return _0x1164e7['json']()['catch'](function(){return{};})['then'](function(_0x5b7a16){var _0x4d35f7=v6_0x1ab8;if(!_0x1164e7['ok'])throw new Error(_0x5b7a16[_0x4d35f7(0x1ff)]||_0x4d35f7(0x1c5));return _0x5b7a16;});})[_0x17c32c(0x176)](function(_0xff2902){var _0x5c941e=_0x17c32c;_0x501abd['foto']=_0xff2902[_0x5c941e(0x2e8)],_0x40f964(_0xff2902['foto']),_0x1cc493(_0x5c941e(0x236),'ok');})['catch'](function(_0x4069e9){var _0x10ede8=_0x17c32c;_0x1cc493(_0x4069e9['message'],_0x10ede8(0x320));});});function _0x40f121(){var _0xee430a=_0x430c79;_0x44d57e(![]),['pinLama',_0xee430a(0x2c4),'pinUlang']['forEach'](function(_0x406a7f){var _0x48716d=_0xee430a;_0x5d04b0(_0x406a7f)['value']='',_0x5d04b0(_0x406a7f)['type']=_0x48716d(0x215);}),_0x5d04b0('pinErr')['textContent']='',_0x5d04b0(_0xee430a(0x277))[_0xee430a(0x1e0)]=![],_0x5d04b0('pinLama')[_0xee430a(0x179)]();}function _0x1d8db5(){_0x5d04b0('pinModal')['hidden']=!![],_0x5d04b0('q')['focus']();}_0x5d04b0('btnPin')['addEventListener'](_0x430c79(0x169),_0x40f121),_0x5d04b0('pinModal')[_0x430c79(0x2c6)](_0x430c79(0x169),function(_0x3e6f9c){var _0x2a9b5f=_0x430c79;if(_0x3e6f9c[_0x2a9b5f(0x2ee)]===this||_0x3e6f9c['target'][_0x2a9b5f(0x1cd)]('[data-close]'))_0x1d8db5();}),document['querySelectorAll']('[data-pin-eye]')[_0x430c79(0x1b0)](function(_0x33d21a){var _0x2fe6cd=_0x430c79;_0x33d21a['addEventListener'](_0x2fe6cd(0x169),function(){var _0x2d6ff2=_0x2fe6cd,_0x30a549=_0x33d21a[_0x2d6ff2(0x290)]['querySelector'](_0x2d6ff2(0x2e0));_0x30a549[_0x2d6ff2(0x22b)]=_0x30a549[_0x2d6ff2(0x22b)]==='password'?_0x2d6ff2(0x2ad):_0x2d6ff2(0x215),_0x30a549[_0x2d6ff2(0x179)]();});}),[_0x430c79(0x1ca),'pinBaru',_0x430c79(0x163)][_0x430c79(0x1b0)](function(_0x2b5900){var _0x36ba6e=_0x430c79;_0x5d04b0(_0x2b5900)['addEventListener'](_0x36ba6e(0x2e0),function(){var _0x500c27=_0x36ba6e;this[_0x500c27(0x227)]=this[_0x500c27(0x227)]['replace'](/\D/g,'')['slice'](0x0,0x8);});}),_0x5d04b0('pinForm')[_0x430c79(0x2c6)](_0x430c79(0x205),function(_0x1d76ff){var _0x34f3ce=_0x430c79;_0x1d76ff[_0x34f3ce(0x1b1)]();var _0x556ac8=_0x5d04b0(_0x34f3ce(0x1ca))[_0x34f3ce(0x227)],_0x214f53=_0x5d04b0('pinBaru')['value'],_0x463796='';if(!_0x556ac8)_0x463796=_0x34f3ce(0x311);else{if(!/^\d{4,8}$/[_0x34f3ce(0x1de)](_0x214f53))_0x463796=_0x34f3ce(0x26b);else{if(_0x214f53!==_0x5d04b0(_0x34f3ce(0x163))['value'])_0x463796='Ulangi\x20PIN\x20baru\x20tidak\x20sama';else{if(_0x214f53===_0x556ac8)_0x463796='PIN\x20baru\x20harus\x20berbeda\x20dari\x20PIN\x20lama';}}}if(_0x463796){_0x5d04b0('pinErr')[_0x34f3ce(0x2c1)]=_0x463796;return;}_0x5d04b0(_0x34f3ce(0x294))[_0x34f3ce(0x16c)]=!![],_0x5d04b0('pinErr')['textContent']='',_0x1f2fe7('/api/kasir/profil/pin',{'body':{'pin_lama':_0x556ac8,'pin_baru':_0x214f53}})['then'](function(){var _0x22a9e2=_0x34f3ce;_0x1d8db5(),_0x1cc493(_0x22a9e2(0x19e),'ok');})['catch'](function(_0x215772){_0x5d04b0('pinErr')['textContent']=_0x215772['message'];})['then'](function(){_0x5d04b0('pinGo')['disabled']=![];});}),_0x5d04b0(_0x430c79(0x239))[_0x430c79(0x2c6)]('click',function(){var _0x1c638c=_0x430c79;fetch(_0x1c638c(0x315),{'method':_0x1c638c(0x209),'credentials':'same-origin'})['finally'](function(){var _0x25998d=_0x1c638c;location[_0x25998d(0x2c8)](_0x25998d(0x1c0));});}),document[_0x430c79(0x2c6)](_0x430c79(0x1cb),function(_0x502f97){var _0x97e3e6=_0x430c79;if(!_0x5d04b0('qrisModal')['hidden']){if(_0x502f97[_0x97e3e6(0x1a4)]==='Escape'||_0x502f97[_0x97e3e6(0x1a4)]===_0x97e3e6(0x1ac)||/^F\d+$/['test'](_0x502f97[_0x97e3e6(0x1a4)]))_0x502f97[_0x97e3e6(0x1b1)]();return;}if(!_0x5d04b0('qrModal')[_0x97e3e6(0x1e0)]){if(_0x502f97['key']==='Escape'||_0x502f97['key']==='F1')_0x502f97[_0x97e3e6(0x1b1)](),_0x3e916b();else{if(/^F\d+$/[_0x97e3e6(0x1de)](_0x502f97[_0x97e3e6(0x1a4)]))_0x502f97[_0x97e3e6(0x1b1)]();}return;}if(!_0x5d04b0(_0x97e3e6(0x277))[_0x97e3e6(0x1e0)]){if(_0x502f97[_0x97e3e6(0x1a4)]==='Escape')_0x502f97[_0x97e3e6(0x1b1)](),_0x1d8db5();else{if(/^F\d+$/[_0x97e3e6(0x1de)](_0x502f97[_0x97e3e6(0x1a4)]))_0x502f97[_0x97e3e6(0x1b1)]();}return;}if(!_0x5d04b0('memberModal')['hidden']){if(_0x502f97['key']==='Escape')_0x502f97[_0x97e3e6(0x1b1)](),_0x34ac99();else{if(_0x502f97['key']==='F6')_0x502f97[_0x97e3e6(0x1b1)](),_0x5b65dd();else{if(/^F\d+$/[_0x97e3e6(0x1de)](_0x502f97['key']))_0x502f97['preventDefault']();}}return;}if(!_0x5d04b0('closingModal')[_0x97e3e6(0x1e0)]){if(_0x502f97['key']===_0x97e3e6(0x279))_0x502f97[_0x97e3e6(0x1b1)](),_0x38cc26();else{if(/^F\d+$/[_0x97e3e6(0x1de)](_0x502f97['key']))_0x502f97[_0x97e3e6(0x1b1)]();}return;}if(!_0x5d04b0(_0x97e3e6(0x184))['hidden']){if(_0x502f97['key']===_0x97e3e6(0x279))_0x502f97[_0x97e3e6(0x1b1)](),_0x40ebff();else{if(_0x502f97[_0x97e3e6(0x1a4)]==='F6')_0x502f97[_0x97e3e6(0x1b1)](),_0x369d03();else{if(/^F\d+$/[_0x97e3e6(0x1de)](_0x502f97['key']))_0x502f97[_0x97e3e6(0x1b1)]();}}return;}if(!_0x5d04b0(_0x97e3e6(0x2d3))[_0x97e3e6(0x1e0)]){if(_0x502f97[_0x97e3e6(0x1a4)]==='Escape')_0x502f97['preventDefault'](),_0x5e55e6();else{if(_0x502f97[_0x97e3e6(0x1a4)]===_0x97e3e6(0x1ac))_0x502f97['preventDefault'](),_0x345be5();else{if(/^F\d+$/[_0x97e3e6(0x1de)](_0x502f97['key']))_0x502f97[_0x97e3e6(0x1b1)]();}}return;}var _0x4be1be={'F1':function(){var _0x3a9572=_0x97e3e6;_0x5d04b0(_0x3a9572(0x1d4))[_0x3a9572(0x169)]();},'F3':function(){_0x205058('Manual\x20Ticket');},'F4':function(){var _0x219762=_0x97e3e6;_0x205058(_0x219762(0x2a2));},'F6':_0x4ac7d0,'F7':function(){var _0x20d812=_0x97e3e6;_0x55111b(_0x5d04b0('q')[_0x20d812(0x227)]);}}[_0x502f97['key']];if(_0x4be1be){_0x502f97[_0x97e3e6(0x1b1)](),_0x4be1be();return;}if(_0x17b4c1){if(_0x502f97['key']===_0x97e3e6(0x279))_0x17456c();else{if(_0x502f97[_0x97e3e6(0x1a4)]===_0x97e3e6(0x245))_0x5a1c8c(-0x1);else{if(_0x502f97[_0x97e3e6(0x1a4)]==='ArrowRight')_0x5a1c8c(0x1);}}return;}if(_0x502f97[_0x97e3e6(0x1a4)]==='Escape'){if(!_0x5d04b0(_0x97e3e6(0x16e))[_0x97e3e6(0x1e0)])_0x10df9a();else _0x1bfaaa();}});function _0x304358(){var _0x2cb6ea=_0x430c79,_0x2c625d=new Date();_0x5d04b0('jamNow')['textContent']=[_0x2c625d[_0x2cb6ea(0x250)](),_0x2c625d['getMinutes'](),_0x2c625d['getSeconds']()]['map'](function(_0x48a0c2){var _0x3886e8=_0x2cb6ea;return('0'+_0x48a0c2)[_0x3886e8(0x2d5)](-0x2);})['join'](':');}_0x304358(),setInterval(_0x304358,0x3e8),_0x1f2fe7(_0x430c79(0x303))[_0x430c79(0x176)](function(_0x2e4661){var _0x53037b=_0x430c79;_0x501abd=_0x2e4661,_0x5d04b0(_0x53037b(0x1e1))['textContent']=_0x2e4661[_0x53037b(0x1e1)],document['querySelector']('[data-ku-nama]')['textContent']=_0x2e4661['nama'],document['querySelector'](_0x53037b(0x302))[_0x53037b(0x2c1)]='@'+(_0x2e4661[_0x53037b(0x17a)]||'-'),_0x40f964(_0x2e4661[_0x53037b(0x2e8)]),_0x5d04b0('device')[_0x53037b(0x2c1)]=_0x2e4661[_0x53037b(0x282)]||'-';if(_0x2e4661['eod']){var _0x3efe8f=_0x2e4661['eod'][_0x53037b(0x185)]('-');_0x5d04b0('eod')['textContent']=_0x3efe8f[0x2]+'/'+_0x3efe8f[0x1]+'/'+_0x3efe8f[0x0]['slice'](0x2);}_0x5d04b0('metode')['innerHTML']=_0x1e21f7(_0x2e4661[_0x53037b(0x273)]),_0x5d04b0('jenis')[_0x53037b(0x232)]='<option\x20value=\x22\x22\x20disabled\x20hidden\x20selected>Pilih\x20jenis\x20kendaraan</option>'+_0x2e4661[_0x53037b(0x29a)][_0x53037b(0x17f)](function(_0x111953){var _0x1cd164=_0x53037b;return _0x1cd164(0x1ab)+_0x4ac3ac(_0x111953['id'])+'\x22>'+_0x4ac3ac(_0x111953[_0x1cd164(0x1d9)])+_0x1cd164(0x318);})['join']('');if(!_0xf9ba7c)_0x1fc447();if(!_0x2e4661[_0x53037b(0x282)])_0x1cc493(_0x53037b(0x2cd),'warn');_0x42bb10();})[_0x430c79(0x1e5)](function(_0x3e4c18){var _0x32583f=_0x430c79;_0x1cc493(_0x3e4c18['message'],_0x32583f(0x320));}),_0x51da0b(!![]),setInterval(function(){var _0x374a1b=_0x430c79;if(!document[_0x374a1b(0x1e0)])_0x51da0b();},0xea60);if(window[_0x430c79(0x220)]){var _0x4bd8c8=new EventSource(_0x430c79(0x241));_0x4bd8c8['addEventListener'](_0x430c79(0x2ba),function(){_0x51da0b();}),_0x4bd8c8['onopen']=function(){_0x51da0b();},window[_0x430c79(0x2c6)]('pagehide',function(){_0x4bd8c8['close']();});}document['addEventListener'](_0x430c79(0x2ca),function(){var _0x417b68=_0x430c79;if(!document['hidden']){_0x51da0b();if(_0x4db01c[_0x417b68(0x18a)])_0x283163();}}),_0x1736f7(),_0x59527e();}()));function v6_0x578c(){var _0x484bb0=['nZyZmJa3mNfyDLjNwG','yNrUq2v0ywS','Ahr0ChnFCg9YDa','AgvHza','y2XtAgLMDa','ChjVDg9JB2W','CgXHEq','Bwv0B2rL','DgLRzxq','uNaG','ig1LBML0','CgLUtw9KywW','Ag92zxi','rxnJyxbL','Dg1oyw1H','rhvYyxnP','twvUz2LYAw0GA2uGChjPBNrLCI4UlG','yw1VDw50','CxjFy29Kzq','Dg1uAxrSzq','sxnPihbHC3n3B3jKifnqvG','vgfYAwyGBgfUz2DHBMfUigHHCNvZigXLyMLOigrHCMKGma','zgv2AwnL','y2XVy2S','CxjPC01VzgfS','vhv0DxaGu2HPzNqGqMvYAgfZAwW','Dg1jzgvUDgL0yxm','l2fWAs9RyxnPCI9IyxLHCG','zgf0yxnLDa','y2XqyxnZ','CMvTB3zL','q2fYAsbKyw4GCgLSAwGGBgfUz2DHBMfUigr1Bhu','ywXHBwf0','z2v0sxrLBq','A2vUzgfYywfU','z2v0u3vWCg9YDgvKrM9YBwf0CW','CgfYzw50rwXLBwvUDa','zhjHD0LTywDL','uviGz2fNywWGzgLJzxrHAYbRzsbWCMLUDgvYia','pgj1DhrVBIbJBgfZCZ0IC2GTBMf2ihbYzxyIihr5Cgu9iMj1DhrVBIiGzgf0ys1NzxnLCJ0I','CgLUr28','CMf0zq','Dg1dzwS','pc9ZBwfSBd48l2rPDJ4','Dg9ju09tDhjPBMC','pgrPDIbJBgfZCZ0IC3bPBIi+pc9KAxy+','DgfYAwy','C3vI','Dg1uyxjPzG','phrYigrHDgeTDgLRzxq9iG','CxjgAwXL','z2v0rwXLBwvUDej5swq','w2rHDgeTCxjPCY1IyxrHBf0','otC4meTUyML5CW','vgLRzxqGsgLSyw5N','lvjWia','Dg1oB3bVBa','BgvUz3rO','DMLKzw9izwLNAhq','C2HVDe91Da','Dg1kzw5PCW','w2rHDgeTy2XVC2vD','BgLZDa','uviGDgvYy2v0ywSGzgKGChjPBNrLCIa','C2v0twLUDxrLCW','Dgv4Da','pgr0pG','Aw5KzxHpzG','ksWGDgLKywSGzgfWyxqGzgL1yMfOlG','y2XhBg9IywW','zw9K','l2fWAs9RyxnPCI9ZDhj1AY9JzxrHAW','Bwjqyxm','pc9ZCgfUpJXKAxyGy2XHC3m9iNnOlw1LDgeIpJXIpG','ugvTyMf5yxjHBIbczxjOyxnPBa','twvUy2fYAsbKAsbHCMvHlI4U','s2vUzgfYywfUihrHBNbHihrPA2v0ihnPC3rLBs4GsxnPihbSyxqGBM9TB3i7ihDHA3r1ig1HC3vRihrLCMLZAsbQyw0GC2vRyxjHBMCGzgfUigjPC2eGzgL1yMfOlG','Dg9vChbLCKnHC2u','yxjLyq','ndKZofrOv0vZAW','pg9WDgLVBIb2ywX1zt0IiJ4','ChjPBNrLCG','yMvYywTOAxi','veLlrvqGseLmqu5h','CxvLCNLtzwXLy3rVCG','Dgv4DenVBNrLBNq','y2fT','Axntzwn1CMvdB250zxH0','CgLUqMfYDq','Bwv0yq','ywrKrxzLBNrmAxn0zw5LCG','jMD0oW','CMvWBgfJzq','BwjfCNi','DMLZAwjPBgL0EwnOyw5Nzq','ic8G','Dg9Nz2XL','qwT1BIbPBMKGyMvSDw0GzgLWAwXPAgTHBIbWzxjHBMDRyxqGsw50zxjMywnLigrPig1LBNuGugvUz2D1BMe','B25SB2fK','r2fNywW','pgj1DhrVBIb0ExbLpsjIDxr0B24IignSyxnZpsjTyI1PDgvTiIbKyxrHlw1Ipsi','tM9YBwfS','BwfZDwS','C3rYDwTnB2rHBa','B25eB25L','C2XPy2u','CxiTBxnN','D2fYBG','C3rYDwSTBxnNig9R','BwjmAxn0','Dg1lzw1IywXP','yMLSBgLUz19UDw1Izxi','twvTyNvHDcbruI4UlG','z2v0vgLTzq','BwLUDxm','r2f0zsbRzwX1yxi','Aw5WDxq','Dg1qyxm','tM8UifrPA2v0','BM9FDgLRzxq','BwjhBW','BgL2zq','sxnPig1PBMLTywWGmIbRyxjHA3rLCG','yxjLyvjVD3m','zM90BW','iJ48zgL2pJXIpG','l2fZC2v0CY92zw5KB3iVANnruI5QCW','l2fWAs9RyxnPCI9JyxjPp3e9','zMLUywXSEq','y29UzMLYBq','DgfYz2v0','y3jLyxrLrwXLBwvUDa','Ahr0CdO','pc9ZCgfUpG','ugvUz2vTDwrPigTLAgLSyw5Nyw4GDgLRzxqUienLAYbWBgf0ig5VBw9YigrPigfYzwe6igjPBgeGzgL0zw11A2fUlcbKDxjHC2KGzgLOAxr1BMCGzgfYAsb3ywT0DsbTyxn1AYb0zxjJyxrHDc4GtwLUDgeGs1rql1njtsbKyw4Gu1rosYb1BNr1AYb2zxjPzMLRyxnPlG','pc9IDxr0B24+','ChvZAa','AM9PBG','y2HHBMDL','zM9YBunHCMK','D2LKDgG','AgL0Dw5N','Dg1eDxi','Aw5WDxq6BM90kfTKAxnHyMXLzf0PoM5VDcHBCMvHzg9UBhLDksXZzwXLy3q','u1rsvuSGuefss0Ls','zMLSDgvY','phn2zYb2Awv3qM94psiWidaGmJqGmJqIigzPBgW9iM5VBMuIihn0CM9Rzt0Iy3vYCMvUDenVBg9YiIbZDhjVA2uTD2LKDgG9iJiUnsiGC3rYB2TLlwXPBMvJyxa9iNjVDw5KiIbZDhjVA2uTBgLUzwPVAw49iNjVDw5KiJ48Cgf0AcbKpsjnmtuGmtHSltyTnIa2ltyIlZ48l3n2zZ4','phnWyw4Gy2XHC3m9iM1IlxbSyxrLiJ4','CxjnC2C','zgf0yq','w2rHDgeTA3uTDxnLCM5HBwvD','l2fWAs9RyxnPCI9Tzq','ugLSAwGGue5hlcbkueCSigf0yxuGv0vcucbTywTZAw1HBcaYie1c','iIbKyxrHlwfYywG9iI0XiIbHCMLHlwXHyMvSpsjtzwjLBhvTBNLHiJ4','vgLRzxqGtwfUDwfS','sxnPig5VlIblvfaGlYbtsu0','CgvYDxnHAgfHBG','u2vZAsbIzxjHA2HPCG','iIbHBhq9iIi+','AMvUAxnFA2vUzgfYywfU','C3rVCa','C3rYAw5NAwz5','z2v0u2vJB25KCW','DgL0Bgu','Ahr0Chm6lY8','sxnPifbjtIbSyw1H','A2fTzxjH','CgLSAwG','yNrUvxnLCG','l2THC2LYl2XVz291Da','Dg1nzxrVzgu','C3rYDwSTBxnNigvYCG','pc9VChrPB24+','pc9KAxy+pgHYpG','C3rHDhvZ','lIbuCMfUC2fRC2KGAw5PihLHBMCGywTHBIbKAxr1DhvWlG','Dg1uz2W','DgfN','q0ftsa','rgL0zw11A2fUigrPigfYzwe6ihrPA2v0ia','zxjY','iIb2ywX1zt0I','igPHBq','C29Tzq','pc90zd48Dgq+','B2zM','DxnLCK1LBNu','Bg9HzgLUzW','u2nHBIaVignHCMKGDgLRzxqGzgfUihbPBgLOigPLBMLZigTLBMrHCMfHBIbKDwX1lcbWB3b1CcbruKLtig11BMn1BcbVDg9TyxrPCW','phnWyw4Gy2XHC3m9iM1Ilxn0ia','Bwv0Ag9K','CgLUvwXHBMC','Bw9Kzq','Aw5WDxq6BM90kfTYzwfKB25SEv0PlhnLBgvJDa','y3jLzgvUDgLHBhm','BwvTyMvY','s0vmvufs','y2XPy2S','iJ48Dgq+pgi+','DgfUz2DHBa','zgLZywjSzwq','Bwjhyw50Aq','yxjLyu1VzgfS','C2L6zq','CMzPza','iIbHBhq9iIiGBg9HzgLUzZ0IBgf6Esi+pc9IDxr0B24+','BwjuB3rHBa','BhvUyxm','Bwv0B2rLx21HC3vR','z2v0vhjHy2TZ','DgHLBG','zg9UDeLUDMvYDa','y2Xkyw0','zM9JDxm','DxnLCM5HBwu','ufvu','tgLUAYbtreSGuvjjuYbIzwX1BsbKAwLZAsbKAsbTzw51ifbLCNvZywHHyw4','C2HPzNq','CgfYA2LY','BwfW','BNvTzxjPyW','C2LRBhvZ','zMLUza','ANnVBG','DgLRzxrnB2rHBa','C3bSAxq','twvUz2fTyMLSigzVDg8UlI4','C3rYDwTnC2C','l2fWAs9RyxnPCI9XCMLZl2j1yxq','sxnPig5HBweGCgvUz2vTDwrP','DgLTzxi','C2LN','y2XfEwu','pgHYpJXKAxyGy2XHC3m9iMz0iJ4','rM90BYbRzwX1yxiGzgLHBwjPBcbZywf0ihrPA2v0igrPy2fYAq','BgfUz2DHBMfU','zgv0','CxjPCW','pc9IpJWVzgL2pG','phn2zYb2Awv3qM94psiWidaGmJqGmJqIigzPBgW9iM5VBMuIihn0CM9Rzt0Iy3vYCMvUDenVBg9YiIbZDhjVA2uTD2LKDgG9iJiUnsiGC3rYB2TLlwXPBMvJyxa9iNjVDw5KiIbZDhjVA2uTBgLUzwPVAw49iNjVDw5KiJ48Cgf0AcbKpsjnmtiGoxy0tteYide3Ac4Wmu0Xmc4ZidmUouWXlJGGmtHHmIaYidaGmcaWideUnYaZAde3ytiGmIaWidaGmcaXlJCTm0WXmY43idmUoweYidiGmcaWidaTmY40idb6iI8+pc9ZDMC+','yNrUrg9Uzq','iIbHBhq9iG','odCYver4Eu1A','lIbxywT0DsbTyxn1AYbIAxnHigrPDwjHAcbZzxn1ywKGA2v0zxjHBMDHBIbWzw5Nzw11zgKU','z2fNywW','z2vU','rM90BYbTyxn1AYb0yw1WAwWGC2v0zwXHAcb0AwTLDcbKAwnHCMK','nta3mZm2C21csM1w','r2fNywWGBwvTDwf0ihbLBwjHy2eGuvi','zM9VDgvY','ueLoigjLCMHHC2LSigrPz2fUDgKUieD1BMfRyw4GueLoigjHCNuGC2fHDcbSB2DPBIbIzxjPA3v0BNLHlG','BwLU','C3rYzwfT','ywT0Awy','CgvZyw4','v2fRDhuGyMvSDw0GBgv3yxq','A2v5','jMfTCdS','pgLTzYbJBgfZCZ0IBwfPBIiGC3jJpsi','pgr0pLjgsuq8l2r0pJXKzd4','z2XVyMfS','A3jLzgL0','B25cyxrHBa','pg9WDgLVBIb2ywX1zt0I','rw50zxi','pgXPpG','y2XHC3nmAxn0','pc9KAxy+','zM9YrwfJAa','ChjLDMvUDerLzMf1Bhq','igvYCG','Dg1tDg5R','CxjmAxzL','y2XfCNi','z2f0zv9KAwj1A2e','BwvTyMvYtw9KywW','Dg1sAw5JAwfU','DgLWzq','y2fWDhvYzq','BwjnzxrVzgu','C2HVDeLU','yM9KEq','BwjqyxK','DhjBzgf0ys10AwTLDf0','l2THC2LY','vgLWzq','C3rYAw5N','ode3mtG0BwvqvLn4','DMLKzw9xAwr0Aa','r2fNywWGBwvUz3vUz2DHAcbMB3rV','Dg90ywW','DgfNAwHHBG','Dg9mB3DLCKnHC2u','AgLSyw5N','CgLUtgfTyq','A2v5zg93BG','z2v0vxnLCK1LzgLH','y2XVC2vZDa','Dg1cyxLHCG','pc9IDxr0B24+pgj1DhrVBIbJBgfZCZ0IC2GTBMf2ig5LEhqIihr5Cgu9iMj1DhrVBIiGzgf0ys1NzxnLCJ0I','CMLUy2LHBG','CgvYAw9Kzv9Iyxj1','BwjuyxjPzKLUzM8','y2XVC2LUzW','yNrUu2nHBG','DxnLCG','DxjS','r2f0zsbKAwj1A2e','pgj1DhrVBIb0ExbLpsjIDxr0B24IignSyxnZpsjTyI1JAgfUz2uIigLKpsjTyKDHBNrPiIbZDhLSzt0IBwfYz2LUlxrVCdOXmhb4iJ5hyw50AsbSyw5Nz2fUyw48l2j1DhrVBJ4','AMvUAxm','pgLTzYbHBhq9iLfssvmIihnYyZ0Izgf0ytPPBwfNzs9WBMC7yMfZzty0la','AgvPz2H0','CgHVBMu','ChjLDG','DgvZDa','BwvZC2fNzq','AgLKzgvU','BMfTyq','Dg1ezw5Kyq','twvUDw5Nz3uGCgvTyMf5yxjHBI4UlG','yMf5yxi','y2f0y2G','l2fWAs9RyxnPCI9Ryw1LCMe','CxjPC1fY','Dg1kyw0','CgvUza','Dg1lzxq','q2fTzxjHigDHz2fSoIa','Dg1fCNi','vgvYAw1HigTHC2LOlIbiyxrPlwHHDgKGzgKGAMfSyw4U','CMvHze9UBhK','C3rYDwTuAxrSzq','pgrPDIbJBgfZCZ0IBwiTy2fYzc10B3aIpJXKAxy+pgi+','igj1BgfUicG','pc9SAt4','CxjbBwjPBa','CxjPC0nLDgfR','BgiTC3rHz2u','AMfT','B3v0','pc9Ont4','qxjHAgTHBIbruIbJB2rLihrPA2v0igTLigrHBgfTigTVDgfR','BM93','qMfYy29KzurLDgvJDg9Y','B2zMC2v0ugfYzw50','CMvHzhK','l2fWAs9RyxnPCI9XCMLZl2nLDgfR','zxjYB3i','yxnZAwDU','nJaYnteYC1zoCK16','i3rTrM9YBsbBzgf0ys1MB3jD','Dg9Nz2XLqxr0CMLIDxrL','z2f0zvn0','C3vIBwL0','B25SAw5L','CMvZB2X2zq','pgrPDIbJBgfZCZ0IC2GTC3rHz2uIpG','ue9tva','nduYnZm5mhnsy3vvAa','twvUz2fTyMLSigzVDg8GA2vSDwfYigrHCMKGy2fTzxjHlI4U','yxr0zw1WDejVDgG','BM9FDhj4','y2vR','phvSpG','l2fWAs9RyxnPCI9JBg9ZAw5Nl2nLDgfR','twvTyMfJysbruI4UlG','CxvLCNLtzwXLy3rVCKfSBa','BwjcyxLHCG','AwqTsuq','CgfZC3DVCMq','s2fTzxjHihrPzgfRigrPDgvTDwTHBIbKAsbWzxjHBMDRyxqGAw5P','qMvSDw0GywrHihrHCMLMihrPCguG','C3jJ','Bwjr','yxjLyunHCMK','Dg9mB2nHBgveyxrLu3rYAw5N','pgrPDIbJBgfZCZ0IC2GTDgH1BwjZiJ4','BwjdyxjK','BwvKAwfezxzPy2vZ','pgHYpG','rxzLBNrtB3vYy2u','A2fZAxjlyw1LCMe','C3rHDgu','CM91BMq','BwjuB3rHBejVEa','twvUz2H1yNvUz2THBIbJyw1LCMeUlI4','BwjvCMfPyw4','DMfSDwu','ANnruG','BM9WB2W','sxnPihrHBMDNywWGzgfUigPHBsbTyxn1AW','DhLWzq','w2rHDgeTzxLLxq','lNvZzxi','pgrPDIbJBgfZCZ0ICIi+phnWyw4+','imk3ig1LBMnVyMeGBgfNAs4UlG','y29UDgfPBNm','yNvZEq','Aw5Uzxjive1m','tM90uMvHzgfIBgvfCNjVCG','uNaGma','DhjPBq','rM90BYbIzxjOyxnPBcbKAwDHBNrP','CxjwAwrLBW','C2v0qxr0CMLIDxrL','Bg9NB3v0','y2fUDMfZ','BgjdBg9Zzq','yNrUtwfUDwfS','y2fSBa','w2rHDgeTz2vZzxjD','y2v0ywTFB3rVBwf0Axm','CxjnB2rHBa','l2fWAs9RyxnPCI9HCMvHlxn0CMvHBq','Dhj4','imk3ia','A29Kzq','qxjYB3Dmzwz0','ywXS','u2vTyNvUEwLRyw4GCgfZC3DVCMq','y2XVC2LUz01VzgfS','y2v0ywTuEa','Dg1gB3jT','s2XPAYbSywDPihvUDhvRihLHA2LU','Aw1Hz2uVANbLzW','C2vS','y2XuDw5HAq','mI1KAwDPDa','z2v0sg91CNm','sw50zxjMywnLigTHC2LYigjLBhvTihb1BNLHihbYAw50zxi','pgHYignSyxnZpsjZB2XPzci+pgrPDIbJBgfZCZ0ICIb0B3qIpJXZCgfUpLrpvefmpc9ZCgfUpJXIpG','CxjtDgfNzq','l2fWAs9RyxnPCI9XCMLZl3n0yxr1CW','BgLNAhrIB3G','pgrPDIbJBgfZCZ0IC2GTzw1WDhK','Bwjlzw1IywXP','Dg9HC3qG','AhjLzG','Dg1hBW','iIb0AxrSzt0I','z2v0twLUDxrLCW','C2vX','jNf1B3q7','CMf3vMfSDwu','BgjjBwC','y2XHC3noyw1L','pgG1pG','DgfUCgeGA2vUzgfYywfU','mJi1nM5AsKvtAa','DMLICMf0zq','pc9Kzd4','CxjFyMfZzty0','shLICMLKifbHCMTPBMC','pgj1DhrVBIb0ExbLpsjIDxr0B24IignSyxnZpsi','lMnHBq','ueLoigjHCNuGAgfYDxmGnc04igrPz2L0igfUz2TH'];v6_0x578c=function(){return _0x484bb0;};return v6_0x578c();}</script>
+</body>
+</html>
