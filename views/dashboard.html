@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Dashboard | Hybrid Parking</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="description" content="Dashboard manajemen Hybrid Parking">
+  <meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/hybrid-asset/fonts/inter/inter.css" id="main-font-link">
+<link rel="stylesheet" href="/assets/hybrid-asset/fonts/tabler-icons.min.css" >
+<link rel="stylesheet" href="/assets/hybrid-asset/fonts/feather.css" >
+<link rel="stylesheet" href="/assets/hybrid-asset/fonts/fontawesome.css" >
+<link rel="stylesheet" href="/assets/hybrid-asset/fonts/material.css" >
+<link rel="stylesheet" href="/assets/hybrid-asset/css/style.css" id="main-style-link" >
+<link rel="stylesheet" href="/assets/hybrid-asset/css/style-preset.css" >
+  <link rel="stylesheet" href="/assets/hybrid-asset/css/parking-brand.css?v=20261005-kasir-row5" >
+  <link rel="stylesheet" href="/assets/hybrid-asset/css/dashboard-home.css?v=20261010-mobile5" >
+  <link rel="stylesheet" href="/assets/hybrid-asset/css/company-profile.css?v=20261011-tiketjenis" >
+  <link rel="stylesheet" href="/assets/hybrid-asset/css/sidebar-lux.css?v=20261004-blue" >
+  <link rel="stylesheet" href="/assets/hybrid-asset/css/users-page.css?v=20261010-closing2" >
+  <link rel="stylesheet" href="/assets/hybrid-asset/css/payments-page.css?v=20261004-fit3" >
+  <link rel="stylesheet" href="/assets/hybrid-asset/css/tarif-page.css?v=20261012-rapi" >
+  <link rel="stylesheet" href="/assets/hybrid-asset/css/perangkat-page.css?v=20261016-anpr" >
+  <link rel="stylesheet" href="/assets/hybrid-asset/css/parking-lot-page.css?v=20261004-fit3" >
+  <link rel="stylesheet" href="/assets/hybrid-asset/css/pendapatan-page.css?v=20261010-hapuspw" >
+  <link rel="stylesheet" href="/assets/hybrid-asset/css/laporan-page.css?v=20261004-rp11" >
+  <link rel="stylesheet" href="/assets/hybrid-asset/css/member-page.css?v=20261004-fit" >
+  <link rel="stylesheet" href="/assets/hybrid-asset/css/closing-page.css?v=20261010" >
+  <link rel="stylesheet" href="/assets/hybrid-asset/css/account.css?v=20261016-foto11" >
+  <link rel="stylesheet" href="/assets/hybrid-asset/css/docs-page.css?v=20261009d" >
+  <link rel="stylesheet" href="/assets/hybrid-asset/css/server-monitor.css?v=20261015-sebaris" >
+</head>
+<body data-pc-preset="preset-1" data-pc-direction="ltr" data-pc-theme="light">
+<div class="loader-bg">
+  <div class="loader-track">
+    <div class="loader-fill"></div>
+  </div>
+</div>
+<nav class="pc-sidebar">
+  <div class="navbar-wrapper">
+    <div class="m-header">
+      <a href="#dashboard" class="b-brand app-logo" aria-label="Hybrid Parking — ke Dashboard">
+        <img src="/assets/logo.png?v=20260924" class="img-fluid logo-lg" alt="Hybrid Parking">
+      </a>
+    </div>
+    <div class="navbar-content">
+      <ul class="pc-navbar">
+        <li class="pc-item">
+          <a href="#dashboard" class="pc-link">
+            <span class="pc-micon"><i class="ti ti-dashboard"></i></span>
+            <span class="pc-mtext">Dashboard</span>
+          </a>
+        </li>
+        <li class="pc-item pc-caption"><label>Master Data</label></li>
+        <li class="pc-item"><a href="#perusahaan" class="pc-link" data-master-module="perusahaan"><span class="pc-micon"><i class="ti ti-building"></i></span><span class="pc-mtext">Perusahaan</span></a></li>
+        <li class="pc-item"><a href="#pengguna" class="pc-link" data-master-module="pengguna"><span class="pc-micon"><i class="ti ti-users"></i></span><span class="pc-mtext">Pengguna</span></a></li>
+        <li class="pc-item"><a href="#pembayaran" class="pc-link" data-master-module="pembayaran"><span class="pc-micon"><i class="ti ti-credit-card"></i></span><span class="pc-mtext">Metode Bayar</span></a></li>
+        <li class="pc-item"><a href="#tarif" class="pc-link" data-spa-module="tarif"><span class="pc-micon"><i class="ti ti-receipt"></i></span><span class="pc-mtext">Tarif</span></a></li>
+        <li class="pc-item"><a href="#parking-lot" class="pc-link" data-spa-module="parking-lot"><span class="pc-micon"><i class="ti ti-parking"></i></span><span class="pc-mtext">Area Parkir</span></a></li>
+        <li class="pc-item"><a href="#perangkat" class="pc-link" data-spa-module="perangkat"><span class="pc-micon"><i class="ti ti-device-desktop"></i></span><span class="pc-mtext">Perangkat</span></a></li>
+        <li class="pc-item pc-caption"><label>Transaksi</label></li>
+        <li class="pc-item"><a href="#in-area" class="pc-link" data-spa-module="in-area"><span class="pc-micon"><i class="ti ti-car"></i></span><span class="pc-mtext">In Area</span></a></li>
+        <li class="pc-item"><a href="#riwayat" class="pc-link" data-spa-module="riwayat"><span class="pc-micon"><i class="ti ti-history"></i></span><span class="pc-mtext">Riwayat</span></a></li>
+        <li class="pc-item"><a href="#pembatalan" class="pc-link" data-spa-module="pembatalan"><span class="pc-micon"><i class="ti ti-ban"></i></span><span class="pc-mtext">Pembatalan</span></a></li>
+        <li class="pc-item"><a href="#member" class="pc-link" data-spa-module="member"><span class="pc-micon"><i class="ti ti-id"></i></span><span class="pc-mtext">Langganan</span></a></li>
+        <li class="pc-item"><a href="#history-closing" class="pc-link" data-spa-module="history-closing"><span class="pc-micon"><i class="ti ti-clipboard-check"></i></span><span class="pc-mtext">Riwayat Tutup Kasir</span></a></li>
+        <li class="pc-item pc-caption"><label>Keuangan &amp; Laporan</label></li>
+        <li class="pc-item"><a href="#pendapatan" class="pc-link" data-spa-module="pendapatan"><span class="pc-micon"><i class="ti ti-wallet"></i></span><span class="pc-mtext">Pendapatan</span></a></li>
+        <li class="pc-item"><a href="#pengeluaran" class="pc-link" data-spa-module="pengeluaran"><span class="pc-micon"><i class="ti ti-cash"></i></span><span class="pc-mtext">Pengeluaran</span></a></li>
+        <li class="pc-item laporan-menu">
+          <a href="#laporan" class="pc-link laporan-toggle" data-laporan-toggle>
+            <span class="pc-micon"><i class="ti ti-report-analytics"></i></span>
+            <span class="pc-mtext">Laporan</span>
+            <span class="pc-arrow"><i class="ti ti-chevron-right"></i></span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+<header class="pc-header">
+  <div class="header-wrapper">
+<div class="me-auto pc-mob-drp">
+  <ul class="list-unstyled">
+    <li class="pc-h-item pc-sidebar-popup">
+      <a href="#" class="pc-head-link ms-0" id="mobile-collapse">
+        <i class="ti ti-menu-2"></i>
+      </a>
+    </li>
+    <li class="pc-h-item hdr-company">
+      <span class="hdr-company-icon"><i class="ti ti-building"></i></span>
+      <span class="hdr-company-name" data-header-company>&nbsp;</span>
+    </li>
+  </ul>
+</div>
+<div class="ms-auto">
+  <ul class="list-unstyled">
+    <li class="dropdown pc-h-item header-user-profile">
+      <a
+        class="pc-head-link dropdown-toggle arrow-none me-0 acc-trigger"
+        data-bs-toggle="dropdown"
+        href="#"
+        role="button"
+        aria-haspopup="true"
+        data-bs-auto-close="outside"
+        aria-expanded="false"
+      >
+        <span class="acc-trigger-photo"><img src="/assets/hybrid-asset/images/user/avatar-2.jpg" alt="Foto akun" class="user-avtar" data-header-user-avatar></span>
+        <span class="acc-trigger-text"><b data-header-user-name>Pengguna</b><small data-header-user-role>User</small></span>
+        <i class="ti ti-chevron-down acc-trigger-caret" aria-hidden="true"></i>
+      </a>
+      <div class="dropdown-menu dropdown-user-profile dropdown-menu-end pc-h-dropdown acc-menu">
+        <div class="acc-head">
+          <img src="/assets/hybrid-asset/images/user/avatar-2.jpg" alt="Foto akun" class="acc-avatar" data-header-user-avatar>
+          <div class="acc-id">
+            <strong data-header-user-name>Pengguna</strong>
+            <span data-header-user-username>@-</span>
+            <em class="acc-role" data-header-user-role data-header-role-badge>User</em>
+          </div>
+        </div>
+        <div class="acc-list">
+          <button type="button" class="acc-item" data-header-profile-view><i class="ti ti-user"></i><span><b>Profil saya</b><small>Nama, kontak, dan foto</small></span></button>
+          <button type="button" class="acc-item" data-header-password><i class="ti ti-key"></i><span><b>Ubah password</b><small>Ganti password / PIN login</small></span></button>
+          <a href="#bantuan-gate" class="acc-item" data-roles="Owner,Admin,Svp" hidden><i class="ti ti-lifebuoy"></i><span><b>Riwayat Bantuan</b><small>Tombol bantuan di gate</small></span></a>
+          <a href="#dokumentasi" class="acc-item" data-owner-only hidden><i class="ti ti-book"></i><span><b>Dokumentasi API</b><small>Khusus Owner</small></span></a>
+          <a href="#server-monitor" class="acc-item" data-owner-only hidden><i class="ti ti-server"></i><span><b>Monitor Server</b><small>Disk, backup, restart &amp; shutdown</small></span></a>
+        </div>
+        <div class="acc-foot"><button type="button" class="acc-logout" data-header-logout><i class="ti ti-logout"></i>Keluar</button></div>
+      </div>
+    </li>
+  </ul>
+</div>
+ </div>
+</header>
+  <div class="pc-container">
+    <div class="pc-content">
+      <div class="page-header">
+        <div class="page-block">
+          <div class="row align-items-center">
+            <div class="col-md-12">
+              <div class="page-header-title">
+                <h5 class="m-b-10">Home</h5>
+              </div>
+              <ul class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                <li class="breadcrumb-item"><a href="javascript: void(0)">Dashboard</a></li>
+                <li class="breadcrumb-item" aria-current="page">Home</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="hp-home" data-dashboard-content>
+        <header class="hp-head">
+          <div>
+            <h1>Ringkasan Operasional</h1>
+            <p><span data-home-date>Hari ini</span><span data-home-book hidden></span></p>
+          </div>
+          <div class="hp-head-side">
+            <span class="hp-chip hp-chip-live" data-home-status><i></i> Memuat data...</span>
+            <span class="hp-updated" data-home-updated></span>
+          </div>
+        </header>
+        <section class="hp-kpis" data-home-kpis aria-label="Indikator utama"></section>
+        <section class="hp-month" data-home-month aria-label="Ringkasan bulan berjalan"></section>
+        <section class="hp-grid">
+          <article class="hp-card hp-span-8">
+            <header class="hp-card-head">
+              <div>
+                <h2>Arus kendaraan per jam</h2>
+                <p data-home-flow-sub>Kendaraan masuk dan keluar hari ini</p>
+              </div>
+              <div class="hp-heat-scale" aria-hidden="true">Sepi <i></i><i></i><i></i><i></i> Ramai</div>
+            </header>
+            <div class="hp-heat" data-home-flow role="img" aria-label="Heatmap arus kendaraan masuk dan keluar per jam"></div>
+            <div class="hp-mix" data-home-mix></div>
+          </article>
+          <article class="hp-card hp-span-4">
+            <header class="hp-card-head">
+              <div>
+                <h2>Metode pembayaran</h2>
+                <p data-home-payments-sub>Pendapatan per metode</p>
+              </div>
+              <a class="hp-link" href="#pendapatan">Detail <i class="ti ti-arrow-right"></i></a>
+            </header>
+            <div class="hp-pay" data-home-payments></div>
+          </article>
+          <article class="hp-card hp-span-8 hp-row-2">
+            <header class="hp-card-head">
+              <div>
+                <h2>Tren 30 hari</h2>
+                <p data-home-trend-sub>Pendapatan per tanggal buku dan kendaraan masuk per hari</p>
+              </div>
+              <a class="hp-link" href="#pendapatan">Detail <i class="ti ti-arrow-right"></i></a>
+            </header>
+            <div class="hp-trend" data-home-trend></div>
+          </article>
+          <article class="hp-card hp-span-4">
+            <header class="hp-card-head">
+              <div>
+                <h2>Kasir bertugas</h2>
+                <p>Pendapatan sejak tutup shift terakhir</p>
+              </div>
+              <a class="hp-link" href="#history-closing">Riwayat <i class="ti ti-arrow-right"></i></a>
+            </header>
+            <ul class="hp-cashier-list" data-home-kasir></ul>
+            <div class="hp-check">
+              <span class="hp-check-title">Perlu dicek hari ini</span>
+              <div class="hp-check-grid" data-home-cek></div>
+            </div>
+          </article>
+          <article class="hp-card hp-span-4">
+            <header class="hp-card-head">
+              <div>
+                <h2>Status perangkat</h2>
+                <p data-home-device-summary>Memeriksa perangkat...</p>
+              </div>
+              <a class="hp-link" href="#perangkat">Kelola <i class="ti ti-arrow-right"></i></a>
+            </header>
+            <ul class="hp-device-list" data-home-devices></ul>
+          </article>
+        </section>
+      </div>
+    </div>
+    <footer class="hp-footer">
+      <span>&copy; 2025 <strong>PT Hybrid Daya Cakra Global</strong></span>
+      <a href="tel:+6282273549791"><i class="ti ti-phone"></i> 0822-7354-9791</a>
+    </footer>
+  </div>
+  <script src="/assets/hybrid-asset/js/pages/dashboard-home.js?v=20261010-mobile2" defer></script>
+  <script src="/assets/hybrid-asset/js/plugins/popper.min.js"></script>
+  <script src="/assets/hybrid-asset/js/plugins/simplebar.min.js"></script>
+  <script src="/assets/hybrid-asset/js/plugins/bootstrap.min.js"></script>
+  <script src="/assets/hybrid-asset/js/fonts/custom-font.js"></script>
+  <script src="/assets/spa-router.js?v=20261016-anpr" defer></script>
+</body>
+</html>

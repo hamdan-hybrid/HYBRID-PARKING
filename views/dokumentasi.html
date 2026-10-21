@@ -1,0 +1,320 @@
+<div class="doc-page">
+  <header class="doc-hero">
+    <p class="doc-eyebrow"><i class="ti ti-book"></i> Khusus Owner</p>
+    <h2>Dokumentasi API</h2>
+    <p>API untuk perangkat Interface di gate (kendaraan masuk, update IP, buka gate) dan API laporan omset untuk bot WhatsApp.</p>
+  </header>
+
+  <div class="doc-body">
+    <section class="doc-section" id="doc-umum">
+      <h3>1. Ketentuan umum</h3>
+      <ul class="doc-bullets">
+        <li>Semua permintaan <b>GET</b>, <b>tanpa login</b>.</li>
+        <li>Alamat server harus memakai <b>IP server</b> (bukan domain), misalnya <code>http://192.168.18.240:3000</code>.</li>
+        <li>Pengirim harus berada di <b>jaringan lokal yang sama</b> dengan server. Selain itu dijawab <code>403 {"status":false,"pesan":"Access denied"}</code>.</li>
+        <li><code>KEY</code> = API key Interface (32 karakter), disalin dari menu <a href="#perangkat">Perangkat</a> (tombol kunci).</li>
+        <li>Bila IP Interface sudah diisi di menu Perangkat, IP pengirim harus sama dengan IP tersebut.</li>
+        <li>Semua respons JSON: <code>status</code> (<code>true</code>/<code>false</code>) dan <code>pesan</code>.</li>
+      </ul>
+    </section>
+
+    <section class="doc-section" id="doc-masuk">
+      <h3>2. Kendaraan masuk</h3>
+      <div class="doc-api">
+        <div class="doc-api-head"><span class="doc-method get">GET</span><code>/api/gate/masuk</code></div>
+        <pre>http://IP-SERVER:3000/api/gate/masuk?id_gate=KEY&amp;jenis_kendaraan=motor&amp;rfid_member=&amp;metode_masuk=tiket</pre>
+        <div class="doc-table-wrap">
+          <table class="doc-table">
+            <thead><tr><th>Parameter</th><th>Keterangan</th></tr></thead>
+            <tbody>
+              <tr><td><code>id_gate</code></td><td>Wajib. API key Interface.</td></tr>
+              <tr><td><code>jenis_kendaraan</code></td><td>Wajib. Misalnya <code>motor</code> / <code>mobil</code>. Untuk member boleh kosong bila langganan hanya punya satu kendaraan (jenis diambil dari data langganan).</td></tr>
+              <tr><td><code>rfid_member</code></td><td>Opsional. Nomor kartu RFID langganan. Bila diisi, metode otomatis <code>member</code>.</td></tr>
+              <tr><td><code>metode_masuk</code></td><td><code>tiket</code> (bawaan), <code>member</code>, <code>qr</code>, <code>anpr</code>, <code>manual</code>.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <h4>Proses di server</h4>
+        <ol class="doc-steps">
+          <li>Cek API key dan IP pengirim.</li>
+          <li>Member: cek kartu RFID terdaftar, langganan aktif, dan belum tercatat di area.</li>
+          <li>Simpan transaksi dengan no. tiket 10 digit (status <em>in</em>).</li>
+          <li>Metode <code>tiket</code>: cetak tiket ke printer yang terhubung ke Interface.</li>
+          <li>Kirim perintah buka gate ke Interface (lihat bagian 4).</li>
+          <li>Ambil foto dari kamera yang terhubung ke Interface di latar belakang (±2 detik).</li>
+        </ol>
+        <h4>Respons berhasil (200)</h4>
+        <pre>{
+  "status": true,
+  "pesan": "Silakan masuk",
+  "no_tiket": "6943224415",
+  "gate": "GATE MASUK",
+  "jenis_kendaraan": "motor",
+  "metode_masuk": "tiket",
+  "member": null,
+  "nopol": null,
+  "foto_diproses": 1,
+  "cetak": true,
+  "cetak_diulang": false,
+  "peringatan": [],
+  "gate_dibuka": true
+}</pre>
+        <ul class="doc-bullets">
+          <li>Member: <code>pesan</code> = <code>"Selamat datang, NAMA"</code>, <code>member</code> berisi nama pelanggan, <code>nopol</code> diisi dari kendaraan langganan yang cocok.</li>
+          <li><code>cetak</code>: <code>null</code> bila tidak mencetak (bukan metode tiket). Printer yang belum merespons dicoba ulang di latar belakang sampai 10 kali; alasannya tercatat di <code>peringatan</code>.</li>
+          <li><code>gate_dibuka</code>: <code>true</code> bila perintah buka gate sudah dikirim (IP Interface terisi).</li>
+        </ul>
+        <h4>Respons gagal</h4>
+        <div class="doc-table-wrap">
+          <table class="doc-table">
+            <thead><tr><th>Kode</th><th>Pesan</th></tr></thead>
+            <tbody>
+              <tr><td>400</td><td><code>jenis_kendaraan wajib diisi</code></td></tr>
+              <tr><td>400</td><td><code>metode_masuk harus salah satu: tiket, member, qr, anpr, manual</code></td></tr>
+              <tr><td>400</td><td><code>rfid_member wajib untuk metode member</code></td></tr>
+              <tr><td>403</td><td><code>Access denied</code> (bukan jaringan lokal / lewat domain)</td></tr>
+              <tr><td>403</td><td><code>IP x.x.x.x bukan IP perangkat NAMA</code></td></tr>
+              <tr><td>403</td><td><code>Langganan NAMA tidak aktif (berlaku … s/d …)</code></td></tr>
+              <tr><td>404</td><td><code>id_gate tidak terdaftar</code></td></tr>
+              <tr><td>404</td><td><code>Kartu RFID tidak terdaftar</code></td></tr>
+              <tr><td>409</td><td><code>NAMA masih tercatat di area</code></td></tr>
+              <tr><td>409</td><td><code>Interface belum terhubung ke printer</code> / <code>IP printer belum diatur</code></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="doc-section" id="doc-update-ip">
+      <h3>3. Update IP</h3>
+      <div class="doc-api">
+        <div class="doc-api-head"><span class="doc-method get">GET</span><code>/api/gate/update-ip</code></div>
+        <p>Dipanggil Interface saat menyala atau IP-nya berubah (DHCP), agar server tahu alamat untuk perintah buka gate.</p>
+        <pre>http://IP-SERVER:3000/api/gate/update-ip?apikey=KEY&amp;ipaddrs=192.168.18.30:80&amp;sn=SERIAL123</pre>
+        <div class="doc-table-wrap">
+          <table class="doc-table">
+            <thead><tr><th>Parameter</th><th>Keterangan</th></tr></thead>
+            <tbody>
+              <tr><td><code>apikey</code></td><td>Wajib. API key Interface (<code>id_gate</code> juga diterima).</td></tr>
+              <tr><td><code>ipaddrs</code></td><td><code>IP</code> atau <code>IP:port</code>. Kosong = IP pengirim. Port bawaan 80.</td></tr>
+              <tr><td><code>sn</code></td><td>Opsional. Serial number Interface, maks. 64 karakter (huruf, angka, <code>. _ : - /</code>). Kosong = nilai lama.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <h4>Respons berhasil (200)</h4>
+        <pre>{ "status": true, "gate": "GATE MASUK", "ip": "192.168.18.30", "port": 80, "sn": "SERIAL123", "berubah": true }</pre>
+        <h4>Respons gagal</h4>
+        <div class="doc-table-wrap">
+          <table class="doc-table">
+            <thead><tr><th>Kode</th><th>Pesan</th></tr></thead>
+            <tbody>
+              <tr><td>400</td><td><code>apikey tidak valid</code></td></tr>
+              <tr><td>400</td><td><code>ipaddrs tidak valid, contoh: 10.10.1.2 atau 10.10.1.2:80</code></td></tr>
+              <tr><td>400</td><td><code>ipaddrs x.x.x.x bukan jaringan lokal yang sama dengan server</code></td></tr>
+              <tr><td>400</td><td><code>sn tidak valid (maks 64 karakter: huruf, angka, . _ : - /)</code></td></tr>
+              <tr><td>404</td><td><code>apikey tidak terdaftar</code></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="doc-section" id="doc-bantuan">
+      <h3>4. Bantuan</h3>
+      <div class="doc-api">
+        <div class="doc-api-head"><span class="doc-method get">GET</span><code>/api/gate/bantuan</code></div>
+        <p>Dipanggil Interface saat tombol bantuan di gate ditekan.</p>
+        <pre>http://IP-SERVER:3000/api/gate/bantuan?id_gate=KEY</pre>
+        <div class="doc-table-wrap">
+          <table class="doc-table">
+            <thead><tr><th>Parameter</th><th>Keterangan</th></tr></thead>
+            <tbody>
+              <tr><td><code>id_gate</code></td><td>Wajib. API key Interface.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <ul class="doc-bullets">
+          <li>Proses: simpan riwayat bantuan → foto semua camera Interface (latar belakang) → notifikasi WhatsApp ke semua nomor di menu Perusahaan (latar belakang).</li>
+          <li>Ditekan lagi dari gate yang sama dalam 30 detik tidak dicatat ulang dan WhatsApp tidak dikirim lagi; respons berisi <code>"diulang": true</code>.</li>
+        </ul>
+        <h4>Respons berhasil (200)</h4>
+        <pre>{
+  "status": true,
+  "pesan": "Bantuan diminta, petugas segera datang",
+  "id_bantuan": 12,
+  "gate": "GATE MASUK",
+  "foto_diproses": 1
+}</pre>
+        <h4>Respons gagal</h4>
+        <div class="doc-table-wrap">
+          <table class="doc-table">
+            <thead><tr><th>Kode</th><th>Pesan</th></tr></thead>
+            <tbody>
+              <tr><td>400</td><td><code>id_gate tidak valid</code></td></tr>
+              <tr><td>403</td><td><code>Access denied</code> (bukan jaringan lokal / lewat domain)</td></tr>
+              <tr><td>403</td><td><code>IP x.x.x.x bukan IP perangkat NAMA</code></td></tr>
+              <tr><td>404</td><td><code>id_gate tidak terdaftar</code></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="doc-section" id="doc-anpr-member">
+      <h3>5. Akses member ANPR</h3>
+      <div class="doc-api">
+        <div class="doc-api-head"><span class="doc-method get">GET</span><code>/api/gate/akses_member_anpr</code></div>
+        <p>Member masuk lewat pembacaan plat nomor (ANPR). Bila nopol milik member yang memenuhi ketentuan, kendaraan dicatat masuk di gate ini dan gate dibuka.</p>
+        <pre>http://IP-SERVER:3000/api/gate/akses_member_anpr?id_gate=KEY&amp;nopol=BK1234AB</pre>
+        <div class="doc-table-wrap">
+          <table class="doc-table">
+            <thead><tr><th>Parameter</th><th>Keterangan</th></tr></thead>
+            <tbody>
+              <tr><td><code>id_gate</code></td><td>Wajib. API key Interface (gate masuk).</td></tr>
+              <tr><td><code>nopol</code></td><td>Wajib. Hasil baca plat. Huruf besar, spasi dan tanda baca diabaikan (<code>bk 1234 ab</code> = <code>BK1234AB</code>).</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <ul class="doc-bullets">
+          <li>Nopol dicocokkan ke kendaraan di menu <a href="#member">Langganan</a>.</li>
+          <li>Syarat: langganan <b>Aktif</b>, masa berlaku mencakup hari ini, belum tercatat di area, dan jenis kendaraan (tarif) sudah diatur.</li>
+          <li>Dicatat seperti kendaraan masuk member: <code>metode_masuk</code> = <code>anpr</code>, <code>anpr_masuk</code> = nopol hasil baca, no. tiket = nomor kartu RFID (bila tidak ada: 10 digit acak). Server membuka gate dan foto diambil di latar belakang.</li>
+        </ul>
+        <h4>Respons berhasil (200)</h4>
+        <pre>{
+  "status": true,
+  "pesan": "Selamat datang, NAMA",
+  "no_tiket": "32323",
+  "gate": "GATE MASUK",
+  "jenis_kendaraan": "mobil",
+  "metode_masuk": "anpr",
+  "member": "NAMA",
+  "nopol": "BK1234AB",
+  "gate_dibuka": true
+}</pre>
+        <h4>Respons gagal</h4>
+        <div class="doc-table-wrap">
+          <table class="doc-table">
+            <thead><tr><th>Kode</th><th>Pesan</th></tr></thead>
+            <tbody>
+              <tr><td>400</td><td><code>nopol wajib diisi</code> / <code>id_gate tidak valid</code></td></tr>
+              <tr><td>403</td><td><code>Langganan NAMA tidak aktif (berlaku … s/d …)</code></td></tr>
+              <tr><td>403</td><td><code>Access denied</code> / <code>IP x.x.x.x bukan IP perangkat NAMA</code></td></tr>
+              <tr><td>404</td><td><code>Nopol X bukan kendaraan member</code> / <code>id_gate tidak terdaftar</code></td></tr>
+              <tr><td>409</td><td><code>NAMA masih tercatat di area</code></td></tr>
+              <tr><td>409</td><td><code>Jenis kendaraan X belum diatur di data langganan</code></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="doc-section" id="doc-capture">
+      <h3>6. Capture ANPR</h3>
+      <div class="doc-api">
+        <div class="doc-api-head"><span class="doc-method get">GET</span><code>/api/gate/capture</code></div>
+        <p>Dipanggil Interface untuk mengambil foto ANPR. Server langsung membalas, foto diambil di latar belakang.</p>
+        <pre>http://IP-SERVER:3000/api/gate/capture?id_gate=KEY</pre>
+        <div class="doc-table-wrap">
+          <table class="doc-table">
+            <thead><tr><th>Parameter</th><th>Keterangan</th></tr></thead>
+            <tbody>
+              <tr><td><code>id_gate</code></td><td>Wajib. API key Interface.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <ul class="doc-bullets">
+          <li>Foto dari camera pertama yang terhubung ke Interface, disimpan di <code>storage/GateAnpr/&lt;id perangkat&gt;-&lt;YYYYMMDDHHmmss&gt;.jpg</code>.</li>
+          <li>Setelah foto tersimpan: <code>anpr_foto</code> perangkat diisi path foto (<code>GateAnpr/...</code>) dan <code>nopol</code> diisi <code>ANPR</code>.</li>
+          <li>Gagal mengambil foto tidak mengubah respons; alasannya dicatat di log server.</li>
+        </ul>
+        <h4>Respons berhasil (200)</h4>
+        <pre>{ "status": true }</pre>
+        <h4>Respons gagal</h4>
+        <div class="doc-table-wrap">
+          <table class="doc-table">
+            <thead><tr><th>Kode</th><th>Pesan</th></tr></thead>
+            <tbody>
+              <tr><td>400</td><td><code>id_gate tidak valid</code></td></tr>
+              <tr><td>403</td><td><code>Access denied</code> (bukan jaringan lokal / lewat domain)</td></tr>
+              <tr><td>403</td><td><code>IP x.x.x.x bukan IP perangkat NAMA</code></td></tr>
+              <tr><td>404</td><td><code>id_gate tidak terdaftar</code></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="doc-section" id="doc-open-gate">
+      <h3>7. Buka gate (server → Interface)</h3>
+      <div class="doc-api">
+        <div class="doc-api-head"><span class="doc-method get">GET</span><code>http://IP-INTERFACE:PORT/open-gate/?sn=SERIAL</code></div>
+        <p>Endpoint ini harus tersedia <b>di perangkat Interface</b>. Server memanggilnya setelah kendaraan masuk tercatat, dan setelah kasir menyelesaikan pembayaran di gate keluar.</p>
+        <ul class="doc-bullets">
+          <li><code>IP-INTERFACE:PORT</code> diambil dari menu Perangkat (atau dari Update IP).</li>
+          <li><code>sn</code> = serial number Interface yang tersimpan di server (tidak dikirim bila belum ada); Interface sebaiknya menolak bila tidak cocok. Port 80 tidak ditulis di alamat.</li>
+          <li>Batas waktu 3 detik. Balasan Interface tidak ditunggu oleh API masuk; kegagalan dicatat di log server.</li>
+          <li>Path dapat diganti dengan <code>GATE_OPEN_PATH</code> di <code>.env</code>.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="doc-section" id="doc-omset">
+      <h3>8. Laporan omset (bot WhatsApp)</h3>
+      <ul class="doc-bullets">
+        <li>Permintaan <b>GET</b>, <b>tanpa login dan tanpa API key</b>. Bisa lewat IP server maupun domain.</li>
+        <li>Data dari transaksi parkir yang sudah dibayar, per <b>tanggal buku</b> (bukan tanggal kalender). Pembayaran langganan dan pendapatan manual tidak dihitung.</li>
+        <li>Selalu untuk <b>tanggal buku berjalan</b>, tanpa parameter.</li>
+        <li>Respons JSON: <code>ok</code> dan <code>message</code> (teks siap kirim ke WhatsApp).</li>
+      </ul>
+      <div class="doc-api">
+        <div class="doc-api-head"><span class="doc-method get">GET</span><code>/RestApi/OmsetNow</code></div>
+        <p>Omset per kasir pada tanggal buku berjalan, total transaksi, total omset, dan kendaraan di area.</p>
+        <pre>http://IP-SERVER:3000/RestApi/OmsetNow</pre>
+        <h4>Respons berhasil (200)</h4>
+        <pre>{
+  "ok": true,
+  "message": "📊 *LAPORAN OMSET PARKIR*\n━━━━━━━━━━━━━━━━━━\n📅 Tanggal: *14/10/26*\n..."
+}</pre>
+        <p>Transaksi tanpa kasir (keluar otomatis lewat gate) memakai nama gate keluar di daftar kasir.</p>
+      </div>
+      <div class="doc-api">
+        <div class="doc-api-head"><span class="doc-method get">GET</span><code>/RestApi/OmsetRekap</code></div>
+        <p>Rekap omset harian satu bulan: tanggal 1 sampai tanggal buku berjalan, total omset, jumlah kendaraan, dan jumlah kendaraan per metode bayar.</p>
+        <pre>http://IP-SERVER:3000/RestApi/OmsetRekap</pre>
+        <h4>Respons berhasil (200)</h4>
+        <pre>{
+  "ok": true,
+  "message": "📊 *REKAP OKTOBER*\n```\nKam  01/10/26   557.000\n...\nTOTAL            7.290.000\n...```"
+}</pre>
+        <h4>Respons gagal</h4>
+        <div class="doc-table-wrap">
+          <table class="doc-table">
+            <thead><tr><th>Kode</th><th>Pesan</th></tr></thead>
+            <tbody>
+              <tr><td>400</td><td><code>Tanggal buku belum diatur di menu Perusahaan</code></td></tr>
+              <tr><td>405</td><td><code>Method not allowed</code> (selain GET)</td></tr>
+              <tr><td>500</td><td><code>Terjadi kesalahan di server</code></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="doc-note"><i class="ti ti-info-circle"></i> Angka ribuan di <code>message</code> diberi karakter tak terlihat (zero-width space) setelah titik agar WhatsApp tidak menjadikannya tautan nomor telepon.</p>
+      </div>
+    </section>
+
+    <section class="doc-section" id="doc-env">
+      <h3>9. Pengaturan .env</h3>
+      <div class="doc-table-wrap">
+        <table class="doc-table">
+          <thead><tr><th>Nama</th><th>Keterangan</th></tr></thead>
+          <tbody>
+            <tr><td><code>GATE_LOCAL_ONLY=off</code></td><td>Izinkan API Gate dari luar jaringan lokal / lewat domain (tidak disarankan)</td></tr>
+            <tr><td><code>GATE_OPEN_PATH=/open-gate/</code></td><td>Path buka gate di Interface</td></tr>
+            <tr><td><code>GATE_FRAME_CACHE=on</code></td><td>Simpan frame kamera terus-menerus: foto instan, ±11% CPU per kamera</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="doc-note"><i class="ti ti-info-circle"></i> Server membutuhkan <b>ffmpeg</b> untuk mengambil foto kamera. Ubah <code>.env</code> lalu restart server.</p>
+    </section>
+  </div>
+</div>

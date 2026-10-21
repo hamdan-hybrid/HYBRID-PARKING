@@ -1,0 +1,159 @@
+/* Hybrid Parking — pendapatan (read-only) */
+.pd-hero-meta { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 8px; }
+.pd-readonly, .pd-book { display: inline-flex; align-items: center; gap: 6px; padding: 7px 12px; border-radius: 999px; background: rgba(255,255,255,.85); border: 1px solid var(--up-line); color: var(--up-ink-2); font-size: 12.5px; font-weight: 600; }
+.pd-readonly i { color: var(--up-ink-3); }
+.pd-book i { color: var(--up-accent-deep); }
+.pd-book strong { color: var(--up-ink); }
+
+/* Filter: satu baris di atas ringkasan & grafik */
+.pd-filters { display: grid; gap: 12px; padding: 16px 20px; border: 1px solid var(--up-line); border-radius: 18px; background: #fff; }
+.pd-period, .pd-filter-row { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 10px 12px; }
+.pd-period label, .pd-select { display: grid; gap: 4px; margin: 0; color: var(--up-ink-3); font-size: 11.5px; font-weight: 700; letter-spacing: .3px; text-transform: uppercase; }
+.pd-period input, .pd-select select { height: 40px; padding: 0 12px; border: 1px solid var(--up-line); border-radius: 11px; background: var(--up-field, #f8fafc); color: var(--up-ink); font-size: 13.5px; font-weight: 500; letter-spacing: 0; text-transform: none; }
+.pd-select select { min-width: 160px; }
+.pd-period input:focus, .pd-select select:focus { outline: 2px solid var(--up-accent); outline-offset: 1px; }
+.pd-presets { display: flex; flex-wrap: wrap; gap: 4px; padding: 4px; border: 1px solid var(--up-line); border-radius: 12px; background: #f6f8fb; }
+.pd-presets button { height: 32px; padding: 0 12px; border: 1px solid transparent; border-radius: 9px; background: transparent; color: var(--up-ink-2); font-size: 12.5px; font-weight: 600; cursor: pointer; }
+.pd-presets button:hover { background: #fff; color: var(--up-accent-deep); }
+.pd-presets button.is-active { background: #fff; border-color: var(--up-accent); color: var(--up-accent-deep); }
+.pd-search { flex: 1; min-width: 220px; }
+
+.pd-body { display: grid; gap: 18px; transition: opacity .15s; }
+.pd-body.is-loading { opacity: .55; }
+.pd-stats { margin: 0; }
+.pd-stats .up-stat strong { font-size: 20px; }
+.pd-stat-note { display: block; margin-top: 2px; color: var(--up-ink-3); font-size: 11.5px; }
+.pd-card { padding: 18px 20px; }
+.pd-card h3, .pd-list-head h3 { display: flex; align-items: center; gap: 8px; margin: 0; color: var(--up-ink); font-size: 15px; font-weight: 700; }
+.pd-card h3 i, .pd-list-head h3 i { color: var(--up-accent-deep); font-size: 18px; }
+.pd-card-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 16px; margin-bottom: 14px; }
+.pd-card-head > span { color: var(--up-ink-3); font-size: 12px; }
+.pd-list-head { padding: 18px 20px 0; }
+.pd-list-head .up-filters { margin: 0; }
+
+/* Daftar transaksi */
+.pd-trx strong { display: block; color: var(--up-ink); font: 700 12.5px ui-monospace, SFMono-Regular, Menlo, monospace; }
+.pd-trx small, .pd-desc small { display: block; margin-top: 2px; color: var(--up-ink-3); font-size: 11.5px; }
+.pd-desc { display: grid; justify-items: start; gap: 3px; min-width: 0; }
+.pd-uraian { color: var(--up-ink); font-size: 13px; }
+.pd-ref { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+.pd-jenis { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 999px; background: #f2f4f7; color: var(--up-ink-2); font-size: 11px; font-weight: 700; white-space: nowrap; }
+.pd-jenis i { font-size: 12px; }
+.pd-jenis-langganan { background: var(--up-accent-tint); color: #0a24a8; }
+.pd-jenis-tiket-hilang, .pd-jenis-denda { background: #fdeeee; color: #b42f2f; }
+.pd-jenis-tiket-manual { background: #fdf3e7; color: #8a4b08; }
+.pd-jenis-penggantian-kartu { background: #eaf7f0; color: #137a4c; }
+.pd-jenis-lainnya { background: #f3effb; color: #5b3fa8; }
+.pd-plates { display: flex; flex-wrap: wrap; gap: 4px; }
+.pd-plates .hp-plate { padding: 2px 7px; border-radius: 6px; background: var(--up-ink); color: #fff; font: 700 11px ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .6px; white-space: nowrap; }
+.pd-desc .pm-code { margin: 0 0 0 4px; vertical-align: 1px; }
+.pd-kasir { color: var(--up-ink-2); font-size: 12.5px; }
+.pd-table th.pd-amount, .pd-table td.pd-amount { text-align: right; white-space: nowrap; }
+.pd-table td.pd-amount strong { color: var(--up-ink); }
+
+@media (max-width: 1279px) {
+  .pd-table td[data-label] { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; grid-column: 1 / -1; text-align: right; }
+  .pd-table td[data-label]::before { content: attr(data-label); flex: none; color: var(--up-ink-3); font-size: 12px; font-weight: 600; text-align: left; }
+  .pd-table td[data-label] .pd-desc { justify-items: end; }
+  .pd-table td[data-label] .pd-plates { justify-content: flex-end; }
+}
+@media (max-width: 767px) {
+  .pd-filters { padding: 14px; }
+  .pd-period label, .pd-select { flex: 1 1 140px; }
+  .pd-period input, .pd-select select { width: 100%; min-width: 0; }
+  .pd-presets { width: 100%; }
+  .pd-presets button { flex: 1; padding: 0 6px; }
+  .pd-card { padding: 16px; }
+  .pd-list-head { padding: 16px 16px 0; }
+}
+
+/* Pengeluaran (memakai komponen halaman pendapatan) */
+.kl-page .pd-hero-meta .up-primary { margin: 0; }
+.kl-kategori { display: inline-block; padding: 3px 10px; border-radius: 999px; background: #fdf3e7; color: #8a4b08; font-size: 12px; font-weight: 700; white-space: nowrap; }
+.kl-table td.kl-berita { min-width: 200px; }
+.kl-file { display: inline-flex; align-items: center; gap: 6px; max-width: 180px; padding: 4px 10px; border-radius: 8px; background: var(--up-accent-tint); color: var(--up-accent-deep); font-size: 12px; font-weight: 600; text-decoration: none; }
+.kl-file span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.kl-file i { flex: none; font-size: 15px; }
+.kl-file:hover { background: #dfeaff; }
+.kl-current { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; padding: 10px 12px; border: 1px solid var(--up-line); border-radius: 12px; background: #f8fafc; }
+.kl-current .kl-file { max-width: 260px; }
+.kl-current small { color: var(--up-ink-3); font-size: 11.5px; }
+.user-modal .kl-remove { display: inline-flex !important; align-items: center; gap: 6px; margin: 0 0 0 auto; color: #b42f2f !important; font-size: 12.5px !important; cursor: pointer; }
+.kl-drop { position: relative; display: flex; align-items: center; gap: 10px; min-height: 48px; padding: 10px 14px; border: 1px dashed #c3cfe2; border-radius: 12px; color: var(--up-ink-2); font-size: 13px; cursor: pointer; transition: border-color .15s, background .15s; }
+.kl-drop:hover, .kl-drop:focus-within { border-color: var(--up-accent); background: var(--up-accent-tint); }
+.kl-drop i { color: var(--up-accent-deep); font-size: 18px; }
+.kl-drop input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+.kl-drop span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.user-modal.kl-modal textarea { min-height: 70px; padding: 10px 12px !important; resize: vertical; }
+.kl-modal .tf-input em { font-style: normal; font-weight: 700; }
+@media (max-width: 1279px) {
+  .kl-table td[data-label] .kl-file { max-width: 60%; }
+}
+
+/* Input pendapatan manual */
+.pd-page .pd-hero-meta .up-primary { margin: 0; }
+.pd-jenis-pick { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.pd-modal .tf-input em { font-style: normal; font-weight: 700; }
+@media (max-width: 575px) { .pd-jenis-pick { grid-template-columns: 1fr; } }
+
+/* Tombol tambah pendapatan & pengeluaran: gaya lembut (soft) — hijau = uang masuk, merah = uang keluar */
+.pd-hero-meta { align-items: center; }
+.pd-hero-meta .pd-book, .pd-hero-meta .pd-readonly { min-height: 44px; padding: 0 14px; border-radius: 12px; }
+.up-primary.pd-add-btn, .up-primary.kl-add-btn { border: 1px solid transparent !important; box-shadow: none !important; transition: background .15s, border-color .15s, transform .15s; }
+.up-primary.pd-add-btn { background: #eaf7f0 !important; border-color: #b7e2c8 !important; color: #137a4c !important; }
+.up-primary.pd-add-btn:hover { background: #dcf1e5 !important; border-color: #8fd1aa !important; }
+.up-primary.pd-add-btn:focus-visible { outline: 3px solid rgba(19, 122, 76, .3); outline-offset: 2px; }
+.up-primary.kl-add-btn { background: #fdeeee !important; border-color: #f3c4c4 !important; color: #b42f2f !important; }
+.up-primary.kl-add-btn:hover { background: #fbe1e1 !important; border-color: #eba3a3 !important; }
+.up-primary.kl-add-btn:focus-visible { outline: 3px solid rgba(180, 47, 47, .3); outline-offset: 2px; }
+@media (max-width: 767px) {
+  .pd-hero-meta { width: 100%; }
+  .pd-hero-meta .pd-add-btn { flex: 1 1 100%; order: 2; }
+}
+
+@media (max-width: 767px) {
+  .kl-page .pd-hero-meta .kl-add-btn { flex: 1 1 100%; order: 2; }
+}
+
+/* Foto masuk di tabel In Area / Riwayat / Pembatalan */
+.tp-fotos { display: flex; gap: 6px; }
+.tp-foto { flex: none; width: 64px; height: 44px; padding: 0; border: 1px solid var(--up-line); border-radius: 8px; overflow: hidden; background: #f2f4f7; cursor: zoom-in; }
+.tp-foto img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.tp-foto:hover { border-color: var(--up-accent, #2f5bd3); }
+.tp-lightbox { position: fixed; inset: 0; z-index: 2000; display: grid; place-items: center; padding: 24px; background: rgba(11, 18, 32, .82); cursor: zoom-out; }
+.tp-lightbox figure { margin: 0; max-width: min(1100px, 100%); }
+.tp-lightbox img { display: block; max-width: 100%; max-height: 82vh; margin: 0 auto; border-radius: 10px; background: #000; }
+.tp-lightbox figcaption { margin-top: 10px; color: #fff; font-size: 13px; text-align: center; }
+.tp-lightbox-close { position: absolute; top: 14px; right: 18px; width: 40px; height: 40px; border: 0; border-radius: 50%; background: rgba(255, 255, 255, .16); color: #fff; font-size: 26px; line-height: 1; cursor: pointer; }
+@media (max-width: 1279px) { .pd-table td[data-label="Foto"] .tp-fotos { justify-content: flex-end; } }
+
+.tp-foto.is-missing { display: grid; place-items: center; color: var(--up-ink-3); font-size: 18px; cursor: default; background: repeating-linear-gradient(45deg, #f2f4f7, #f2f4f7 6px, #eaecf0 6px, #eaecf0 12px); }
+
+.pd-trx small.tp-member { display: flex; align-items: center; gap: 4px; color: var(--up-accent, #2f5bd3); font-weight: 600; }
+.pd-trx small.tp-member i { font-size: 12px; }
+
+/* Penanda jumlah foto & navigasi galeri */
+.tp-foto { position: relative; }
+.tp-foto-count { position: absolute; right: 3px; bottom: 3px; padding: 1px 6px; border-radius: 999px; background: rgba(11, 18, 32, .78); color: #fff; font-size: 11px; font-weight: 700; line-height: 1.4; }
+.tp-lightbox-nav { position: absolute; top: 50%; width: 48px; height: 48px; margin-top: -24px; border: 0; border-radius: 50%; background: rgba(255, 255, 255, .16); color: #fff; font-size: 34px; line-height: 1; cursor: pointer; }
+.tp-lightbox-nav.is-prev { left: 16px; }
+.tp-lightbox-nav.is-next { right: 16px; }
+.tp-lightbox img { cursor: default; }
+
+/* Riwayat: penanda foto masuk / keluar pada gambar mini */
+.tp-foto-tag { position: absolute; left: 3px; top: 3px; padding: 0 5px; border-radius: 4px; color: #fff; font-size: 9.5px; font-weight: 800; line-height: 1.5; letter-spacing: .2px; }
+.tp-foto-tag.is-masuk { background: rgba(22, 168, 118, .92); }
+.tp-foto-tag.is-keluar { background: rgba(241, 90, 11, .92); }
+
+/* Konfirmasi hapus dengan password */
+.pw-confirm-field { display: grid; gap: 6px; margin: 6px 0 0; }
+.pw-confirm-field > span:first-child { color: #4b5b75; font-size: 12px; font-weight: 700; }
+.pw-confirm-input { position: relative; display: flex; align-items: center; }
+.pw-confirm-input > i { position: absolute; left: 12px; color: #8a95a8; font-size: 16px; pointer-events: none; }
+.pw-confirm-input input { width: 100%; height: 42px; padding: 0 42px 0 38px; border: 1.5px solid #e1e8f2; border-radius: 10px; background: #fff; color: #13284d; font-size: 14px; outline: 0; transition: border-color .15s, box-shadow .15s; }
+.pw-confirm-input input:focus { border-color: #b85b54; box-shadow: 0 0 0 4px rgba(184, 91, 84, .12); }
+.pw-confirm-input input.is-invalid { border-color: #d64545; }
+.pw-confirm-eye { position: absolute; right: 5px; display: grid; place-items: center; width: 32px; height: 32px; border: 0; border-radius: 8px; background: transparent; color: #8a95a8; font-size: 17px; cursor: pointer; }
+.pw-confirm-eye:hover { background: #f5f7fa; color: #4b5b75; }
+.spa-confirm-dialog p.pw-confirm-error { color: #c8101a; font-size: 12px; font-weight: 600; }
+.pw-confirm .spa-confirm-delete:disabled { opacity: .65; cursor: wait; }

@@ -1,0 +1,17 @@
+HYBRID PARKING 1.0.0 (20261016)
+
+Kebutuhan: Linux x64, Node.js 22, MariaDB 10.6+ (atau MySQL 8), ffmpeg (foto kamera gate).
+
+1. Ekstrak paket:      tar -xzf hybrid-parking-1.0.0-20261016.tar.gz && cd hybrid-parking-1.0.0-20261016
+2. Jalankan:           npm start            (kode instalasi tampil di terminal)
+3. Instalasi:          buka http://<ip-server>:3000 , isi kode instalasi yang tampil di terminal / log
+                       (pm2 logs), koneksi database (host, user, password, nama database) dan pengaturan server.
+                       Database dibuat, database.sql diimpor, dan .env ditulis otomatis.
+                       Bila PM2 terpasang, aplikasi otomatis dipindah ke PM2 (cluster, restart otomatis bila error).
+   Nyala saat boot:     pm2 startup          (jalankan perintah sudo yang ditampilkan, sekali saja)
+   Perintah lain:       npm run pm2:logs  |  npm run pm2:restart  |  npm run pm2 (jalankan di PM2 bila belum)
+4. Login:              login awal: admin / admin123 (segera ganti password).
+
+User database harus boleh membuat database bila database belum ada.
+Tabel tambahan dibuat otomatis saat server pertama kali jalan.
+Detail operasional: OPERATIONS.md. API perangkat gate: GATE-API.md.
