@@ -1,8 +1,8 @@
-HYBRID PARKING 1.0.0 (20261021)
+HYBRID PARKING 1.0.0 (20261022)
 
 Kebutuhan: Linux x64, Node.js 22, MariaDB 10.6+ (atau MySQL 8), ffmpeg (foto kamera gate).
 
-1. Ekstrak paket:      tar -xzf hybrid-parking-1.0.0-20261021.tar.gz && cd hybrid-parking
+1. Ekstrak paket:      tar -xzf hybrid-parking-1.0.0-20261022.tar.gz && cd hybrid-parking
 2. Jalankan:           npm start            (kode instalasi tampil di terminal)
 3. Instalasi:          buka http://<ip-server>:3000 , isi kode instalasi yang tampil di terminal / log
                        (pm2 logs), koneksi database (host, user, password, nama database) dan pengaturan server.

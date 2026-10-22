@@ -199,6 +199,38 @@ FROM tbl_perusahaan
 WHERE serial_number = 'HSS-001'
   AND NOT EXISTS (SELECT 1 FROM tbl_metode_bayar WHERE metode_code = 'QRIS');
 
+-- Kasir memilih "Kartu Uang Elektronik" (popup tempel kartu, SDK Uang Elektronik); pendapatan dicatat sesuai jenis kartu
+-- (awalan nomor kartu) dengan metode di bawahnya, yang tidak tampil di kasir.
+INSERT INTO tbl_metode_bayar (id_perusahaan, metode, tampil_kasir, metode_code, normal_balance)
+SELECT id_perusahaan, 'Kartu Uang Elektronik', 1, 'KARTU', 'debit'
+FROM tbl_perusahaan
+WHERE serial_number = 'HSS-001'
+  AND NOT EXISTS (SELECT 1 FROM tbl_metode_bayar WHERE metode_code = 'KARTU');
+
+INSERT INTO tbl_metode_bayar (id_perusahaan, metode, tampil_kasir, metode_code, normal_balance)
+SELECT id_perusahaan, 'E-money Mandiri', 0, 'EMONEY', 'debit'
+FROM tbl_perusahaan
+WHERE serial_number = 'HSS-001'
+  AND NOT EXISTS (SELECT 1 FROM tbl_metode_bayar WHERE REPLACE(metode_code, '-', '') = 'EMONEY');
+
+INSERT INTO tbl_metode_bayar (id_perusahaan, metode, tampil_kasir, metode_code, normal_balance)
+SELECT id_perusahaan, 'BRIZZI BRI', 0, 'BRIZZI', 'debit'
+FROM tbl_perusahaan
+WHERE serial_number = 'HSS-001'
+  AND NOT EXISTS (SELECT 1 FROM tbl_metode_bayar WHERE metode_code = 'BRIZZI');
+
+INSERT INTO tbl_metode_bayar (id_perusahaan, metode, tampil_kasir, metode_code, normal_balance)
+SELECT id_perusahaan, 'TapCash BNI', 0, 'TAPCASH', 'debit'
+FROM tbl_perusahaan
+WHERE serial_number = 'HSS-001'
+  AND NOT EXISTS (SELECT 1 FROM tbl_metode_bayar WHERE metode_code = 'TAPCASH');
+
+INSERT INTO tbl_metode_bayar (id_perusahaan, metode, tampil_kasir, metode_code, normal_balance)
+SELECT id_perusahaan, 'Flazz BCA', 0, 'FLAZZ', 'debit'
+FROM tbl_perusahaan
+WHERE serial_number = 'HSS-001'
+  AND NOT EXISTS (SELECT 1 FROM tbl_metode_bayar WHERE metode_code = 'FLAZZ');
+
 INSERT INTO tbl_pengguna (nama_lengkap, alamat, phone, username, password_pin, hak_akses, akses_omset, closing, status)
 SELECT 'Administrator Owner', NULL, phone, 'admin', '$2b$12$MDBglo27ypjbjWukVo71.OfKalDLOjUJtQ5g0LUKOdKQhStk18xxa', 'Owner', 100, 'yes', 'Aktif'
 FROM tbl_perusahaan
