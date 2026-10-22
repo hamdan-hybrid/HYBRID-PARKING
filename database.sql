@@ -231,6 +231,30 @@ FROM tbl_perusahaan
 WHERE serial_number = 'HSS-001'
   AND NOT EXISTS (SELECT 1 FROM tbl_metode_bayar WHERE metode_code = 'FLAZZ');
 
+-- Contoh perangkat (instalasi baru saja: data perusahaan bawaan dan tabel perangkat masih kosong). Ubah IP / RTSP di menu
+-- Perangkat sesuai lapangan, atau hapus. PM1 = pintu masuk 1, PK2 = pintu keluar 2. api_key Interface dibuat server saat start.
+SET @hp_contoh_perangkat = (SELECT COUNT(*) = 0 FROM tbl_pengaturan_perangkat)
+  AND EXISTS (SELECT 1 FROM tbl_perusahaan WHERE serial_number = 'HSS-001');
+
+INSERT INTO tbl_pengaturan_perangkat (nama_perangkat, jenis, rtsp_url, ip_address, port)
+SELECT nama, jenis, rtsp, ip, port FROM (
+  SELECT 'PM1 Printer' AS nama, 'Printer' AS jenis, NULL AS rtsp, '192.168.1.101' AS ip, 9100 AS port
+  UNION ALL SELECT 'PK2 Printer', 'Printer', NULL, '192.168.1.102', 9100
+  UNION ALL SELECT 'PM1 Camera', 'Camera', 'rtsp://admin:password@192.168.1.111:554/stream1', NULL, NULL
+  UNION ALL SELECT 'PK2 Camera', 'Camera', 'rtsp://admin:password@192.168.1.112:554/stream1', NULL, NULL
+) contoh
+WHERE @hp_contoh_perangkat;
+
+INSERT INTO tbl_pengaturan_perangkat (nama_perangkat, jenis, ip_address, port, id_printer, id_camera)
+SELECT nama, 'Interface', ip, 80,
+  (SELECT id_perangkat FROM tbl_pengaturan_perangkat WHERE nama_perangkat = printer),
+  JSON_ARRAY((SELECT id_perangkat FROM tbl_pengaturan_perangkat WHERE nama_perangkat = camera))
+FROM (
+  SELECT 'PM1' AS nama, '192.168.1.121' AS ip, 'PM1 Printer' AS printer, 'PM1 Camera' AS camera
+  UNION ALL SELECT 'PK2', '192.168.1.122', 'PK2 Printer', 'PK2 Camera'
+) contoh
+WHERE @hp_contoh_perangkat;
+
 INSERT INTO tbl_pengguna (nama_lengkap, alamat, phone, username, password_pin, hak_akses, akses_omset, closing, status)
 SELECT 'Administrator Owner', NULL, phone, 'admin', '$2b$12$MDBglo27ypjbjWukVo71.OfKalDLOjUJtQ5g0LUKOdKQhStk18xxa', 'Owner', 100, 'yes', 'Aktif'
 FROM tbl_perusahaan
