@@ -155,7 +155,7 @@ if dpkg-query -W -f='${Status}' mariadb-server 2>/dev/null | grep 'install ok in
    || [ -x /usr/sbin/mariadbd ] || [ -x /usr/sbin/mysqld ]; then DB_SERVER_PRESENT=1
 else PKGS+=(mariadb-server); fi
 # Penanda: MariaDB dipasang oleh installer ini → pengamanan dasar dijalankan (sekali), walau run pertama terputus.
-HP_STATE_DIR=/var/lib/hybrid-parking-setup; mkdir -p "$HP_STATE_DIR"; chmod 700 "$HP_STATE_DIR"
+mkdir -p "$HP_STATE_DIR"; chmod 700 "$HP_STATE_DIR"
 [ "$DB_SERVER_PRESENT" -eq 0 ] && touch "$HP_STATE_DIR/mariadb-dipasang-installer"
 if ! command -v mariadb >/dev/null && ! command -v mysql >/dev/null; then PKGS+=(mariadb-client); fi
 if ! command -v mariadb-dump >/dev/null && ! command -v mysqldump >/dev/null; then PKGS+=(mariadb-client); fi
@@ -506,7 +506,7 @@ else step_end FAILED "pm2 startup gagal (lihat log)"; fi
 
 # ---------- 16. Opsional: tombol Restart/Shutdown Monitor Server ----------
 step_begin "Izin restart server"
-RULE_FILE=/etc/sudoers.d/hybrid-parking-power
+RULE_FILE="/etc/sudoers.d/$HP_PM2_NAME-power"
 if [ -f "$RULE_FILE" ] && grep -q "^$APP_USER " "$RULE_FILE"; then step_end SKIPPED "aturan sudoers sudah ada"
 else
   [ -z "$POWER_RULE" ] && [ "$INTERACTIVE" -eq 1 ] && confirm "Izinkan tombol Restart/Shutdown server di menu Monitor Server (hanya Owner)?" n && POWER_RULE=yes

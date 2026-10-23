@@ -395,6 +395,8 @@
         <li>Sebelum transaksi disimpan, server mengecek ulang ke <code>/api/payments/{transactionId}</code>: status harus <code>paid</code> dan nominal sama dengan tarif. No. transaksi masuk <code>no_referensi</code> pendapatan dan tidak bisa dipakai dua kali.</li>
         <li>Pendapatan dicatat sesuai jenis kartu dari awalan nomor kartu: <code>6032</code> E-money Mandiri, <code>6013</code> BRIZZI BRI, <code>7546</code> TapCash BNI, <code>0145</code> Flazz BCA. Metodenya dibuat otomatis bila belum ada (tidak tampil di kasir). Nomor kartu disimpan tersamar.</li>
         <li>Popup ditutup sebelum lunas → server memanggil <code>/cancel</code> agar kartu tidak terpotong belakangan.</li>
+        <li><b>Angkat kartu begitu reader berbunyi.</b> Reader baru mengirim hasil deduct ke komputer setelah kartu diangkat; kartu yang dibiarkan menempel membuat hasil tertahan ±10 detik (diukur: diangkat 4 dtk, dibiarkan 9–11 dtk termasuk waktu menempel).</li>
+        <li><b>Metode gabungan QRIS + uang elektronik:</b> buat metode bayar yang nama/kodenya mengandung <b>qris</b> dan <b>uang elektronik</b> / <b>e-money</b> / <b>kartu</b> (mis. <code>QRIS + Uang Elektronik</code>, kode <code>QRIS_EMONEY</code>), dan isi kedua link SDK. Popup kasir menampilkan QR sekaligus menunggu kartu ditempel; yang lunas duluan menyelesaikan transaksi dan pendapatan dicatat sesuai channel yang dipakai (QRIS, atau jenis kartu). Channel lain dihentikan: sesi kartu dibatalkan, status QRIS masih dipantau 30 detik. Bila pelanggan terlanjur membayar dua kali, kasir mendapat peringatan untuk mengembalikan kelebihan, dan pembayaran kedua dicatat di catatan transaksi parkir (<code>pembayaran_ganda</code>, bukan pendapatan). Bila hanya satu link SDK diisi, metode ini berlaku sebagai QRIS saja / kartu saja.</li>
       </ul>
       <div class="doc-api">
         <div class="doc-api-head"><span class="doc-method post">POST</span><code>/api/parking/deduct</code></div>
@@ -409,7 +411,7 @@ Content-Type: application/json
             <tbody>
               <tr><td><code>transactionId</code></td><td>Wajib. No. transaksi, sama untuk setiap tap sampai lunas</td></tr>
               <tr><td><code>amount</code></td><td>Wajib. Nominal tagihan (bilangan bulat)</td></tr>
-              <tr><td><code>gateId</code></td><td>Opsional. Nama perangkat kasir/gate (maks. 20 karakter), dicetak di struk SDK</td></tr>
+              <tr><td><code>gateId</code></td><td>Opsional. Nama perangkat kasir/gate (maks. 20 karakter)</td></tr>
             </tbody>
           </table>
         </div>
@@ -424,8 +426,7 @@ Content-Type: application/json
   "balance": 45000,
   "payments": [{ "cardNo": "6032984012344438", "cardType": "01", "amount": 5000, "balance": 45000, "transactionDate": "..." }],
   "reader": { "statusCode": "000000", ... },
-  "barrier": { "requested": true },
-  "receipt": { "queued": true }
+  "barrier": { "requested": true }
 }</pre>
         <h4>Respons belum lunas (200)</h4>
         <pre>{
@@ -479,7 +480,7 @@ Content-Type: application/json
       </div>
       <div class="doc-api">
         <div class="doc-api-head"><span class="doc-method get">GET</span><code>/api/parking/health</code></div>
-        <p>Cek koneksi (tombol Test). Respons: <code>{"ok":true,"readerConnected":true,"barrierMode":"demo","printer":"192.168.1.50:9100"}</code>.</p>
+        <p>Cek koneksi (tombol Test). Respons: <code>{"ok":true,"readerConnected":true,"barrierMode":"demo"}</code>.</p>
       </div>
       <div class="doc-api">
         <div class="doc-api-head"><span class="doc-method post">POST</span><code>/api/parking/check-balance</code></div>

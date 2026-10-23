@@ -4,8 +4,13 @@
 
 HP_REQUIRED_NODE="26.12.1"          # engines.node di package.json
 HP_NODE_ROOT="/usr/local/lib/nodejs" # Node.js khusus Hybrid Parking (tarball resmi nodejs.org)
-HP_PM2_NAME="hybrid-parking"         # nama proses di ecosystem.config.cjs
-HP_LOG_DIR="/var/log/hybrid-parking"
+# Nama aplikasi = nama proses PM2 di ecosystem.config.cjs (mis. hybrid-parking); dipakai juga untuk folder log,
+# folder status installer, dan aturan sudoers, sehingga skrip yang sama berlaku untuk white label.
+HP_APP_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+HP_PM2_NAME="$(sed -n "s/^[[:space:]]*name: *'\([a-z0-9-]*\)'.*/\1/p" "$HP_APP_ROOT/ecosystem.config.cjs" 2>/dev/null | head -n1)"
+HP_PM2_NAME="${HP_PM2_NAME:-hybrid-parking}"
+HP_LOG_DIR="/var/log/$HP_PM2_NAME"
+HP_STATE_DIR="/var/lib/$HP_PM2_NAME-setup"
 
 if [ -t 1 ]; then
   C_OK=$'\e[32m'; C_FAIL=$'\e[31m'; C_WARN=$'\e[33m'; C_SKIP=$'\e[36m'; C_DIM=$'\e[2m'; C_B=$'\e[1m'; C_0=$'\e[0m'

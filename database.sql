@@ -209,6 +209,13 @@ FROM tbl_perusahaan
 WHERE serial_number = 'HSS-001'
   AND NOT EXISTS (SELECT 1 FROM tbl_metode_bayar WHERE metode_code = 'KARTU');
 
+-- Metode gabungan: satu popup kasir menampilkan QRIS sekaligus menunggu kartu ditempel (kedua link SDK diisi);
+-- pendapatan dicatat sesuai channel yang dipakai (QRIS, atau jenis kartu).
+INSERT INTO tbl_metode_bayar (id_perusahaan, metode, tampil_kasir, metode_code, normal_balance)
+SELECT id_perusahaan, 'QRIS + Uang Elektronik', 1, 'QRIS_EMONEY', 'debit'
+FROM tbl_perusahaan
+WHERE serial_number = 'HSS-001'
+  AND NOT EXISTS (SELECT 1 FROM tbl_metode_bayar WHERE metode_code = 'QRIS_EMONEY');
 INSERT INTO tbl_metode_bayar (id_perusahaan, metode, tampil_kasir, metode_code, normal_balance)
 SELECT id_perusahaan, 'E-money Mandiri', 0, 'EMONEY', 'debit'
 FROM tbl_perusahaan

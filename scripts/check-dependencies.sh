@@ -42,9 +42,9 @@ if command -v curl >/dev/null && curl -fsI --max-time 8 https://nodejs.org/dist/
 else row PERHATIAN "Internet" "nodejs.org tidak terjangkau (atau curl belum ada); dibutuhkan bila Node.js/PM2 harus dipasang"; fi
 
 # Aplikasi.
-if [ -f "$APP_DIR/start.js" ] && [ -f "$APP_DIR/server.js" ] && grep -q '"name": "hybrid-parking"' "$APP_DIR/package.json" 2>/dev/null; then
-  row OK "Folder aplikasi" "$APP_DIR"
-else row GAGAL "Folder aplikasi" "$APP_DIR bukan folder Hybrid Parking (start.js / server.js / package.json)"; fi
+if [ -f "$APP_DIR/start.js" ] && [ -f "$APP_DIR/server.js" ] && [ -f "$APP_DIR/database.sql" ] && grep -q "name: '$HP_PM2_NAME'" "$APP_DIR/ecosystem.config.cjs" 2>/dev/null; then
+  row OK "Folder aplikasi" "$APP_DIR ($HP_PM2_NAME)"
+else row GAGAL "Folder aplikasi" "$APP_DIR bukan folder Hybrid Parking (start.js / server.js / database.sql / ecosystem.config.cjs)"; fi
 [ -f "$APP_DIR/.env" ] && row OK ".env" "ada (dipertahankan, hanya kunci yang kurang ditambahkan)" || row KURANG ".env" "belum ada, dibuat setup.sh"
 [ -d "$APP_DIR/node_modules" ] && row OK "node_modules" "ada (diuji saat setup)" || row KURANG "node_modules" "belum ada, dipasang dengan npm ci"
 for d in storage/parkir storage/pengeluaran public/uploads public/img; do

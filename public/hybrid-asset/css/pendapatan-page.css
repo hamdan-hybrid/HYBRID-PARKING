@@ -194,3 +194,36 @@
 .tp-catatan-dialog summary { cursor: pointer; font-size: 13px; font-weight: 600; color: #2a4a8a; }
 .tp-catatan-json { max-height: 50vh; overflow: auto; margin: 8px 0 0; padding: 10px 12px; border: 1px solid #e1e8f2; border-radius: 8px; background: #f5f8fc; color: #2a4a8a; font: 500 11.5px/1.5 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; white-space: pre-wrap; word-break: break-all; }
 .tp-online { display: inline-flex; align-items: center; gap: 4px; width: max-content; padding: 2px 9px; border-radius: 999px; background: #e5f6ef; color: #0b7a62; font-size: 12px; font-weight: 700; }
+
+/* Detail pembayaran (Riwayat → Detail info): ringkasan per bagian, data teknis dilipat. */
+.tpd { width: min(680px, calc(100vw - 32px)); padding: 0; overflow: hidden auto; }
+.tpd-head { display: flex; align-items: center; gap: 12px; padding: 18px 22px 14px; border-bottom: 1px solid #edf1f7; }
+.tpd-head > div { flex: 1; min-width: 0; }
+.tpd-head h3 { margin: 0 !important; color: #13284d; font-size: 17px; font-weight: 800; }
+.tpd-head small { color: #6b7a93; font-size: 12.5px; }
+.tpd-logo { display: grid; flex: none; place-items: center; width: 52px; height: 36px; padding: 4px; border: 1px solid #e3e9f2; border-radius: 9px; background: #fff; color: #2a4a8a; font-size: 20px; }
+.tpd-logo img { max-width: 100%; max-height: 100%; object-fit: contain; }
+.tpd-chip { display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: 999px; font-size: 12px; font-weight: 700; white-space: nowrap; }
+.tpd-chip::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.tpd-chip.is-ok { background: #e8f7ef; color: #13784a; }
+.tpd-chip.is-warn { background: #fff4e0; color: #9a5b00; }
+.tpd-chip.is-err { background: #fdecec; color: #b42318; }
+.tpd-hero { display: grid; gap: 2px; padding: 14px 22px; background: linear-gradient(180deg, #f6f8fc, #fff); }
+.tpd-hero small { color: #6b7a93; font-size: 12.5px; font-weight: 600; }
+.tpd-hero strong { color: #13284d; font-size: 26px; font-weight: 800; letter-spacing: -.3px; }
+.tpd-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 10px; padding: 4px 22px 14px; }
+.tpd-sec { padding: 12px 14px; border: 1px solid #e8edf5; border-radius: 12px; background: #fff; }
+.tpd-sec h4 { display: flex; align-items: center; gap: 6px; margin: 0 0 8px; color: #6b7a93; font-size: 11.5px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; }
+.tpd-sec h4 i { color: #2a4a8a; font-size: 15px; }
+.tpd-sec dl { display: grid; gap: 7px; margin: 0; }
+.tpd-row { display: grid; gap: 1px; }
+.tpd-row dt { color: #8a95a8; font-size: 11.5px; }
+.tpd-row dd { margin: 0; color: #13284d; font-size: 13.5px; font-weight: 600; word-break: break-word; }
+.tpd-mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 12.5px; letter-spacing: .02em; }
+.tpd-alert { display: flex; gap: 10px; margin: 0 22px 12px; padding: 10px 12px; border: 1px solid #f5c98a; border-radius: 10px; background: #fff8ec; color: #7a4a00; font-size: 12.5px; }
+.tpd-alert i { font-size: 18px; }
+.tpd-alert div { display: grid; gap: 2px; }
+.tpd-raw { margin: 0 22px 4px; }
+.tpd .spa-confirm-actions { padding: 12px 22px 18px; margin: 0; }
+@media (max-width: 560px) { .tpd-head { flex-wrap: wrap; } .tpd-hero strong { font-size: 22px; } }
+
