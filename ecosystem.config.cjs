@@ -3,7 +3,8 @@ module.exports = {
     name: 'hybrid-parking',
     // start.js membaca .env sendiri; bila .env belum lengkap tampil halaman Instalasi.
     script: './start.js',
-    interpreter: 'node',
+    // setup.sh mengisi HYBRID_PARKING_NODE bila Node.js untuk Hybrid Parking dipasang terpisah dari node bawaan server.
+    interpreter: process.env.HYBRID_PARKING_NODE || 'node',
     // Satu proses: notifikasi kendaraan di area (SSE), cache, dan batas percobaan PIN/password disimpan di memori proses.
     // Lebih dari satu instance membuat data itu terpecah per proses. Mode cluster tetap dipakai agar `pm2 reload` tanpa jeda.
     instances: 1,

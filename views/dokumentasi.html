@@ -2,7 +2,7 @@
   <header class="doc-hero">
     <p class="doc-eyebrow"><i class="ti ti-book"></i> Khusus Owner</p>
     <h2>Dokumentasi API</h2>
-    <p>API untuk perangkat Interface di gate (kendaraan masuk, update IP, buka gate), API laporan omset untuk bot WhatsApp, dan standar SDK QRIS.</p>
+    <p>API untuk perangkat Interface di gate (kendaraan masuk, update IP, buka gate), API laporan omset untuk bot WhatsApp, dan standar SDK QRIS serta SDK uang elektronik.</p>
   </header>
 
   <div class="doc-body">
@@ -385,8 +385,111 @@
       </div>
     </section>
 
+    <section class="doc-section" id="doc-sdk-emoney">
+      <h3>10. SDK Uang Elektronik</h3>
+      <ul class="doc-bullets">
+        <li>Alamat SDK diisi di menu <a href="#perusahaan">Perusahaan</a> → <b>SDK uang elektronik</b>, berupa alamat dasar tanpa path, misalnya <code>http://localhost:4173</code>. Boleh <code>http://</code> (termasuk <code>localhost</code>) atau <code>https://</code>.</li>
+        <li>SDK terhubung ke reader kartu (e-money Mandiri, BRIZZI, TapCash, Flazz) dan wajib menyediakan endpoint di bawah ini. Body dan respons berupa JSON.</li>
+        <li>Tombol <b>Test</b> di samping isian: cek koneksi reader, <b>Cek saldo</b> kartu yang ditempel, dan <b>Test potong</b> sesuai nominal (kartu benar-benar terpotong). Sesi tes yang belum lunas dibatalkan saat popup ditutup.</li>
+        <li><b>Kasir:</b> bila link SDK diisi dan metode bayar yang dipilih bernama/berkode <b>uang elektronik</b>, <b>e-money</b>, atau <b>kartu</b>, popup <b>Tempelkan kartu</b> muncul. Server membuat satu no. transaksi (<code>transactionId</code>, awalan <code>HP</code>) lalu setiap tap memanggil <code>/api/parking/deduct</code> dengan no. transaksi dan nominal yang sama sampai lunas. Nominal ditandatangani server, jadi tidak bisa diubah dari browser.</li>
+        <li>Sebelum transaksi disimpan, server mengecek ulang ke <code>/api/payments/{transactionId}</code>: status harus <code>paid</code> dan nominal sama dengan tarif. No. transaksi masuk <code>no_referensi</code> pendapatan dan tidak bisa dipakai dua kali.</li>
+        <li>Pendapatan dicatat sesuai jenis kartu dari awalan nomor kartu: <code>6032</code> E-money Mandiri, <code>6013</code> BRIZZI BRI, <code>7546</code> TapCash BNI, <code>0145</code> Flazz BCA. Metodenya dibuat otomatis bila belum ada (tidak tampil di kasir). Nomor kartu disimpan tersamar.</li>
+        <li>Popup ditutup sebelum lunas → server memanggil <code>/cancel</code> agar kartu tidak terpotong belakangan.</li>
+      </ul>
+      <div class="doc-api">
+        <div class="doc-api-head"><span class="doc-method post">POST</span><code>/api/parking/deduct</code></div>
+        <p>Satu tap kartu: reader memotong seluruh tagihan dari kartu yang ditempel. Bila gagal (mis. saldo kurang), kartu tidak dipotong; kirim ulang permintaan yang sama setelah kartu ditempel lagi. No. transaksi yang sama aman diulang (tidak memotong dua kali).</p>
+        <pre>POST http://localhost:4173/api/parking/deduct
+Content-Type: application/json
+
+{"transactionId":"HP5-MH3K2Q1A7","amount":5000,"gateId":"KASIR-1"}</pre>
+        <div class="doc-table-wrap">
+          <table class="doc-table">
+            <thead><tr><th>Field</th><th>Keterangan</th></tr></thead>
+            <tbody>
+              <tr><td><code>transactionId</code></td><td>Wajib. No. transaksi, sama untuk setiap tap sampai lunas</td></tr>
+              <tr><td><code>amount</code></td><td>Wajib. Nominal tagihan (bilangan bulat)</td></tr>
+              <tr><td><code>gateId</code></td><td>Opsional. Nama perangkat kasir/gate (maks. 20 karakter), dicetak di struk SDK</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <h4>Respons lunas (200)</h4>
+        <pre>{
+  "success": true,
+  "transactionId": "HP5-MH3K2Q1A7",
+  "status": "paid",
+  "amount": 5000,
+  "paid": 5000,
+  "remaining": 0,
+  "balance": 45000,
+  "payments": [{ "cardNo": "6032984012344438", "cardType": "01", "amount": 5000, "balance": 45000, "transactionDate": "..." }],
+  "reader": { "statusCode": "000000", ... },
+  "barrier": { "requested": true },
+  "receipt": { "queued": true }
+}</pre>
+        <h4>Respons belum lunas (200)</h4>
+        <pre>{
+  "success": false,
+  "status": "open",
+  "remaining": 5000,
+  "sameCard": { "cardNo": "6032 98** **** 4438", "retriesLeft": 2 },
+  "message": "Saldo kartu kurang, kartu tidak dipotong. Isi saldo lalu tempel KARTU YANG SAMA (6032 98** **** 4438) untuk Rp 5.000. Sisa percobaan 2",
+  "reader": { "statusCode": "011004", ... }
+}</pre>
+        <ul class="doc-bullets">
+          <li><code>success</code> = <code>true</code> atau <code>status</code> = <code>"paid"</code> → lunas. Selain itu tap diulang dengan <code>transactionId</code> dan <code>amount</code> yang sama.</li>
+          <li><code>reader.statusCode</code> <code>011002</code> = reader menunggu kartu terlalu lama (belum ada kartu ditempel): kasir langsung mengulang tap tanpa pesan error.</li>
+          <li><code>sameCard</code> = kartu yang saldonya kurang; 3 tap berikutnya harus kartu yang sama (kartu lain ditolak tanpa dipotong). <code>null</code> = kartu apa pun boleh.</li>
+          <li><code>payments</code> = kartu yang terpotong (nomor, jenis, nominal, saldo akhir). Respons lunas lengkap ikut disimpan di catatan transaksi.</li>
+        </ul>
+        <h4>Respons gagal</h4>
+        <div class="doc-table-wrap">
+          <table class="doc-table">
+            <thead><tr><th>Kode</th><th>Respons</th></tr></thead>
+            <tbody>
+              <tr><td>400</td><td><code>{"success":false,"error":"transactionId is required"}</code> / <code>"amount must be a non-negative integer"</code></td></tr>
+              <tr><td>409</td><td><code>{"success":false,"error":"Reader is not connected"}</code></td></tr>
+              <tr><td>502</td><td><code>{"success":false,"deducted":true,"error":"..."}</code> kartu sudah terpotong tetapi palang SDK gagal; tetap dianggap hasil pembayaran</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="doc-api">
+        <div class="doc-api-head"><span class="doc-method get">GET</span><code>/api/payments/{transactionId}</code></div>
+        <p>Status sesi pembayaran. Dipakai server untuk memastikan lunas sebelum transaksi kasir disimpan.</p>
+        <pre>http://localhost:4173/api/payments/HP5-MH3K2Q1A7</pre>
+        <h4>Respons berhasil (200)</h4>
+        <pre>{
+  "success": true,
+  "transactionId": "HP5-MH3K2Q1A7",
+  "status": "paid",
+  "amount": 5000,
+  "paid": 5000,
+  "remaining": 0,
+  "payments": [{ "cardNo": "6032984012344438", "cardType": "01", "amount": 5000, "balance": 45000, "transactionDate": "..." }]
+}</pre>
+        <ul class="doc-bullets">
+          <li><code>status</code> = <code>open</code> (belum lunas), <code>paid</code> (lunas), atau <code>cancelled</code> (dibatalkan).</li>
+          <li>Tidak ditemukan → <code>404</code> <code>{"error":"Transaction not found"}</code>.</li>
+        </ul>
+      </div>
+      <div class="doc-api">
+        <div class="doc-api-head"><span class="doc-method post">POST</span><code>/api/payments/{transactionId}/cancel</code></div>
+        <p>Menutup sesi yang belum lunas (body <code>{}</code>). Sesi yang sudah lunas tidak berubah dan dijawab dengan statusnya. Respons sama dengan status sesi; <code>404</code> bila tidak ditemukan, <code>409</code> bila tap kartu masih berjalan.</p>
+      </div>
+      <div class="doc-api">
+        <div class="doc-api-head"><span class="doc-method get">GET</span><code>/api/parking/health</code></div>
+        <p>Cek koneksi (tombol Test). Respons: <code>{"ok":true,"readerConnected":true,"barrierMode":"demo","printer":"192.168.1.50:9100"}</code>.</p>
+      </div>
+      <div class="doc-api">
+        <div class="doc-api-head"><span class="doc-method post">POST</span><code>/api/parking/check-balance</code></div>
+        <p>Membaca saldo kartu yang ditempel tanpa memotong (tombol <b>Cek saldo</b>). Body <code>{"transactionId":"TEST-SALDO","amount":0}</code>.</p>
+        <pre>{"success":true,"canPay":true,"transactionId":"TEST-SALDO","amount":0,"remaining":0,"balance":45000,"cardNo":"6032984012344438"}</pre>
+      </div>
+    </section>
+
     <section class="doc-section" id="doc-env">
-      <h3>10. Pengaturan .env</h3>
+      <h3>11. Pengaturan .env</h3>
       <div class="doc-table-wrap">
         <table class="doc-table">
           <thead><tr><th>Nama</th><th>Keterangan</th></tr></thead>

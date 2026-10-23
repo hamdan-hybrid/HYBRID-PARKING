@@ -1604,7 +1604,9 @@
   "semua kasir langsung mencetak struk parkir keluar setelah bayar; cetak ulang lewat tombol Cetak Lagi": "all cashiers print the exit receipt right after payment; reprint with the Print Again button",
   "Sistem menutup buku otomatis setiap pergantian hari.": "The system closes the books automatically at each day change.",
   "Tanggal pembukuan": "Bookkeeping date",
-  "Tutup harian dilakukan dari kasir, satu kali untuk seluruh area dan kasir.": "The daily close is done from the cashier, once for all areas and cashiers."
+  "Tutup harian dilakukan dari kasir, satu kali untuk seluruh area dan kasir.": "The daily close is done from the cashier, once for all areas and cashiers.",
+  "Pembayaran ini sedang diproses, coba lagi": "This payment is being processed, please try again",
+  "Worker laporan gagal, ekspor di thread utama:": "Report worker failed, exporting on the main thread:"
  },
  "patterns": {
   "· {0} terpotong": "· {0} deducted",
