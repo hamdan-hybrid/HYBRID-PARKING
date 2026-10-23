@@ -21,7 +21,7 @@
   position: relative;
   display: grid;
   grid-template-columns: 1fr auto;
-  align-items: start;
+  align-items: center; /* tombol aksi di kanan sejajar tengah dengan judul */
   gap: 22px 24px;
   padding: 28px 32px;
   overflow: hidden;

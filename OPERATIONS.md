@@ -61,3 +61,22 @@ sudo visudo -c
 ```
 
 Without this rule the buttons stay disabled. Set `SERVER_POWER=local` in `.env` to allow restart/shutdown only from the local network through the server IP, or `SERVER_POWER=off` to turn them off. Backup uses `mariadb-dump` (or `mysqldump`; override with `DB_DUMP_BIN`) and the database credentials in `.env`.
+
+## Backup & restore
+
+Monitor Server → **Backup database** downloads `backup-<db>-<YYYYMMDD-HHMMSS>.sql.gz`. It contains every table, all data, triggers and routines, in one consistent snapshot (`--single-transaction`). Since 2026-10-23 the file has no `CREATE DATABASE` / `USE` line, so a restore always goes into the database you name. Older files still contain `USE <original db>` and will overwrite that database.
+
+The backup is a manual download only. Nothing is scheduled, and nothing is kept on the server. Store each file away from the server machine.
+
+Restore into a separate database first, check it, then switch:
+
+```bash
+mariadb -u root -p -e "CREATE DATABASE db_hybrid_pulih CHARACTER SET utf8mb4 COLLATE utf8mb4_uca1400_ai_ci"
+gunzip -c backup-db-hybrid-parking-20261023-021114.sql.gz | mariadb -u root -p db_hybrid_pulih
+mariadb -u root -p db_hybrid_pulih -e "SELECT COUNT(*), SUM(total_bayar) FROM tbl_transaksi_pendapatan; SELECT SUM(total) FROM tbl_pendapatan_harian"
+```
+
+The two totals must match. Then set `DB_NAME=db_hybrid_pulih` in `.env` and restart the app, or restore the same file into the production database name during a maintenance window.
+
+On 2026-10-23 this was tested on a 365,000-transaction test database: a 14 MB backup took about 5 s, and the restore took about 46 s.
+

@@ -10,6 +10,8 @@
   const PROBE_MS = 120_000;
 
   const PAY_COLORS = ['#0b2cc0', '#0088dd', '#1a9b62', '#eb6834', '#7c5cdb', '#c98500'];
+  // Warna grafik lewat variabel CSS (--hp-c-<hex>) agar tema gelap bisa memakai versi yang lebih terang (theme-dark-extra.css).
+  const warna = hex => (/^#[0-9a-f]{6}$/i.test(hex) ? `var(--hp-c-${hex.slice(1).toLowerCase()}, ${hex})` : hex);
   const deviceIcon = { Interface: 'ti-device-desktop', Camera: 'ti-camera', Printer: 'ti-printer' };
   const statusText = { online: ['Online', 'ti-circle-check', 'good'], offline: ['Offline', 'ti-circle-x', 'bad'], unknown: ['Belum dicek', 'ti-help-circle', 'unknown'] };
   const rupiah = value => 'Rp ' + Math.round(value).toLocaleString('id-ID');
@@ -58,9 +60,9 @@
     const line = points.map(([x, y], index) => `${index ? 'L' : 'M'}${x.toFixed(1)},${y.toFixed(1)}`).join(' ');
     const id = `hp-spark-${color.slice(1)}`;
     return `<svg class="hp-spark" viewBox="0 0 ${width} ${height}" preserveAspectRatio="none" aria-hidden="true">
-      <defs><linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${color}" stop-opacity=".22"/><stop offset="1" stop-color="${color}" stop-opacity="0"/></linearGradient></defs>
+      <defs><linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:${warna(color)}" stop-opacity=".22"/><stop offset="1" style="stop-color:${warna(color)}" stop-opacity="0"/></linearGradient></defs>
       <path d="${line} L${width},${height} L0,${height} Z" fill="url(#${id})"/>
-      <path d="${line}" fill="none" stroke="${color}" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg>`;
+      <path d="${line}" fill="none" style="stroke:${warna(color)}" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg>`;
   }
 
   function renderKpis() {
@@ -124,8 +126,8 @@
     const MIX_COLORS = ['#0b2cc0', '#0088dd', '#7c5cdb', '#c98500'];
     const total = mix.jenis.reduce((sum, item) => sum + item.jumlah, 0);
     const pct = value => total ? Math.round(value / total * 100) : 0;
-    const bar = parts => `<div class="hp-mix-bar">${parts.filter(part => part.jumlah).map(part => `<span style="flex-grow:${part.jumlah};background:${part.color}"></span>`).join('') || '<span></span>'}</div>`;
-    const legend = parts => `<div class="hp-mix-legend">${parts.map(part => `<span><i style="background:${part.color}"></i>${escapeHtml(capital(part.nama))} <b>${number(part.jumlah)}</b> <small>${pct(part.jumlah)}%</small></span>`).join('')}</div>`;
+    const bar = parts => `<div class="hp-mix-bar">${parts.filter(part => part.jumlah).map(part => `<span style="flex-grow:${part.jumlah};background:${warna(part.color)}"></span>`).join('') || '<span></span>'}</div>`;
+    const legend = parts => `<div class="hp-mix-legend">${parts.map(part => `<span><i style="background:${warna(part.color)}"></i>${escapeHtml(capital(part.nama))} <b>${number(part.jumlah)}</b> <small>${pct(part.jumlah)}%</small></span>`).join('')}</div>`;
     const jenis = mix.jenis.slice(0, 4).map((item, index) => ({ ...item, color: MIX_COLORS[index] }));
     const pelanggan = [{ nama: 'Umum', jumlah: mix.umum, color: '#0b2cc0' }, { nama: 'Member', jumlah: mix.member, color: '#1a9b62' }];
     $('[data-home-mix]').innerHTML = `
@@ -149,11 +151,11 @@
     $('[data-home-payments]').innerHTML = `
       <div class="hp-pay-total"><strong>${rupiah(total)}</strong><span>${number(count)} transaksi</span></div>
       <div class="hp-pay-stack" role="img" aria-label="Komposisi pendapatan per metode">
-        ${list.map((item, index) => share(item) ? `<span style="flex-grow:${share(item).toFixed(2)};background:${color(index)}" title="${escapeHtml(item.nama)} ${Math.round(share(item))}%"></span>` : '').join('')}
+        ${list.map((item, index) => share(item) ? `<span style="flex-grow:${share(item).toFixed(2)};background:${warna(color(index))}" title="${escapeHtml(item.nama)} ${Math.round(share(item))}%"></span>` : '').join('')}
       </div>
       <ul class="hp-pay-list">${list.map((item, index) => `
         <li class="hp-pay-row">
-          <i class="hp-pay-dot" style="background:${color(index)}"></i>
+          <i class="hp-pay-dot" style="background:${warna(color(index))}"></i>
           <span class="hp-pay-name">${escapeHtml(item.nama)}<small>${number(item.jumlah)} transaksi</small></span>
           <span class="hp-pay-amount">${rupiah(item.total)}<small>${share(item).toLocaleString('id-ID', { maximumFractionDigits: 1 })}%</small></span>
         </li>`).join('')}
