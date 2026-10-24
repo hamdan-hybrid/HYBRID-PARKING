@@ -115,14 +115,15 @@
 .up-primary.kl-add-btn { background: #fdeeee !important; border-color: #f3c4c4 !important; color: #b42f2f !important; }
 .up-primary.kl-add-btn:hover { background: #fbe1e1 !important; border-color: #eba3a3 !important; }
 .up-primary.kl-add-btn:focus-visible { outline: 3px solid rgba(180, 47, 47, .3); outline-offset: 2px; }
-/* In Area: tombol "Batalkan semua" dan batal per baris (Owner), merah cerah dengan ikon tong sampah. */
-.up-btn.tp-batal-semua, .up-btn.tp-batal-baris { border-color: #dc2626; background: #dc2626; color: #fff; box-shadow: 0 6px 14px rgba(220, 38, 38, .22); }
-.up-btn.tp-batal-semua { flex: 0 0 auto; white-space: nowrap; }
-.up-btn.tp-batal-baris { width: 38px; padding: 0; }
+/* In Area: tombol "Batalkan semua" dan batal per baris (Owner), ikon tong sampah.
+   Palet merah lembut "Tambah pengeluaran" / penanda "Dibatalkan"; merah pekat hanya saat hover. */
+.up-btn.tp-batal-semua { flex: 0 0 auto; white-space: nowrap; border-color: #f3c4c4; background: #fdeeee; color: #b42f2f; }
+.up-btn.tp-batal-semua:hover { border-color: #b42f2f; background: #b42f2f; color: #fff; }
+.up-btn.tp-batal-baris { width: 38px; padding: 0; background: #fff; color: #b42f2f; }
+.up-btn.tp-batal-baris:hover { border-color: #f3c4c4; background: #fdeeee; color: #9b2626; }
 .pm-table td.pm-actions .up-btn.tp-batal-baris { flex: none; } /* layout kartu (< 1280px) melebarkan tombol pertama; tetap kotak di kanan */
-.up-btn.tp-batal-semua i, .up-btn.tp-batal-baris i { font-size: 17px; }
-.up-btn.tp-batal-semua:hover, .up-btn.tp-batal-baris:hover { border-color: #b91c1c; background: #b91c1c; color: #fff; }
-.up-btn.tp-batal-semua:focus-visible, .up-btn.tp-batal-baris:focus-visible { outline: 3px solid rgba(220, 38, 38, .35); outline-offset: 2px; }
+.up-btn.tp-batal-semua i, .up-btn.tp-batal-baris i { font-size: 16px; }
+.up-btn.tp-batal-semua:focus-visible, .up-btn.tp-batal-baris:focus-visible { outline: 3px solid rgba(180, 47, 47, .3); outline-offset: 2px; }
 .up-btn.tp-batal-semua:disabled, .up-btn.tp-batal-baris:disabled { opacity: .65; cursor: wait; }
 @media (max-width: 767px) {
   .pd-hero-meta { width: 100%; }
