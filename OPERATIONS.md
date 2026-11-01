@@ -112,6 +112,10 @@ The two totals must match. Then set `DB_NAME=db_hybrid_pulih` in `.env` and rest
 
 On 2026-10-23 this was tested on a 365,000-transaction test database: a 14 MB backup took about 5 s, and the restore took about 46 s.
 
+### Summary tables (filled by triggers)
+
+`tbl_pendapatan_harian`, `tbl_parkir_masuk_harian` and `tbl_parkir_keluar_harian` are derived from the transaction tables by triggers. Reports (Okupansi, Rekap Bulanan, dashboard revenue) read them instead of scanning a year of transactions. Never edit them by hand. At startup the app compares them with the transaction tables and rebuilds them when they differ; the full per-day comparison of the parkir tables runs 2 minutes after startup and logs `Rekap transaksi parkir dibangun ulang` when it had to fix something. The first start after the 1.1.1 update fills the parkir tables once (about 4 s for 365,000 transactions).
+
 
 ## Pages in a release (views.pak)
 
