@@ -1796,7 +1796,6 @@
   "Status import tidak terbaca. Muat ulang halaman ini.": "Import status is unavailable. Reload this page.",
   "Unggah file gagal": "File upload failed",
   "Unggahan tidak ditemukan, ulangi dari awal": "Upload not found, start again",
-  "Upload file backup": "Upload backup file",
   "Urutan potongan file tidak sesuai, ulangi unggahan": "File chunks arrived out of order, upload again",
   "Backup sebelum import:": "Backup before import:",
   "Bukan file backup database (dump MariaDB / MySQL)": "Not a database backup file (MariaDB / MySQL dump)",
@@ -1804,7 +1803,8 @@
   "File .gz rusak atau tidak utuh": "The .gz file is damaged or incomplete",
   "Ketik": "Type",
   "untuk konfirmasi": "to confirm",
-  "Satu baris file terlalu panjang (file rusak?)": "A line in the file is too long (damaged file?)"
+  "Satu baris file terlalu panjang (file rusak?)": "A line in the file is too long (damaged file?)",
+  "Upload": "Upload"
  },
  "patterns": {
   "Serial number {0}": "Serial number {0}",

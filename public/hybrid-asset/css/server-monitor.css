@@ -87,21 +87,28 @@
 .srv-part-head strong { font-variant-numeric: tabular-nums; }
 .srv-part > small { color: var(--up-ink-3); font-size: 12px; }
 
-/* Pemeliharaan: tiga kartu, tombol di footer rata bawah */
+/* Pemeliharaan: kartu aksi, tombol di footer rata bawah */
 .srv-section-head { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 4px 16px; margin: 0 0 12px; }
 .srv-section-head h3 { margin: 0; color: var(--up-ink); font-size: 17px; font-weight: 700; }
 .srv-section-head p { display: inline-flex; align-items: center; gap: 6px; margin: 0; color: var(--up-ink-3); font-size: 12.5px; }
-/* 4 aksi dalam 2 × 2: Backup | Import, Perbarui | Daya. */
-.srv-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
-.srv-action { position: relative; display: flex; flex-direction: column; gap: 14px; min-width: 0; padding: 20px 22px; overflow: hidden; border-radius: 18px; background: #fff; border: 1px solid var(--up-line); box-shadow: 0 1px 2px rgba(20,33,61,.04); }
+/* 4 aksi dalam satu baris; 2 × 2 bila area konten sempit, 1 kolom di ponsel. */
+.srv-actions { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+.srv-action { position: relative; display: flex; flex-direction: column; gap: 12px; min-width: 0; padding: 18px 16px; overflow: hidden; border-radius: 18px; background: #fff; border: 1px solid var(--up-line); box-shadow: 0 1px 2px rgba(20,33,61,.04); }
 .srv-action:before { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 3px; background: linear-gradient(90deg, #0b2cc0, #0088dd); }
 .srv-danger:before { background: linear-gradient(90deg, #d64545, #e6a23c); }
+/* Ilustrasi latar sesuai fungsi kartu; memudar ke kiri agar teks di atasnya tetap terbaca. */
+.srv-action > * { position: relative; z-index: 1; }
+.srv-action::after { content: ""; position: absolute; top: -4px; right: -10px; width: 112px; height: 112px; background: no-repeat center / contain; opacity: .17; pointer-events: none; -webkit-mask-image: linear-gradient(90deg, transparent, #000 60%); mask-image: linear-gradient(90deg, transparent, #000 60%); }
+.srv-backup::after { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 140 140' fill='none' stroke='%230b2cc0' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cellipse cx='70' cy='24' rx='36' ry='13' fill='%230b2cc0' fill-opacity='.14'/%3E%3Cpath d='M34 24v42c0 7.2 16.1 13 36 13s36-5.8 36-13V24' fill='%230b2cc0' fill-opacity='.14'/%3E%3Cpath d='M34 45c0 7.2 16.1 13 36 13s36-5.8 36-13'/%3E%3Cpath d='M70 88v30M58 106l12 12 12-12'/%3E%3Cpath d='M30 104v14a8 8 0 0 0 8 8h64a8 8 0 0 0 8-8v-14'/%3E%3C/svg%3E"); }
+.srv-import::after { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 140 140' fill='none' stroke='%230b8a70' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M16 12h30l14 14v42a6 6 0 0 1-6 6H16a6 6 0 0 1-6-6V18a6 6 0 0 1 6-6z' fill='%230b8a70' fill-opacity='.14'/%3E%3Cpath d='M46 12v14h14'/%3E%3Cpath d='M22 42h26M22 52h26M22 62h15'/%3E%3Cellipse cx='94' cy='82' rx='32' ry='11' fill='%230b8a70' fill-opacity='.14'/%3E%3Cpath d='M62 82v34c0 6.1 14.3 11 32 11s32-4.9 32-11V82' fill='%230b8a70' fill-opacity='.14'/%3E%3Cpath d='M62 99c0 6.1 14.3 11 32 11s32-4.9 32-11'/%3E%3Cpath d='M70 36h16a14 14 0 0 1 14 14v12M91 53l9 9 9-9'/%3E%3C/svg%3E"); }
+.srv-update::after { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 140 140' fill='none' stroke='%230088dd' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M70 42l28 15v32l-28 15-28-15V57z' fill='%230088dd' fill-opacity='.14'/%3E%3Cpath d='M42 57l28 15 28-15M70 72v32M56 49.5l28 15'/%3E%3Cpath d='M18 70a52 52 0 0 1 88-37'/%3E%3Cpath d='M108 16v18H90'/%3E%3Cpath d='M122 70a52 52 0 0 1-88 37'/%3E%3Cpath d='M32 124v-18h18'/%3E%3C/svg%3E"); }
+.srv-danger::after { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 140 140' fill='none' stroke='%23c0392b' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M70 10v30'/%3E%3Cpath d='M46 20a34 34 0 1 0 48 0'/%3E%3Crect x='26' y='88' width='88' height='18' rx='5' fill='%23c0392b' fill-opacity='.14'/%3E%3Crect x='26' y='112' width='88' height='18' rx='5' fill='%23c0392b' fill-opacity='.14'/%3E%3Cpath d='M84 97h18M84 121h18'/%3E%3Cpath stroke-width='4.5' d='M38 97h.01M49 97h.01M38 121h.01M49 121h.01'/%3E%3C/svg%3E"); }
 .srv-action-head { display: flex; align-items: center; gap: 12px; }
 .srv-danger .srv-action-icon { background: #fdeeee; color: #c0392b; }
 .srv-import:before { background: linear-gradient(90deg, #0b8a70, #2bb894); }
 .srv-import .srv-action-icon { background: #e6f6f1; color: #0b7a62; }
 .srv-import-pilih { display: grid; gap: 6px; color: var(--up-ink-3); font-size: 12.5px; font-weight: 500; }
-.srv-import-pilih select { width: 100%; min-height: 40px; padding: 0 12px; border: 1px solid var(--up-line); border-radius: 11px; background: var(--up-field); color: var(--up-ink); font: inherit; font-size: 13px; font-weight: 600; }
+.srv-import-pilih select { width: 100%; min-height: 40px; padding: 0 10px; text-overflow: ellipsis; border: 1px solid var(--up-line); border-radius: 11px; background: var(--up-field); color: var(--up-ink); font: inherit; font-size: 12.5px; font-weight: 600; }
 .srv-action > p { margin: 0; color: var(--up-ink-2); font-size: 13px; line-height: 1.55; }
 .srv-meta { display: grid; margin: 0; border: 1px solid var(--up-line); border-radius: 12px; background: var(--up-field); }
 .srv-meta > div { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 9px 12px; font-size: 12.5px; }
@@ -111,13 +118,15 @@
 .srv-action > .srv-note { display: flex; gap: 8px; align-items: flex-start; padding: 10px 12px; border-radius: 10px; background: #fff7e8; color: #8a5a00; font-size: 12.5px; line-height: 1.5; }
 .srv-note i { flex: none; margin-top: 2px; }
 .srv-action > .srv-note.is-info { background: #edf2ff; color: #3d5fc4; }
-.srv-action-foot { display: flex; flex-wrap: wrap; gap: 10px; margin-top: auto; padding-top: 16px; border-top: 1px solid var(--up-line); }
-.srv-action-foot .srv-btn { flex: 1 1 auto; }
+.srv-action-foot { display: flex; flex-wrap: wrap; gap: 8px; margin-top: auto; padding-top: 14px; border-top: 1px solid var(--up-line); }
+.srv-action-foot .srv-btn { flex: 1 1 auto; gap: 5px; padding: 0 6px; font-size: 12.5px; }
 
 .srv-btn { display: inline-flex; align-items: center; justify-content: center; gap: 7px; min-height: 40px; padding: 0 16px; border: 1px solid transparent; border-radius: 11px; background: linear-gradient(135deg, #0a1a52, #0b2cc0); color: #fff; font-size: 13px; font-weight: 700; white-space: nowrap; cursor: pointer; box-shadow: 0 8px 18px -10px rgba(10,26,82,.7); transition: transform .15s, background-color .15s; }
 .srv-btn:hover:not(:disabled) { transform: translateY(-1px); }
 .srv-btn:focus-visible { outline: 3px solid rgba(11,44,192,.35); outline-offset: 2px; }
 .srv-btn:disabled { border-color: var(--up-line, #e6ebf3); background: #f2f4f7; color: #9aa4b5; cursor: not-allowed; box-shadow: none; }
+.srv-btn-import { background: linear-gradient(135deg, #064e40, #0a7d66); box-shadow: 0 8px 18px -10px rgba(6,78,64,.7); }
+.srv-btn:focus-visible.srv-btn-import { outline-color: rgba(10,125,102,.4); }
 .srv-btn-warn { background: #fff6e8; border-color: #f4ddb2; color: #9a5b00; box-shadow: none; }
 .srv-btn-warn:hover:not(:disabled) { background: #ffefd6; }
 .srv-btn-danger { background: #fdf1f1; border-color: #f3cccc; color: #b42f2f; box-shadow: none; }
@@ -133,14 +142,17 @@
    Media query di bawah tetap ada untuk browser tanpa container query. */
 .srv-page { container: srv / inline-size; }
 @container srv (max-width: 940px) {
-  .srv-tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .srv-tiles, .srv-actions { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @container srv (max-width: 820px) { .srv-grid { grid-template-columns: minmax(0, 1fr); } }
 /* Kartu ringkasan sempit: badge di bawah angka, tidak keluar kartu. */
 @container srv-tile (max-width: 170px) {
   .srv-tile-value { flex-direction: column; align-items: flex-start; }
 }
-@media (max-width: 1099px) { .srv-grid { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 1099px) {
+  .srv-grid { grid-template-columns: minmax(0, 1fr); }
+  .srv-actions { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
 @media (max-width: 991px) {
   .srv-tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }

@@ -1796,7 +1796,6 @@
   "Status import tidak terbaca. Muat ulang halaman ini.": "讀袂著匯入狀態。請重新載入這頁。",
   "Unggah file gagal": "上傳檔案失敗",
   "Unggahan tidak ditemukan, ulangi dari awal": "揣無上傳，請對頭閣來",
-  "Upload file backup": "上傳備份檔",
   "Urutan potongan file tidak sesuai, ulangi unggahan": "檔案段的順序無合，請閣上傳一擺",
   "Backup sebelum import:": "匯入進前的備份：",
   "Bukan file backup database (dump MariaDB / MySQL)": "毋是資料庫備份檔（MariaDB / MySQL dump）",
@@ -1804,7 +1803,8 @@
   "File .gz rusak atau tidak utuh": ".gz 檔案歹去抑是無完整",
   "Ketik": "拍",
   "untuk konfirmasi": "來確認",
-  "Satu baris file terlalu panjang (file rusak?)": "檔案有一逝傷長（檔案敢是歹去？）"
+  "Satu baris file terlalu panjang (file rusak?)": "檔案有一逝傷長（檔案敢是歹去？）",
+  "Upload": "上傳"
  },
  "patterns": {
   "Serial number {0}": "序號 {0}",
