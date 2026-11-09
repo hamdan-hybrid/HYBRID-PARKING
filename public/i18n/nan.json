@@ -1854,7 +1854,16 @@
   "Video dijeda": "影片暫停",
   "Video tersendat": "影片頓頓",
   "Video tidak dapat diputar": "影片袂當播",
-  "X-Codec": "X-Codec"
+  "X-Codec": "X-Codec",
+  "Camera belum terdaftar di layanan video. Muat ulang halaman.": "攝影機猶未佇影片服務登記。請重新載入頁面。",
+  "Camera menolak koneksi: port RTSP tertutup. Cek nomor port (biasanya 554).": "攝影機拒絕連線：RTSP port 關起來矣。檢查 port 號碼（通常是 554）。",
+  "Camera tidak membalas (timeout). Cek kabel, listrik, IP, dan jaringan camera.": "攝影機無回應（逾時）。檢查攝影機的線、電源、IP 佮網路。",
+  "Camera tidak terjangkau dari server (beda jaringan atau tidak ada rute).": "伺服器連袂著攝影機（網路無仝，抑是無路由）。",
+  "go2rtc belum terpasang di server. Jalankan \"Perbarui sistem\" di Monitor Server atau sudo bash setup.sh.": "伺服器猶未裝 go2rtc。請佇伺服器監控執行「系統更新」，抑是 sudo bash setup.sh。",
+  "go2rtc tidak merespons": "go2rtc 無回應",
+  "go2rtc tidak merespons saat dinyalakan": "go2rtc 啟動的時無回應",
+  "Path stream tidak ditemukan (404). Cek bagian URL setelah port, mis. /Streaming/Channels/101.": "揣無 stream 路徑（404）。檢查 URL 佇 port 後壁的部分，比如 /Streaming/Channels/101。",
+  "Username atau password camera salah (401 Unauthorized).": "攝影機的帳號抑是密碼毋著（401 Unauthorized）。"
  },
  "patterns": {
   "Serial number {0}": "序號 {0}",
@@ -2158,6 +2167,9 @@
   "Pernyataan di baris {0} terlalu besar (file rusak?)": "第 {0} 逝的指令傷大（檔案敢是歹去？）",
   "Data video tidak valid (kotak MP4 {0} byte)": "影片資料無效（MP4 盒仔 {0} byte）",
   "Paling banyak {0} camera ditayangkan bersamaan": "上濟 {0} 台攝影機會當同齊播",
-  "Penonton CCTV dari internet sudah {0} (batas). Tutup CCTV Monitor di perangkat lain atau coba lagi nanti.": "對網路來看 CCTV 的人已經 {0} 个（上限）。請關掉別台設備的 CCTV 監看，抑是等一下才閣試。"
+  "Penonton CCTV dari internet sudah {0} (batas). Tutup CCTV Monitor di perangkat lain atau coba lagi nanti.": "對網路來看 CCTV 的人已經 {0} 个（上限）。請關掉別台設備的 CCTV 監看，抑是等一下才閣試。",
+  "go2rtc {0}: {1}": "go2rtc {0}: {1}",
+  "go2rtc berhenti saat dinyalakan{0}": "go2rtc 啟動的時停去{0}",
+  "go2rtc tidak bisa dijalankan: {0}": "go2rtc 袂當執行：{0}"
  }
 }

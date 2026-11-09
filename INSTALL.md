@@ -43,6 +43,7 @@ Selebihnya otomatis. Setiap tahap tampil dengan status **SUCCESS / FAILED / SKIP
    - Hanya kunci yang kurang yang ditambahkan. API key, link SDK, dan nilai lain dipertahankan.
 9. **Folder data**: `storage/` (foto kendaraan), `public/uploads`, `public/img`, dan `_backup` milik user layanan. Data lama tidak dipindah atau dihapus.
 10. **FFmpeg/FFprobe** diuji sebagai user layanan: demuxer RTSP tersedia, snapshot JPEG berhasil dibuat lalu dibaca ulang dengan ffprobe. Ini sama dengan cara `gate.js` mengambil foto kamera.
+    - **go2rtc** (CCTV Monitor) diunduh dari GitHub, SHA-256 dicocokkan dengan nilai di `setup.sh`, lalu dipasang di `/usr/local/bin/go2rtc` dan diuji sebagai user layanan. Dilewati bila versinya sudah sama. Gagal unduh hanya ditandai *perlu diperhatikan*: parkir tetap terpasang, hanya CCTV Monitor yang belum aktif. "Perbarui sistem" menjalankan langkah yang sama, jadi server lama mendapat go2rtc saat update.
 11. **Dependency aplikasi**: modul native diuji dengan cara dimuat. Bila gagal atau tidak ada, dijalankan `npm ci --omit=dev` sesuai `package-lock.json`.
 12. **Migrasi**:
     - Database yang sudah berisi data dibackup dulu ke `_backup/database/`.

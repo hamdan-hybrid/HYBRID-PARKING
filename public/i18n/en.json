@@ -1854,7 +1854,16 @@
   "Video dijeda": "Video paused",
   "Video tersendat": "Video is stalling",
   "Video tidak dapat diputar": "The video cannot be played",
-  "X-Codec": "X-Codec"
+  "X-Codec": "X-Codec",
+  "Camera belum terdaftar di layanan video. Muat ulang halaman.": "The camera is not registered in the video service yet. Reload the page.",
+  "Camera menolak koneksi: port RTSP tertutup. Cek nomor port (biasanya 554).": "The camera refused the connection: the RTSP port is closed. Check the port number (usually 554).",
+  "Camera tidak membalas (timeout). Cek kabel, listrik, IP, dan jaringan camera.": "The camera is not responding (timeout). Check the camera's cable, power, IP and network.",
+  "Camera tidak terjangkau dari server (beda jaringan atau tidak ada rute).": "The camera cannot be reached from the server (different network or no route).",
+  "go2rtc belum terpasang di server. Jalankan \"Perbarui sistem\" di Monitor Server atau sudo bash setup.sh.": "go2rtc is not installed on the server. Run \"System update\" in Server Monitor or sudo bash setup.sh.",
+  "go2rtc tidak merespons": "go2rtc is not responding",
+  "go2rtc tidak merespons saat dinyalakan": "go2rtc did not respond while starting",
+  "Path stream tidak ditemukan (404). Cek bagian URL setelah port, mis. /Streaming/Channels/101.": "Stream path not found (404). Check the part of the URL after the port, e.g. /Streaming/Channels/101.",
+  "Username atau password camera salah (401 Unauthorized).": "Wrong camera username or password (401 Unauthorized)."
  },
  "patterns": {
   "Serial number {0}": "Serial number {0}",
@@ -2158,6 +2167,9 @@
   "Pernyataan di baris {0} terlalu besar (file rusak?)": "The statement at line {0} is too large (damaged file?)",
   "Data video tidak valid (kotak MP4 {0} byte)": "Invalid video data (MP4 box {0} bytes)",
   "Paling banyak {0} camera ditayangkan bersamaan": "At most {0} cameras can be shown at once",
-  "Penonton CCTV dari internet sudah {0} (batas). Tutup CCTV Monitor di perangkat lain atau coba lagi nanti.": "CCTV viewers from the internet already at {0} (the limit). Close CCTV Monitor on another device or try again later."
+  "Penonton CCTV dari internet sudah {0} (batas). Tutup CCTV Monitor di perangkat lain atau coba lagi nanti.": "CCTV viewers from the internet already at {0} (the limit). Close CCTV Monitor on another device or try again later.",
+  "go2rtc {0}: {1}": "go2rtc {0}: {1}",
+  "go2rtc berhenti saat dinyalakan{0}": "go2rtc stopped while starting{0}",
+  "go2rtc tidak bisa dijalankan: {0}": "go2rtc cannot be started: {0}"
  }
 }
