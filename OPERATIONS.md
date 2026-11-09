@@ -93,6 +93,16 @@ The **Perbarui sistem** card installs the latest release from GitHub (`package.j
 - `SERVER_UPDATE=local` limits the button to the local network through the server IP, `SERVER_UPDATE=off` disables it.
 - Installs from before this feature need one manual `sudo bash scripts/update.sh <package.tar.gz>`; afterwards the button works.
 
+## CCTV Monitor (Owner only)
+
+Profile menu → **CCTV Monitor** (below Monitor Server) shows the cameras from the Devices menu as live video. It works through the domain / Cloudflare Tunnel too, so the Owner can watch from anywhere. Camera and RTSP ports are never exposed to the internet.
+
+- **Light on the server.** `cctv.js` runs one `ffmpeg -c copy` per camera (no re-encoding, about 1% CPU each) that turns RTSP into fragmented MP4. The browser plays it with Media Source Extensions (ManagedMediaSource on iPhone, iOS 17.1+). One ffmpeg is shared by every viewer of that camera. It starts with the first viewer and stops 15 seconds after the last one leaves.
+- **Sub-stream.** Devices → Camera → *URL sub-stream (opsional)* (column `rtsp_live`) is used for live view when filled. Gate photos keep using the main *URL RTSP*. Set the sub-stream on the camera to H.264, about 640×360, 10–15 fps, 384–512 kbps. Browsers cannot reliably play H.265, and a camera without a sub-stream is shown as **Stream utama**, which uses more of the site's upload.
+- **Upload limit.** Each viewer from the internet pulls video through the site's upload, which QRIS payments also use. Open CCTV Monitor tabs from the internet are limited to `CCTV_MAKS_PENONTON` in `.env` (default `3`, `0` = no limit). A tab counts once, whatever the number of cameras. Dashboards opened through the server IP on the local network are not counted.
+- **Auto stop.** Video stops when the Owner leaves the page, hides the tab, or is inactive for 10 minutes. The "Satu camera" mode streams only the selected camera.
+- **Log.** Each viewer is written to the server log once per camera with user ID and IP (`CCTV Monitor: user #… menonton "…"`).
+
 ## Backup & restore
 
 Monitor Server → **Backup database** downloads `backup-<db>-<YYYYMMDD-HHMMSS>.sql.gz`. It contains every table, all data, triggers and routines, in one consistent snapshot (`--single-transaction`). Since 2026-10-23 the file has no `CREATE DATABASE` / `USE` line, so a restore always goes into the database you name. Older files still contain `USE <original db>` and will overwrite that database.
