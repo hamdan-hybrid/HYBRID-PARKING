@@ -120,6 +120,22 @@ Profile menu → **CCTV Monitor** (below Monitor Server) shows the cameras from 
 - **Log.** Each viewer is written to the server log once per camera with user ID and IP (`CCTV Monitor: user #… menonton "…"`). go2rtc warnings and errors, for example a camera closing RTSP, appear as `CCTV Monitor (go2rtc): …`, at most 10 lines a minute, with RTSP user and password masked. `CCTV Monitor: go2rtc berhenti (…)` means go2rtc exited on its own.
 - **Check.** `/usr/local/bin/go2rtc -version` shows the installed version. A tile showing `dial tcp <ip>:554: i/o timeout` means the server cannot reach the camera. Test from the server with `timeout 4 bash -c '</dev/tcp/<ip>/554'`. `ip neigh` showing `FAILED` or `INCOMPLETE` for the camera IP means the camera is off or unplugged. A tile showing *go2rtc belum terpasang di server* means the binary is missing: run "Perbarui sistem" or `sudo bash setup.sh --yes`.
 
+## Storage disk (photos on the largest disk)
+
+`setup.sh` (step "Disk penyimpanan", `scripts/disk-data.sh`) puts `storage/` on the largest disk. `storage/` holds vehicle photos, daily database backups and the SSL certificate. The disk is chosen in this order:
+
+1. A disk already mounted from `/etc/fstab` with more free space than the app disk.
+2. An unmounted partition that already has a filesystem. It is mounted at `/mnt/data` without formatting.
+3. A blank disk. It is formatted only after the operator types `YA` in the wizard.
+
+`/mnt/data/hybrid-parking` is then bind-mounted onto `storage/` through `/etc/fstab`, with `nofail`. The old fstab is kept as `/etc/fstab.bak-hybrid-parking-<time>`.
+
+- **`--yes` and Perbarui sistem** never format a disk and never move existing photos. They report NEEDS ATTENTION instead.
+- **Moving existing photos:** run `sudo bash setup.sh` at a quiet hour. rsync copies while the app keeps running, then the app stops for a few seconds for the final pass. The old copy stays in `_backup/storage-lama-<time>`.
+- **Checking:** run `findmnt <app>/storage`. The health check warns when the fstab bind exists but the disk is not mounted, because photos then land on the system disk.
+- **Opting out:** `--tanpa-disk-data` keeps `storage/` on the system disk, and the choice is remembered. `--disk-data DIR` uses a folder of your choice.
+- **Details and undo:** see INSTALL.md → "Disk penyimpanan".
+
 ## Backup & restore
 
 Monitor Server → **Backup database** downloads `backup-<db>-<YYYYMMDD-HHMMSS>.sql.gz`. It contains every table, all data, triggers and routines, in one consistent snapshot (`--single-transaction`). Since 2026-10-23 the file has no `CREATE DATABASE` / `USE` line, so a restore always goes into the database you name. Older files still contain `USE <original db>` and will overwrite that database.
@@ -136,7 +152,7 @@ That download is not kept on the server. Store each downloaded file away from th
   - Successful backups are only logged (`Backup database otomatis: …`).
 - **Missed schedule (catch-up, since 2026-11-05):** the job runs inside the app, so it cannot fire while the machine is off at 02:00. One minute after the app starts, if the newest backup is older than the last scheduled time (or there is none), it makes one straight away. That is at most one extra backup per schedule, so repeated restarts cannot push older backups out of the rotation. `BACKUP_DB_WAKTU=off` turns this off too.
 - **Limitation:** the check runs only when the app starts. A machine that sleeps through 02:00 and wakes without restarting the app gets no catch-up.
-- **Offsite copy:** these files sit on the same disk as the database. Still copy a backup off the machine regularly.
+- **Offsite copy:** these files sit on the same machine as the database (on the data disk when there is one, see "Storage disk"). Still copy a backup off the machine regularly.
 
 `storage/` must never be committed to a git repository, because the backups contain the full database.
 
