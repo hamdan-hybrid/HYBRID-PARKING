@@ -81,6 +81,10 @@ One kasir account serves one gate and may be logged in on several devices at onc
 
 Sync state and locks live in process memory (see `instances: 1`), so a restart clears them. Screens reconnect by themselves and keep the ticket on display.
 
+## Role authorization (Users → Otorisasi)
+
+The **Otorisasi** button on the Users page, and the (i) button next to *Hak akses* in the user form, open a read-only overview of what each role (Owner, Admin, Svp, Kasir, Audit) can do: a table of all roles plus one tab per role. The rules themselves are fixed in the server code. The overview is `otorisasiGrup` in `public/spa-router.js`, so update it whenever a role check in `server.js` changes. Rows tied to a menu that the app does not have (for example CCTV in a white label) are hidden automatically.
+
 ## Monitor Server (Owner only)
 
 Profile menu → **Monitor Server** shows disk, RAM, CPU, and database size, and offers a database backup download plus server restart/shutdown. Only Owner accounts can open it. Every action needs the CSRF token and the Owner's password again (5 wrong passwords lock actions for 5 minutes). Restart/shutdown also need the word `RESTART` / `SHUTDOWN` typed in, and run 5 seconds after confirmation. Each action is written to the server log with user ID and IP.
@@ -107,9 +111,9 @@ The **Perbarui sistem** card installs the latest release from GitHub (`package.j
 - `SERVER_UPDATE=local` limits the button to the local network through the server IP, `SERVER_UPDATE=off` disables it.
 - Installs from before this feature need one manual `sudo bash scripts/update.sh <package.tar.gz>`; afterwards the button works.
 
-## CCTV Monitor (Owner only)
+## CCTV Monitor (Owner, Admin, Svp)
 
-Profile menu → **CCTV Monitor** (below Monitor Server) shows the cameras from the Devices menu as live video. It works through the domain / Cloudflare Tunnel too, so the Owner can watch from anywhere. Camera and RTSP ports are never exposed to the internet.
+Profile menu → **CCTV Monitor** (below Monitor Server) shows the cameras from the Devices menu as live video. Owner, Admin and Svp accounts can open it (`CCTV_PERAN` in `cctv.js`, checked on `/api/cctv` and again on the video WebSocket). It works through the domain / Cloudflare Tunnel too, so they can watch from anywhere. Camera and RTSP ports are never exposed to the internet.
 
 - **go2rtc, not the app, carries the video.** `setup.sh` installs [go2rtc](https://github.com/AlexxIT/go2rtc) (one MIT binary, version and SHA-256 pinned in `setup.sh`) at `/usr/local/bin/go2rtc`. "Perbarui sistem" installs it too, because the updater runs `setup.sh`. `cctv.js` starts go2rtc when CCTV Monitor opens and stops it 10 minutes after the last viewer leaves. go2rtc keeps one RTSP connection per camera for every viewer, with no re-encoding, and sends fragmented MP4 over a WebSocket. The browser plays it with Media Source Extensions (ManagedMediaSource on iPhone, iOS 17.1+).
 - **Why a separate process.** In 1.1.3–1.1.4 the video went through the app's own memory. PM2 then restarted the whole app every ~30 seconds while CCTV was open (`max_memory_restart: '300M'`, checked every 30 s), and the cashier and gates went down with it. Now the app only checks login, the Owner role and the viewer limit, then pipes the WebSocket to go2rtc without reading the video.
