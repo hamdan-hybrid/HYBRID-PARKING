@@ -1950,7 +1950,8 @@
   "Opsional · isi bila ANPR memakai API key": "無一定愛填 · ANPR 有用 API key 才填",
   "Terhubung ke Hybrid ANPR": "已經連著 Hybrid ANPR",
   "Tes koneksi Hybrid ANPR gagal": "Hybrid ANPR 連線測試失敗",
-  "Test koneksi": "測試連線"
+  "Test koneksi": "測試連線",
+  "Nopol terakhir dari Hybrid ANPR": "Hybrid ANPR 上尾讀著的車牌"
  },
  "patterns": {
   "Serial number {0}": "序號 {0}",

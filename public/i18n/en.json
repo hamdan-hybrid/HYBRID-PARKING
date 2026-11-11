@@ -1950,7 +1950,8 @@
   "Opsional · isi bila ANPR memakai API key": "Optional · fill in if ANPR uses an API key",
   "Terhubung ke Hybrid ANPR": "Connected to Hybrid ANPR",
   "Tes koneksi Hybrid ANPR gagal": "Hybrid ANPR connection test failed",
-  "Test koneksi": "Test connection"
+  "Test koneksi": "Test connection",
+  "Nopol terakhir dari Hybrid ANPR": "Last plate from Hybrid ANPR"
  },
  "patterns": {
   "Serial number {0}": "Serial number {0}",
