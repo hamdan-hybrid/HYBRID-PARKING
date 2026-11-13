@@ -1955,7 +1955,15 @@
   "Jumlah transaksi = transaksi unik (sama dengan Tutup Kasir). Tiket hilang/manual berdenda dihitung satu transaksi, walau tercatat di jenisnya dan di Denda.": "Transactions = unique transactions (same as Cashier Closing). A lost/manual ticket with a fine counts as one transaction, even though it is recorded under its type and under Fine.",
   "Masuk/Keluar = jumlah kendaraan masuk dan keluar gate (tanggal kalender). Pendapatan & pengeluaran menurut tanggal buku. Bulan pertama dan terakhir hanya dihitung di dalam periode yang dipilih.": "In/Out = vehicles entering and leaving the gates (calendar date). Revenue & expenses by book date. The first and last months only count days inside the selected period.",
   "Keluar metode kredit": "Exit via credit method",
-  "Tanpa kendaraan": "No vehicle"
+  "Tanpa kendaraan": "No vehicle",
+  "Jam tutup harian harus format JJ:MM (00:00-23:59)": "Daily closing time must be HH:MM (00:00-23:59)",
+  "Otomatis": "Automatic",
+  "Tutup harian otomatis aktif: Tutup Shift dan Tutup Harian dilakukan sistem pada jam tutup harian. Semua kasir keluar otomatis.": "Automatic daily closing is on: the system does Shift Closing and Daily Closing at the daily closing time. All cashiers are logged out automatically.",
+  "Tidak dihitung (otomatis)": "Not counted (automatic)",
+  "Setiap tutup kasir hanya mencakup transaksi kasir itu sejak tutup kasir terakhirnya. Tutup harian otomatis dibuat sistem per kasir pada jam tutup, tunai tidak dihitung fisik. Tutup harian sebelum 22/10/2026 masih mencakup semua kasir.": "Every cashier closing only covers that cashier's transactions since their last closing. Automatic daily closings are made by the system per cashier at the closing time; cash is not physically counted. Daily closings before 22/10/2026 still cover all cashiers.",
+  "Menit": "Minute",
+  "Format 24 jam (JJ:MM), mis. 03:00 atau 15:30": "24-hour format (HH:MM), e.g. 03:00 or 15:30",
+  "Pilih jam tutup harian": "Choose daily closing time"
  },
  "patterns": {
   "Serial number {0}": "Serial number {0}",
@@ -2275,6 +2283,9 @@
   "Keluar Rp 0 (non-member): {0} · metode kredit: {1}": "Exit Rp 0 (non-member): {0} · credit method: {1}",
   "Rincian per hari tersedia di laporan Rincian Setoran Kasir. {0}": "Daily breakdown is available in the Cashier Deposit Details report. {0}",
   "Masuk/Keluar = jumlah kendaraan masuk dan keluar gate (tanggal kalender). Pendapatan & pengeluaran menurut tanggal buku. Bulan pertama dan terakhir hanya dihitung di dalam periode yang dipilih. {0}": "In/Out = vehicles entering and leaving the gates (calendar date). Revenue & expenses by book date. The first and last months only count days inside the selected period. {0}",
-  "\"Tanpa kendaraan\" = pendapatan yang diinput manual tanpa jenis kendaraan (penggantian kartu, lainnya). {0}": "\"No vehicle\" = revenue entered manually without a vehicle type (card replacement, others). {0}"
+  "\"Tanpa kendaraan\" = pendapatan yang diinput manual tanpa jenis kendaraan (penggantian kartu, lainnya). {0}": "\"No vehicle\" = revenue entered manually without a vehicle type (card replacement, others). {0}",
+  "Transaksi sampai pukul {0} esok harinya masih masuk tanggal buku hari ini. Pukul {1} semua kasir ditutup dan keluar otomatis.": "Transactions until {0} the next day still count for today's book date. At {1} all cashiers are closed and logged out automatically.",
+  "Tutup harian otomatis · {0}": "Automatic daily close · {0}",
+  "Transaksi mulai pukul {0} sudah masuk tanggal buku esok hari. Pukul {1} semua kasir ditutup dan keluar otomatis.": "Transactions from {0} onward already count for tomorrow's book date. At {1} all cashiers are closed and logged out automatically."
  }
 }
